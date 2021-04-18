@@ -1,22 +1,19 @@
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
-;; and `package-pinned-packages`. Most users will not need or want to do this.
-;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (package-initialize)
 
+; No welcome message
 (setq inhibit-startup-message t)
-; Pas de barre d'outil
-(tool-bar-mode nil)
+
+; Cleaner interface
+(tool-bar-mode -1)
+(menu-bar-mode -1)
 
 ; Mettre un titre aux fenêtres
 (setq frame-title-format '(buffer-file-name "Emacs: %b (%f)" "Emacs: %b"))
 
 ; Afficher le numéro de colonne
 (column-number-mode 1)
-
-; Pas de tabulations pour l'indentation, que des espaces
-; (setq-default indent-tabs-mode nil) 
+(linum-mode 1)
 
 ; Mode texte en auto-fill par défaut
 ; (créé une nouvelle ligne à chaque fois que vous taper du texte)
@@ -40,9 +37,8 @@
 
 (setq confirm-kill-emacs 'yes-or-no-p)
 
-; Mettre tous les fichiers de sauvegarde dans un seul répertoire
-(setq backup-directory-alist
-'(("." . "~/.emacs-backup-files/")))
+; No backup files
+(setq make-backup-files nil)
 
 ; Pour ne pas avoir à taper en entier la réponse yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -132,17 +128,9 @@
 (add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
 
 (require 'js2-refactor)
-(require 'xref-js2)
 
 (add-hook 'js2-mode-hook #'js2-refactor-mode)
 (js2r-add-keybindings-with-prefix "C-c C-r")
-
-;; js-mode (which js2 is based on) binds "M-." which conflicts with xref, so
-;; unbind it.
-(define-key js-mode-map (kbd "M-.") nil)
-
-(add-hook 'js2-mode-hook (lambda ()
-						   (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))
 
 (global-whitespace-mode 1)
 
@@ -150,8 +138,19 @@
 (add-hook 'js2-mode-hook #'js2-highlight-vars-mode)
 (add-hook 'js2-mode-hook (lambda () (setq js2-indent-switch-body t)))
 
-;(add-to-list 'auto-mode-alist '("\\.js\\'" . javascript-mode))
-;(autoload 'javascript-mode "javascript" nil t)
+(defun infer-indentation-style ()
+  ;; if our source file uses tabs, we use tabs, if spaces spaces, and if
+  ;; neither, we use the current indent-tabs-mode
+  (let ((space-count (how-many "^  " (point-min) (point-max)))
+        (tab-count (how-many "^\t" (point-min) (point-max))))
+    (if (> space-count tab-count) (setq indent-tabs-mode nil))
+    (if (> tab-count space-count) (setq indent-tabs-mode t))))
+
+(add-hook 'js2-mode-hook 'infer-indentation-style)
+
+(load-file "~/.emacs.d/phindent-mode.el")
+
+(add-hook 'js2-mode-hook 'phindent-mode)
 
 ;;;;;;;;;;;;
 ;; PovRay ;;
@@ -232,25 +231,12 @@
 ;; Maximize
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
-(defun infer-indentation-style ()
-  ;; if our source file uses tabs, we use tabs, if spaces spaces, and if
-  ;; neither, we use the current indent-tabs-mode
-  (let ((space-count (how-many "^  " (point-min) (point-max)))
-        (tab-count (how-many "^\t" (point-min) (point-max))))
-    (if (> space-count tab-count) (setq indent-tabs-mode nil))
-    (if (> tab-count space-count) (setq indent-tabs-mode t))))
-
-(add-hook 'js2-mode-hook 'infer-indentation-style)
-
-(load-file "~/.emacs.d/phindent-mode.el")
-
-(add-hook 'js2-mode-hook 'phindent-mode)
-
 (load-file "~/.emacs.d/mytheme.el")
 (enable-theme 'mytheme)
 
 ; Local configuration
-(load-file "~/.emacs.d/init-local.el")
+(when (file-exists-p "~/.emacs.d/init-local.el")
+  (load-file "~/.emacs.d/init-local.el"))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -352,10 +338,10 @@
  '(outline-regexp "[ 
 ]*" t)
  '(package-archives
-   '(("gnu" . "http://elpa.gnu.org/packages/")
-	 ("melpa-stable" . "http://stable.melpa.org/packages/")))
+   '(("gnu" . "https://elpa.gnu.org/packages/")
+	 ("melpa-stable" . "https://stable.melpa.org/packages/")))
  '(package-selected-packages
-   '(markdown-mode go-mode rainbow-mode autothemer zenburn-theme projectile xref-js2 js2-refactor js2-mode visual-fill-column csharp-mode yaml-mode ess haskell-mode auctex))
+   '(markdown-mode go-mode rainbow-mode autothemer js2-refactor js2-mode nhexl-mode visual-fill-column csharp-mode yaml-mode ess haskell-mode auctex))
  '(preview-auto-cache-preamble t)
  '(preview-default-preamble
    '("\\RequirePackage["
@@ -373,24 +359,4 @@
 				 (expand-file-name "../hoqtop")))))
  '(sentence-end-double-space nil)
  '(tab-width 4)
- '(visible-bell t)
- '(whitespace-style '(face trailing lines-tail empty tabs))
- '(xref-js2-ignored-dirs
-   '("bower_components" "node_modules" "build" "lib" "build-*")))
-
-
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(default ((t (:stipple nil :background "#ffffff" :foreground "#000000" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 170 :width normal :family "monospace"))))
-;;  '(font-lock-keyword-face ((((class color) (min-colors 88) (background light)) (:foreground "Purple" :weight bold))))
-;;  '(js2-external-variable ((t nil)))
-;;  '(js2-highlight-vars-face ((t (:background "DarkSeaGreen1")))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+ '(whitespace-style '(face trailing lines-tail empty tabs)))

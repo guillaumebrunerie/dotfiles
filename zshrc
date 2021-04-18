@@ -7,7 +7,6 @@ unsetopt beep
 bindkey -e
 # End of lines configured by zsh-newuser-install
 # The following lines were added by compinstall
-# zstyle :compinstall filename '/home/fractal/.zshrc'
 
 bindkey '^[[1;5C' emacs-forward-word
 bindkey '^[[1;5D' emacs-backward-word
@@ -38,9 +37,13 @@ setopt prompt_subst
 PROMPT='%(?.(%F{green}0%f).%B%F{red}(%?%)%f%b) %F{red}${_HOST}%f%B%F{blue}%~%f %F{yellow}%1(j.%U.)%(!.#.$)%u%f%b '
 RPROMPT='${vcs_info_msg_0_} %F{magenta}%B[%T]%b%f'
 
-alias ls="ls -G"
+if [[ $(uname -s) == "Linux" ]]
+then
+    alias ls="ls --color=auto"
+else
+    alias ls="ls -G"
+fi
 alias grep="grep --color=auto"
-export LESSOPEN="| /usr/bin/src-hilite-lesspipe.sh %s"
 export LESS=' -R '
 
 catfunc () {
@@ -72,14 +75,17 @@ zle -N slash-after-dots
 bindkey . rationalise-dot
 bindkey / slash-after-dots
 
-# emacs() {
-#     if [[ $TERM == linux ]]
-#     then
-#         /usr/bin/emacs -nw "$@"
-#     else
-#         /usr/bin/emacs "$@" &!
-#     fi
-# }
+if [[ $(uname -s) == "Linux" ]]
+then
+	emacs() {
+		if [[ $TERM == linux ]]
+		then
+			/usr/bin/emacs -nw "$@"
+		else
+			/usr/bin/emacs "$@" &!
+		fi
+	}
+fi
 
 unsetopt automenu
 
@@ -110,11 +116,9 @@ precmd () {
 	    printf "\e]0;[%s]\a" $__last_cmd
         fi
     fi
-	echo -en "\a"
+    echo -en "\a"
 }
 REPORTTIME=10
-
-export PATH=~/bin:$PATH:/usr/local/bin
 
 # Colored and paged SVN
 svn() {
@@ -134,7 +138,7 @@ compdef '_files' svn logd
 tabs -4
 
 # Load local configuration
-. $HOME/.zshrc-local
+[[ -f $HOME/.zshrc-local ]] && source $HOME/.zshrc-local
 
 DIRSTACKSIZE=8
 setopt autopushd pushdminus pushdsilent pushdtohome
