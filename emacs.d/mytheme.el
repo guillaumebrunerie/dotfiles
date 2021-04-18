@@ -1,0 +1,51 @@
+(require 'autothemer)
+
+(autothemer-deftheme
+ mytheme "My theme"
+
+ ((((class color) (min-colors #xFFFFFF)))
+
+  (mytx       "#efefef")     ; Good
+  (mybg       "#1e1e1e")     ; Good
+  (mykeyword  "DarkViolet")  ; Good
+  (myconstant "DarkCyan")
+  (mybuiltin  "DarkCyan")
+  (mycomment  "#b11")        ; Good
+  (mydoc      "#f00")
+  (mystring   "#f70")        ; Good
+  (myvar      "#da6")        ; Good
+  (myfunname  "#04f")        ; Good
+  (myparam    "#0A0")        ; Good
+  (mytab      "#282828")     ; Good
+  (myline     "#383838")     ; Good
+  (myregion   "#1d3854")     ; Good
+  (myhvars    "#070")        ; Good
+  (mysearch   "Blue")
+  (myjsdctype "Red")
+  (myjsdcval  "Red")
+  (mywarning  "#b50")
+  (mywstrail  "#800")
+  )
+
+ ((default                      (:foreground mytx :background mybg :height 170))
+  (font-lock-comment-face       (:foreground mycomment))
+  (font-lock-constant-face      (:foreground myconstant))
+  (font-lock-builtin-face       (:foreground mybuiltin))
+  (font-lock-function-name-face (:foreground myfunname))
+  (font-lock-keyword-face       (:foreground mykeyword :weight 'bold))
+  (font-lock-string-face        (:foreground mystring))
+  (font-lock-variable-name-face (:foreground myvar))
+  (font-lock-doc-face           (:foreground mydoc))
+  (isearch                      (:background mysearch :distant-foreground mytx))
+  (js2-external-variable        ())
+  (js2-function-param           (:foreground myparam))
+  (js2-highlight-vars-face      (:background myhvars :distant-foreground mytx))
+  (js2-warning                  (:underline  mywarning))
+  (region                       (:background myregion))
+  (lazy-highlight               (:background myregion))
+  (whitespace-line              (:background myline :foreground nil))
+  (whitespace-tab               (:background mytab))
+  (whitespace-trailing          (:background mywstrail))
+  ))
+
+(provide-theme 'mytheme)
