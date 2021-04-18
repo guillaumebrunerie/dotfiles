@@ -355,7 +355,7 @@
    '(("gnu" . "http://elpa.gnu.org/packages/")
 	 ("melpa-stable" . "http://stable.melpa.org/packages/")))
  '(package-selected-packages
-   '(go-mode rainbow-mode autothemer zenburn-theme projectile xref-js2 js2-refactor js2-mode visual-fill-column csharp-mode yaml-mode ess haskell-mode auctex))
+   '(markdown-mode go-mode rainbow-mode autothemer zenburn-theme projectile xref-js2 js2-refactor js2-mode visual-fill-column csharp-mode yaml-mode ess haskell-mode auctex))
  '(preview-auto-cache-preamble t)
  '(preview-default-preamble
    '("\\RequirePackage["
