@@ -143,12 +143,15 @@
   ;; neither, we use the current indent-tabs-mode
   (let ((space-count (how-many "^  " (point-min) (point-max)))
         (tab-count (how-many "^\t" (point-min) (point-max))))
-    (if (> space-count tab-count) (setq indent-tabs-mode nil))
-    (if (> tab-count space-count) (setq indent-tabs-mode t))))
+    (setq indent-tabs-mode (if (> space-count tab-count) nil t))))
 
 (add-hook 'js2-mode-hook 'infer-indentation-style)
 
-(load-file "~/.emacs.d/phindent-mode.el")
+;; But not tabs by default, as it messes up various other modes (e.g.
+;; elisp and XML)
+(setq-default indent-tabs-mode nil)
+
+(load-file "~/.emacs.d/phindent-mode/phindent-mode.el")
 
 (add-hook 'js2-mode-hook 'phindent-mode)
 
@@ -249,75 +252,75 @@
  '(TeX-command-BibTeX "Biber")
  '(TeX-command-list
    '(("TeX" "%(PDF)%(tex) %`%S%(PDFout)%(mode)%' %t" TeX-run-TeX nil
-	  (plain-tex-mode texinfo-mode ams-tex-mode)
-	  :help "Run plain TeX")
-	 ("LaTeX" "%`%l%(mode)%' %t" TeX-run-TeX nil
-	  (latex-mode doctex-mode)
-	  :help "Run LaTeX")
-	 ("Makeinfo" "makeinfo %t" TeX-run-compile nil
-	  (texinfo-mode)
-	  :help "Run Makeinfo with Info output")
-	 ("Makeinfo HTML" "makeinfo --html %t" TeX-run-compile nil
-	  (texinfo-mode)
-	  :help "Run Makeinfo with HTML output")
-	 ("AmSTeX" "%(PDF)amstex %`%S%(PDFout)%(mode)%' %t" TeX-run-TeX nil
-	  (ams-tex-mode)
-	  :help "Run AMSTeX")
-	 ("ConTeXt" "texexec --once --texutil %(execopts)%t" TeX-run-TeX nil
-	  (context-mode)
-	  :help "Run ConTeXt once")
-	 ("ConTeXt Full" "texexec %(execopts)%t" TeX-run-TeX nil
-	  (context-mode)
-	  :help "Run ConTeXt until completion")
-	 ("BibTeX" "bibtex %s" TeX-run-BibTeX nil t :help "Run BibTeX")
-	 ("View" "evince %s.pdf" TeX-run-discard t t :help "Run Viewer")
-	 ("Print" "%p" TeX-run-command t t :help "Print the file")
-	 ("Queue" "%q" TeX-run-background nil t :help "View the printer queue" :visible TeX-queue-command)
-	 ("File" "%(o?)dvips %d -o %f " TeX-run-command t t :help "Generate PostScript file")
-	 ("Index" "makeindex %s" TeX-run-command nil t :help "Create index file")
-	 ("Check" "lacheck %s" TeX-run-compile nil
-	  (latex-mode)
-	  :help "Check LaTeX file for correctness")
-	 ("Spell" "(TeX-ispell-document \"\")" TeX-run-function nil t :help "Spell-check the document")
-	 ("Clean" "TeX-clean" TeX-run-function nil t :help "Delete generated intermediate files")
-	 ("Clean All" "(TeX-clean t)" TeX-run-function nil t :help "Delete generated intermediate and output files")
-	 ("Other" "" TeX-run-command t t :help "Run an arbitrary command")
-	 ("Biber" "biber %s.bcf" TeX-run-Biber nil t)))
+      (plain-tex-mode texinfo-mode ams-tex-mode)
+      :help "Run plain TeX")
+     ("LaTeX" "%`%l%(mode)%' %t" TeX-run-TeX nil
+      (latex-mode doctex-mode)
+      :help "Run LaTeX")
+     ("Makeinfo" "makeinfo %t" TeX-run-compile nil
+      (texinfo-mode)
+      :help "Run Makeinfo with Info output")
+     ("Makeinfo HTML" "makeinfo --html %t" TeX-run-compile nil
+      (texinfo-mode)
+      :help "Run Makeinfo with HTML output")
+     ("AmSTeX" "%(PDF)amstex %`%S%(PDFout)%(mode)%' %t" TeX-run-TeX nil
+      (ams-tex-mode)
+      :help "Run AMSTeX")
+     ("ConTeXt" "texexec --once --texutil %(execopts)%t" TeX-run-TeX nil
+      (context-mode)
+      :help "Run ConTeXt once")
+     ("ConTeXt Full" "texexec %(execopts)%t" TeX-run-TeX nil
+      (context-mode)
+      :help "Run ConTeXt until completion")
+     ("BibTeX" "bibtex %s" TeX-run-BibTeX nil t :help "Run BibTeX")
+     ("View" "evince %s.pdf" TeX-run-discard t t :help "Run Viewer")
+     ("Print" "%p" TeX-run-command t t :help "Print the file")
+     ("Queue" "%q" TeX-run-background nil t :help "View the printer queue" :visible TeX-queue-command)
+     ("File" "%(o?)dvips %d -o %f " TeX-run-command t t :help "Generate PostScript file")
+     ("Index" "makeindex %s" TeX-run-command nil t :help "Create index file")
+     ("Check" "lacheck %s" TeX-run-compile nil
+      (latex-mode)
+      :help "Check LaTeX file for correctness")
+     ("Spell" "(TeX-ispell-document \"\")" TeX-run-function nil t :help "Spell-check the document")
+     ("Clean" "TeX-clean" TeX-run-function nil t :help "Delete generated intermediate files")
+     ("Clean All" "(TeX-clean t)" TeX-run-function nil t :help "Delete generated intermediate and output files")
+     ("Other" "" TeX-run-command t t :help "Run an arbitrary command")
+     ("Biber" "biber %s.bcf" TeX-run-Biber nil t)))
  '(TeX-electric-sub-and-superscript nil)
  '(TeX-fold-macro-spec-list
    '(("[f]"
-	  ("footnote"))
-	 ("[i]"
-	  ("index"))
-	 ("*"
-	  ("item"))
-	 ("..."
-	  ("dots"))
-	 (1
-	  ("emph" "textit" "textsl" "textmd" "textrm" "textsf" "texttt" "textbf" "textsc" "textup"))))
+      ("footnote"))
+     ("[i]"
+      ("index"))
+     ("*"
+      ("item"))
+     ("..."
+      ("dots"))
+     (1
+      ("emph" "textit" "textsl" "textmd" "textrm" "textsf" "texttt" "textbf" "textsc" "textup"))))
  '(TeX-fold-type-list '(env macro comment))
  '(TeX-newline-function 'reindent-then-newline-and-indent)
  '(TeX-open-quote "\"")
  '(TeX-output-view-style
    '(("^dvi$"
-	  ("^landscape$" "^pstricks$\\|^pst-\\|^psfrag$")
-	  "%(o?)dvips -t landscape %d -o && gv %f")
-	 ("^dvi$" "^pstricks$\\|^pst-\\|^psfrag$" "%(o?)dvips %d -o && gv %f")
-	 ("^dvi$"
-	  ("^a4\\(?:dutch\\|paper\\|wide\\)\\|sem-a4$" "^landscape$")
-	  "%(o?)xdvi %dS -paper a4r -s 0 %d")
-	 ("^dvi$" "^a4\\(?:dutch\\|paper\\|wide\\)\\|sem-a4$" "%(o?)xdvi %dS -paper a4 %d")
-	 ("^dvi$"
-	  ("^a5\\(?:comb\\|paper\\)$" "^landscape$")
-	  "%(o?)xdvi %dS -paper a5r -s 0 %d")
-	 ("^dvi$" "^a5\\(?:comb\\|paper\\)$" "%(o?)xdvi %dS -paper a5 %d")
-	 ("^dvi$" "^b5paper$" "%(o?)xdvi %dS -paper b5 %d")
-	 ("^dvi$" "^letterpaper$" "%(o?)xdvi %dS -paper us %d")
-	 ("^dvi$" "^legalpaper$" "%(o?)xdvi %dS -paper legal %d")
-	 ("^dvi$" "^executivepaper$" "%(o?)xdvi %dS -paper 7.25x10.5in %d")
-	 ("^dvi$" "." "%(o?)xdvi %dS %d")
-	 ("^pdf$" "." "evince %o")
-	 ("^html?$" "." "netscape %o")))
+      ("^landscape$" "^pstricks$\\|^pst-\\|^psfrag$")
+      "%(o?)dvips -t landscape %d -o && gv %f")
+     ("^dvi$" "^pstricks$\\|^pst-\\|^psfrag$" "%(o?)dvips %d -o && gv %f")
+     ("^dvi$"
+      ("^a4\\(?:dutch\\|paper\\|wide\\)\\|sem-a4$" "^landscape$")
+      "%(o?)xdvi %dS -paper a4r -s 0 %d")
+     ("^dvi$" "^a4\\(?:dutch\\|paper\\|wide\\)\\|sem-a4$" "%(o?)xdvi %dS -paper a4 %d")
+     ("^dvi$"
+      ("^a5\\(?:comb\\|paper\\)$" "^landscape$")
+      "%(o?)xdvi %dS -paper a5r -s 0 %d")
+     ("^dvi$" "^a5\\(?:comb\\|paper\\)$" "%(o?)xdvi %dS -paper a5 %d")
+     ("^dvi$" "^b5paper$" "%(o?)xdvi %dS -paper b5 %d")
+     ("^dvi$" "^letterpaper$" "%(o?)xdvi %dS -paper us %d")
+     ("^dvi$" "^legalpaper$" "%(o?)xdvi %dS -paper legal %d")
+     ("^dvi$" "^executivepaper$" "%(o?)xdvi %dS -paper 7.25x10.5in %d")
+     ("^dvi$" "." "%(o?)xdvi %dS %d")
+     ("^pdf$" "." "evince %o")
+     ("^html?$" "." "netscape %o")))
  '(agda2-highlight-level 'interactive)
  '(agda2-include-dirs '("." ".."))
  '(agda2-program-args '("+RTS" "-M25G" "-RTS"))
@@ -339,24 +342,24 @@
 ]*" t)
  '(package-archives
    '(("gnu" . "https://elpa.gnu.org/packages/")
-	 ("melpa-stable" . "https://stable.melpa.org/packages/")))
+     ("melpa-stable" . "https://stable.melpa.org/packages/")))
  '(package-selected-packages
    '(markdown-mode go-mode rainbow-mode autothemer js2-refactor js2-mode nhexl-mode visual-fill-column csharp-mode yaml-mode ess haskell-mode auctex))
  '(preview-auto-cache-preamble t)
  '(preview-default-preamble
    '("\\RequirePackage["
-	 ("," . preview-default-option-list)
-	 "]{preview}[2004/11/05]"))
+     ("," . preview-default-option-list)
+     "]{preview}[2004/11/05]"))
  '(preview-preserve-counters t)
  '(preview-scale-function 1.3)
  '(read-quoted-char-radix 16)
  '(safe-local-variable-values
    '((eval let
-		   ((default-directory
-			  (locate-dominating-file buffer-file-name ".dir-locals.el")))
-		   (make-local-variable 'coq-prog-name)
-		   (setq coq-prog-name
-				 (expand-file-name "../hoqtop")))))
+           ((default-directory
+              (locate-dominating-file buffer-file-name ".dir-locals.el")))
+           (make-local-variable 'coq-prog-name)
+           (setq coq-prog-name
+                 (expand-file-name "../hoqtop")))))
  '(sentence-end-double-space nil)
  '(tab-width 4)
  '(whitespace-style '(face trailing lines-tail empty tabs)))
