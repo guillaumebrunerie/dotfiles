@@ -155,6 +155,13 @@
 
 (add-hook 'js2-mode-hook 'phindent-mode)
 
+;;;;;;;;;
+;; CSS ;;
+;;;;;;;;;
+
+(add-hook 'css-mode-hook 'infer-indentation-style)
+(add-hook 'css-mode-hook 'phindent-mode)
+
 ;;;;;;;;;;;;
 ;; PovRay ;;
 ;;;;;;;;;;;;
