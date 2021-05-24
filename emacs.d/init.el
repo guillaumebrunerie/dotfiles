@@ -136,7 +136,7 @@
 
 (load-file "~/.emacs.d/js2-highlight-vars.el")
 (add-hook 'js2-mode-hook #'js2-highlight-vars-mode)
-(add-hook 'js2-mode-hook (lambda () (setq js2-indent-switch-body t)))
+(add-hook 'js2-mode-hook (lambda () (setq js-switch-indent-offset 4)))
 
 (defun infer-indentation-style ()
   ;; if our source file uses tabs, we use tabs, if spaces spaces, and if
@@ -341,7 +341,6 @@
  '(fill-column 100)
  '(haskell-mode-hook '(turn-on-haskell-indent))
  '(home-end-enable t)
- '(js2-indent-switch-body t)
  '(js2-strict-missing-semi-warning t)
  '(ns-alternate-modifier 'none)
  '(ns-command-modifier 'meta)
