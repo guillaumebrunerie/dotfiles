@@ -155,11 +155,19 @@
 
 (add-hook 'js2-mode-hook 'phindent-mode)
 
+;;;;;;;;;;
+;; HTML ;;
+;;;;;;;;;;
+
+(add-hook 'html-mode-hook 'infer-indentation-style)
+(add-hook 'html-mode-hook (lambda () (setq tab-width 2)))
+
 ;;;;;;;;;
 ;; CSS ;;
 ;;;;;;;;;
 
 (add-hook 'css-mode-hook 'infer-indentation-style)
+(add-hook 'css-mode-hook (lambda () (setq tab-width 2)))
 (add-hook 'css-mode-hook 'phindent-mode)
 
 ;;;;;;;;;;;;
@@ -253,12 +261,15 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(LaTeX-command-style '(("" "%(PDF)%(latex) -file-line-error %S%(PDFout)")))
+ '(LaTeX-command-style
+   (quote
+    (("" "%(PDF)%(latex) -file-line-error %S%(PDFout)"))))
  '(LaTeX-math-abbrev-prefix "*")
  '(TeX-close-quote "\"")
  '(TeX-command-BibTeX "Biber")
  '(TeX-command-list
-   '(("TeX" "%(PDF)%(tex) %`%S%(PDFout)%(mode)%' %t" TeX-run-TeX nil
+   (quote
+    (("TeX" "%(PDF)%(tex) %`%S%(PDFout)%(mode)%' %t" TeX-run-TeX nil
       (plain-tex-mode texinfo-mode ams-tex-mode)
       :help "Run plain TeX")
      ("LaTeX" "%`%l%(mode)%' %t" TeX-run-TeX nil
@@ -292,10 +303,11 @@
      ("Clean" "TeX-clean" TeX-run-function nil t :help "Delete generated intermediate files")
      ("Clean All" "(TeX-clean t)" TeX-run-function nil t :help "Delete generated intermediate and output files")
      ("Other" "" TeX-run-command t t :help "Run an arbitrary command")
-     ("Biber" "biber %s.bcf" TeX-run-Biber nil t)))
+     ("Biber" "biber %s.bcf" TeX-run-Biber nil t))))
  '(TeX-electric-sub-and-superscript nil)
  '(TeX-fold-macro-spec-list
-   '(("[f]"
+   (quote
+    (("[f]"
       ("footnote"))
      ("[i]"
       ("index"))
@@ -304,12 +316,13 @@
      ("..."
       ("dots"))
      (1
-      ("emph" "textit" "textsl" "textmd" "textrm" "textsf" "texttt" "textbf" "textsc" "textup"))))
- '(TeX-fold-type-list '(env macro comment))
- '(TeX-newline-function 'reindent-then-newline-and-indent)
+      ("emph" "textit" "textsl" "textmd" "textrm" "textsf" "texttt" "textbf" "textsc" "textup")))))
+ '(TeX-fold-type-list (quote (env macro comment)))
+ '(TeX-newline-function (quote reindent-then-newline-and-indent))
  '(TeX-open-quote "\"")
  '(TeX-output-view-style
-   '(("^dvi$"
+   (quote
+    (("^dvi$"
       ("^landscape$" "^pstricks$\\|^pst-\\|^psfrag$")
       "%(o?)dvips -t landscape %d -o && gv %f")
      ("^dvi$" "^pstricks$\\|^pst-\\|^psfrag$" "%(o?)dvips %d -o && gv %f")
@@ -327,45 +340,57 @@
      ("^dvi$" "^executivepaper$" "%(o?)xdvi %dS -paper 7.25x10.5in %d")
      ("^dvi$" "." "%(o?)xdvi %dS %d")
      ("^pdf$" "." "evince %o")
-     ("^html?$" "." "netscape %o")))
- '(agda2-highlight-level 'interactive)
- '(agda2-include-dirs '("." ".."))
- '(agda2-program-args '("+RTS" "-M25G" "-RTS"))
+     ("^html?$" "." "netscape %o"))))
+ '(agda2-highlight-level (quote interactive))
+ '(agda2-include-dirs (quote ("." "..")))
+ '(agda2-program-args (quote ("+RTS" "-M25G" "-RTS")))
  '(asm-comment-char 59)
  '(compilation-ask-about-save nil)
  '(compilation-read-command t)
  '(coq-prog-name "/usr/bin/coqtop")
  '(current-language-environment "UTF-8")
  '(custom-safe-themes
-   '("78e9a3e1c519656654044aeb25acb8bec02579508c145b6db158d2cfad87c44e" default))
+   (quote
+    ("78e9a3e1c519656654044aeb25acb8bec02579508c145b6db158d2cfad87c44e" default)))
  '(fill-column 100)
- '(haskell-mode-hook '(turn-on-haskell-indent))
+ '(haskell-mode-hook (quote (turn-on-haskell-indent)))
  '(home-end-enable t)
  '(js2-strict-missing-semi-warning t)
- '(ns-alternate-modifier 'none)
- '(ns-command-modifier 'meta)
+ '(ns-alternate-modifier (quote none))
+ '(ns-command-modifier (quote meta))
  '(outline-regexp "[ 
 ]*" t)
  '(package-archives
-   '(("gnu" . "https://elpa.gnu.org/packages/")
-     ("melpa-stable" . "https://stable.melpa.org/packages/")))
+   (quote
+    (("gnu" . "https://elpa.gnu.org/packages/")
+     ("melpa-stable" . "https://stable.melpa.org/packages/"))))
  '(package-selected-packages
-   '(markdown-mode go-mode rainbow-mode autothemer js2-refactor js2-mode nhexl-mode visual-fill-column csharp-mode yaml-mode ess haskell-mode auctex))
+   (quote
+    (rjsx-mode markdown-mode go-mode rainbow-mode autothemer js2-refactor js2-mode nhexl-mode visual-fill-column csharp-mode yaml-mode ess haskell-mode auctex)))
  '(preview-auto-cache-preamble t)
  '(preview-default-preamble
-   '("\\RequirePackage["
+   (quote
+    ("\\RequirePackage["
      ("," . preview-default-option-list)
-     "]{preview}[2004/11/05]"))
+     "]{preview}[2004/11/05]")))
  '(preview-preserve-counters t)
  '(preview-scale-function 1.3)
  '(read-quoted-char-radix 16)
  '(safe-local-variable-values
-   '((eval let
+   (quote
+    ((eval let
            ((default-directory
               (locate-dominating-file buffer-file-name ".dir-locals.el")))
-           (make-local-variable 'coq-prog-name)
+           (make-local-variable
+            (quote coq-prog-name))
            (setq coq-prog-name
-                 (expand-file-name "../hoqtop")))))
+                 (expand-file-name "../hoqtop"))))))
  '(sentence-end-double-space nil)
  '(tab-width 4)
- '(whitespace-style '(face trailing lines-tail empty tabs)))
+ '(whitespace-style (quote (face trailing lines-tail empty tabs))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
