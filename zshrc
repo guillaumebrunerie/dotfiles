@@ -143,3 +143,5 @@ tabs -4
 DIRSTACKSIZE=8
 setopt autopushd pushdminus pushdsilent pushdtohome
 alias dh='dirs -v'
+
+alias dropbox-ignore='attr -s com.dropbox.ignored -V 1'

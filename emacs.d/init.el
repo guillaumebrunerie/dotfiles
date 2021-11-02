@@ -160,6 +160,8 @@
 (setq gc-cons-threshold 100000000)
 (setq read-process-output-max (* 1024 1024))
 
+(setq create-lockfiles nil)
+
 ;;;;;;;;;;
 ;; HTML ;;
 ;;;;;;;;;;
@@ -361,9 +363,9 @@
 ]*" t)
  '(package-archives
    '(("gnu" . "https://elpa.gnu.org/packages/")
-     ("melpa-stable" . "https://stable.melpa.org/packages/")))
+     ("melpa" . "https://melpa.org/packages/")))
  '(package-selected-packages
-   '(web-mode lsp-mode rjsx-mode markdown-mode go-mode rainbow-mode autothemer js2-refactor js2-mode nhexl-mode visual-fill-column csharp-mode yaml-mode ess haskell-mode auctex))
+   '(tree-sitter-langs tree-sitter web-mode lsp-mode rjsx-mode markdown-mode go-mode rainbow-mode autothemer js2-refactor js2-mode nhexl-mode visual-fill-column csharp-mode yaml-mode ess haskell-mode auctex))
  '(preview-auto-cache-preamble t)
  '(preview-default-preamble
    '("\\RequirePackage["
