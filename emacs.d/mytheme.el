@@ -1,3 +1,4 @@
+(straight-use-package 'autothemer)
 (require 'autothemer)
 
 (autothemer-deftheme
@@ -6,6 +7,7 @@
  ((((class color) (min-colors #xFFFFFF)))
 
   (mytx       "#efefef")     ; Good
+  (myoperator "#bbbbbb")
   (mybg       "#1e1e1e")     ; Good
   (mykeyword  "DarkViolet")  ; Good
   (myconstant "DarkCyan")
@@ -31,7 +33,7 @@
   (font-lock-comment-face       (:foreground mycomment))
   (font-lock-constant-face      (:foreground myconstant))
   (font-lock-builtin-face       (:foreground mybuiltin))
-  (font-lock-function-name-face (:foreground myfunname))
+  (font-lock-function-name-face (:foreground myvar))
   (font-lock-keyword-face       (:foreground mykeyword :weight 'bold))
   (font-lock-string-face        (:foreground mystring))
   (font-lock-variable-name-face (:foreground myvar))
@@ -46,6 +48,13 @@
   (whitespace-line              (:background myline :foreground nil))
   (whitespace-tab               (:background mytab))
   (whitespace-trailing          (:background mywstrail))
-  ))
+  (tree-sitter-hl-face:operator (:foreground myoperator))
+  (tree-sitter-hl-face:variable.parameter (:foreground myparam))
+  (tree-sitter-hl-face:variable (:foreground myvar))
+  (tree-sitter-hl-face:function (:foreground myvar))
+  (tree-sitter-hl-face:property (:foreground mytx))
+  (tree-sitter-hl-face:function.call (:foreground mytx))
+  (tree-sitter-hl-face:constructor (:foreground myfunname))
+  (lsp-lsp-flycheck-info-unnecessary-face (:foreground nil :underline '(:style wave :color "ForestGreen")))))
 
 (provide-theme 'mytheme)

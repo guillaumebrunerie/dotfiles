@@ -1,5 +1,29 @@
-(require 'package)
-(package-initialize)
+;;;;;;;;;;;;;;;;;;;;;;;;
+;; Package management ;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Initialize straight.el
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+;; Configure the use-package macro to work with straight
+(straight-use-package 'use-package)
+(use-package straight
+  :custom (straight-use-package-by-default t))
+
+;;;;;;;;;;;;;
+;; Various ;;
+;;;;;;;;;;;;;
 
 ; No welcome message
 (setq inhibit-startup-message t)
@@ -8,15 +32,13 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 
-; Mettre un titre aux fenêtres
+; Customize window title
 (setq frame-title-format '(buffer-file-name "Emacs: %b (%f)" "Emacs: %b"))
 
-; Afficher le numéro de colonne
+; Column number
 (column-number-mode 1)
-(linum-mode 1)
 
-; Mode texte en auto-fill par défaut
-; (créé une nouvelle ligne à chaque fois que vous taper du texte)
+; Auto-fill by default in text-mode
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 
 ; Recherche automatique des fermetures et ouvertures des parenthèses
@@ -50,9 +72,8 @@
 ; Molette de la souris
 (mouse-wheel-mode 1)
 
-;(if (and (boundp 'window-system) window-system)
-;    (require 'font-lock))
-
+; No annoying lockfiles
+(setq create-lockfiles nil)
 
 ;;;;;;;;;;;
 ;; OCaml ;;
@@ -105,62 +126,102 @@
 (ignore-errors (load "auctex.el" nil t t))
 (ignore-errors (load "preview-latex.el" nil t t))
 
+(add-hook 'LaTeX-mode-hook
+          '(lambda ()
+             (setq ispell-tex-skip-alists
+                   (list
+                     (append
+                       (car ispell-tex-skip-alists) 
+                       '(("[^\\]\\$" . "[^\\]\\$") ("\\[" . "\\]") ("\\\\operatorname" ispell-tex-arg-end)))
+                     (append
+                       (cadr ispell-tex-skip-alists)
+                       '(("align\\*?" . "\\\\end{align\\*?}")
+                         ))))))
 
-;;;;;;;;;;;;
-;; YamlPP ;;
-;;;;;;;;;;;;
+;;;;;;;;;
+;; Git ;;
+;;;;;;;;;
 
-(fset 'êf-yamlpp-fr
-   [?< ?# ?f ?r ?> ?< ?/ ?# ?f ?r ?> left left left left left left])
-(fset 'êo-yamlpp-eo
-   [?< ?# ?e ?o ?> ?< ?/ ?# ?e ?o ?> left left left left left left])
-(fset 'êe-yamlpp-en
-   [?< ?# ?e ?n ?> ?< ?/ ?# ?e ?n ?> left left left left left left])
+(use-package magit)
 
 ;;;;;;;;;;;;;;;;
 ;; Javascript ;;
 ;;;;;;;;;;;;;;;;
 
-(require 'js2-mode)
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-
-;; Better imenu
-(add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
-
-(require 'js2-refactor)
-
-(add-hook 'js2-mode-hook #'js2-refactor-mode)
-(js2r-add-keybindings-with-prefix "C-c C-r")
-
-(global-whitespace-mode 1)
-
-(load-file "~/.emacs.d/js2-highlight-vars.el")
-(add-hook 'js2-mode-hook #'js2-highlight-vars-mode)
-(add-hook 'js2-mode-hook (lambda () (setq js-switch-indent-offset 4)))
+(use-package phindent-mode
+  :straight (:host github :repo "guillaumebrunerie/phindent-mode"))
 
 (defun infer-indentation-style ()
   ;; if our source file uses tabs, we use tabs, if spaces spaces, and if
   ;; neither, we use the current indent-tabs-mode
   (let ((space-count (how-many "^  " (point-min) (point-max)))
         (tab-count (how-many "^\t" (point-min) (point-max))))
-    (setq indent-tabs-mode (if (> space-count tab-count) nil t))))
+    (when (> space-count tab-count)
+      (setq-local indent-tabs-mode nil))
+    (when (< space-count tab-count)
+      (setq-local indent-tabs-mode t))))
 
-(add-hook 'js2-mode-hook 'infer-indentation-style)
+(use-package js2-mode
+  :hook
+  (js2-mode . infer-indentation-style)
+  (js2-mode . phindent-mode)
+  :config
+  (setq js-switch-indent-offset 4))
 
-(add-hook 'rjsx-mode (lambda () (seqt indent-tabs-mode t)))
+(use-package js2-refactor
+  :hook (js2-mode . js2-refactor-mode)
+  :config
+  (js2r-add-keybindings-with-prefix "C-c C-r"))
 
-;; But not tabs by default, as it messes up various other modes (e.g.
-;; elisp and XML)
-(setq-default indent-tabs-mode nil)
 
-(load-file "~/.emacs.d/phindent-mode/phindent-mode.el")
+(use-package js2-highlight-vars
+  :hook (js2-mode . js2-highlight-vars-mode))
 
-(add-hook 'js2-mode-hook 'phindent-mode)
+(use-package rjsx-mode
+  :hook
+  (rjsx-mode . infer-indentation-style)
+  (rjsx-mode . phindent-mode))
 
-(setq gc-cons-threshold 100000000)
-(setq read-process-output-max (* 1024 1024))
+(use-package ultimate-js-mode
+  :straight (:local-repo "ultimate-js-mode")
+  :mode "\\.[jt]sx?\\'"
+  :hook
+  (ultimate-js-mode . infer-indentation-style)
+  (ultimate-js-mode . phindent-mode)
+  (ultimate-js-mode . lsp))
 
-(setq create-lockfiles nil)
+;;;;;;;;;;;;;;;;
+;; Completion ;;
+;;;;;;;;;;;;;;;;
+
+(use-package which-key
+  :config
+  (setq which-key-idle-delay 0.5)
+  (which-key-mode))
+
+(use-package company
+  :hook (after-init . global-company-mode)
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.2))
+
+(use-package flycheck)
+
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :init
+  (setq gc-cons-threshold 100000000)
+  (setq read-process-output-max (* 1024 1024))
+  (setq lsp-keymap-prefix "C-c C-l")
+  :config
+  (lsp-enable-which-key-integration t))
+
+(use-package lsp-ui
+  :config
+  (setq lsp-ui-sideline-show-diagnostics t)
+  (setq lsp-ui-sideline-show-hover t)
+  (setq lsp-ui-sideline-show-symbol t)
+  (setq lsp-ui-sideline-show-code-actions t))
 
 ;;;;;;;;;;
 ;; HTML ;;
@@ -176,26 +237,6 @@
 (add-hook 'css-mode-hook 'infer-indentation-style)
 (add-hook 'css-mode-hook (lambda () (setq tab-width 2)))
 (add-hook 'css-mode-hook 'phindent-mode)
-
-;;;;;;;;;;;;
-;; PovRay ;;
-;;;;;;;;;;;;
-
-(add-to-list 'load-path "~/.emacs.d/pov-mode-3.2")
-(autoload 'pov-mode "pov-mode" "PoVray scene file mode" t)
-(add-to-list 'auto-mode-alist '("\\.pov\\'" . pov-mode))
-(add-to-list 'auto-mode-alist '("\\.inc\\'" . pov-mode))
-
-;;;;;;;;;;;;
-;; Maxima ;;
-;;;;;;;;;;;;
-
-(push "/usr/local/share/emacs/site-lisp" load-path)
-(push "/usr/share/maxima/5.13.0/emacs" load-path)
-(autoload 'imaxima  "imaxima" "Image support for Maxima." t)
-(autoload 'maxima "maxima" "Frontend for maxima" t)
-(autoload 'imath-mode "imath" "Imath mode for math formula input" t)
-(setq imaxima-use-maxima-mode-flag t)
 
 ;;;;;;;;;
 ;; Lua ;;
@@ -227,18 +268,6 @@
 (ignore-errors (require 'haskell-mode))
 (add-to-list 'Info-default-directory-list "/usr/share/emacs/site-lisp/haskell-mode/")
 
-(add-hook 'LaTeX-mode-hook
-          '(lambda ()
-             (setq ispell-tex-skip-alists
-                   (list
-                     (append
-                       (car ispell-tex-skip-alists) 
-                       '(("[^\\]\\$" . "[^\\]\\$") ("\\[" . "\\]") ("\\\\operatorname" ispell-tex-arg-end)))
-                     (append
-                       (cadr ispell-tex-skip-alists)
-                       '(("align\\*?" . "\\\\end{align\\*?}")
-                         ))))))
-
 ;;;;;;;;;;;;;;;;;;;;;
 ;; C (for NetHack) ;;
 ;;;;;;;;;;;;;;;;;;;;;
@@ -255,9 +284,6 @@
 
 ;; Maximize
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
-
-(load-file "~/.emacs.d/mytheme.el")
-(enable-theme 'mytheme)
 
 ; Local configuration
 (when (file-exists-p "~/.emacs.d/init-local.el")
@@ -356,16 +382,12 @@
  '(fill-column 100)
  '(haskell-mode-hook '(turn-on-haskell-indent))
  '(home-end-enable t)
+ '(js-indent-align-list-continuation nil)
  '(js2-strict-missing-semi-warning t)
  '(ns-alternate-modifier 'none)
  '(ns-command-modifier 'meta)
  '(outline-regexp "[ 
 ]*" t)
- '(package-archives
-   '(("gnu" . "https://elpa.gnu.org/packages/")
-     ("melpa" . "https://melpa.org/packages/")))
- '(package-selected-packages
-   '(tree-sitter-langs tree-sitter web-mode lsp-mode rjsx-mode markdown-mode go-mode rainbow-mode autothemer js2-refactor js2-mode nhexl-mode visual-fill-column csharp-mode yaml-mode ess haskell-mode auctex))
  '(preview-auto-cache-preamble t)
  '(preview-default-preamble
    '("\\RequirePackage["
@@ -375,7 +397,8 @@
  '(preview-scale-function 1.3)
  '(read-quoted-char-radix 16)
  '(safe-local-variable-values
-   '((eval let
+   '((comment-fill-column . 80)
+     (eval let
            ((default-directory
               (locate-dominating-file buffer-file-name ".dir-locals.el")))
            (make-local-variable 'coq-prog-name)
@@ -384,10 +407,15 @@
  '(sentence-end-double-space nil)
  '(sgml-basic-offset 4)
  '(tab-width 4)
+ '(tree-sitter-debug-highlight-jump-region t)
+ '(tree-sitter-debug-jump-buttons t)
  '(whitespace-style '(face trailing lines-tail empty tabs)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(lsp-lsp-flycheck-info-unnecessary-face ((t (:underline (:color "ForestGreen" :style wave)))) t))
+
+(load-file "~/.emacs.d/mytheme.el")
+(enable-theme 'mytheme)
