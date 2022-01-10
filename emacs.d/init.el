@@ -409,6 +409,23 @@
  '(tab-width 4)
  '(tree-sitter-debug-highlight-jump-region t)
  '(tree-sitter-debug-jump-buttons t)
+ '(vc-annotate-color-map
+   '((20 . "#FA99B7")
+     (40 . "#FE9A9F")
+     (60 . "#F89F88")
+     (80 . "#ECA777")
+     (100 . "#D9AF6D")
+     (120 . "#C2B86D")
+     (140 . "#A8BF75")
+     (160 . "#8BC485")
+     (180 . "#6CC89C")
+     (200 . "#49C9B5")
+     (220 . "#21C9CE")
+     (240 . "#0EC7E4")
+     (260 . "#3CC3F5")
+     (280 . "#6ABDFE")
+     (300 . "#95B5FE")
+     (320 . "#BAACF6")))
  '(whitespace-style '(face trailing lines-tail empty tabs)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
