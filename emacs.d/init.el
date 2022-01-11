@@ -75,6 +75,9 @@
 ; No annoying lockfiles
 (setq create-lockfiles nil)
 
+;; History for minibuffer
+(savehist-mode)
+
 ;;;;;;;;;;;
 ;; OCaml ;;
 ;;;;;;;;;;;
@@ -145,6 +148,18 @@
 (use-package magit)
 
 ;;;;;;;;;;;;;;;;
+;; Projectile ;;
+;;;;;;;;;;;;;;;;
+
+(use-package projectile
+  :config
+  (projectile-mode +1)
+  (setq projectile-enable-caching t)
+  (setq projectile-indexing-method 'hybrid)
+  (define-key projectile-mode-map (kbd "C-c C-p") 'projectile-command-map)
+  (push "makefile" projectile-project-root-files-bottom-up))
+
+;;;;;;;;;;;;;;;;
 ;; Javascript ;;
 ;;;;;;;;;;;;;;;;
 
@@ -165,6 +180,7 @@
   :hook
   (js2-mode . infer-indentation-style)
   (js2-mode . phindent-mode)
+  (js2-mode . whitespace-mode)
   :config
   (setq js-switch-indent-offset 4))
 
@@ -180,14 +196,16 @@
 (use-package rjsx-mode
   :hook
   (rjsx-mode . infer-indentation-style)
-  (rjsx-mode . phindent-mode))
+  (rjsx-mode . phindent-mode)
+  (rjsx-mode . whitespace-mode))
 
 (use-package ultimate-js-mode
-  :straight (:local-repo "ultimate-js-mode")
+  :straight (:host github :repo "guillaumebrunerie/ultimate-js-mode")
   :mode "\\.[jt]sx?\\'"
   :hook
   (ultimate-js-mode . infer-indentation-style)
   (ultimate-js-mode . phindent-mode)
+  (ultimate-js-mode . whitespace-mode)
   (ultimate-js-mode . lsp))
 
 ;;;;;;;;;;;;;;;;
@@ -219,8 +237,6 @@
 (use-package lsp-ui
   :config
   (setq lsp-ui-sideline-show-diagnostics t)
-  (setq lsp-ui-sideline-show-hover t)
-  (setq lsp-ui-sideline-show-symbol t)
   (setq lsp-ui-sideline-show-code-actions t))
 
 ;;;;;;;;;;

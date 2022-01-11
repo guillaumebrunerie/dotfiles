@@ -55,6 +55,7 @@
   (tree-sitter-hl-face:property (:foreground mytx))
   (tree-sitter-hl-face:function.call (:foreground mytx))
   (tree-sitter-hl-face:constructor (:foreground myfunname))
+  (tree-sitter-hl-face:punctuation.special (:foreground mystring :weight 'bold))
   (lsp-lsp-flycheck-info-unnecessary-face (:foreground nil :underline '(:style wave :color "ForestGreen")))))
 
 (provide-theme 'mytheme)
