@@ -176,13 +176,19 @@
     (when (< space-count tab-count)
       (setq-local indent-tabs-mode t))))
 
+(defun infer-indentation-amount ()
+  (let ((two-indented-lines (how-many "^  [^ ]" (point-min) (point-max))))
+    (when (> two-indented-lines 2)
+      (setq-local js-indent-level 2))))
+
 (use-package js2-mode
   :hook
   (js2-mode . infer-indentation-style)
+  (js2-mode . infer-indentation-amount)
   (js2-mode . phindent-mode)
   (js2-mode . whitespace-mode)
   :config
-  (setq js-switch-indent-offset 4))
+  (setq js-switch-indent-offset js-indent-level))
 
 (use-package js2-refactor
   :hook (js2-mode . js2-refactor-mode)
@@ -204,6 +210,7 @@
   :mode "\\.[jt]sx?\\'"
   :hook
   (ultimate-js-mode . infer-indentation-style)
+  (ultimate-js-mode . infer-indentation-amount)
   (ultimate-js-mode . phindent-mode)
   (ultimate-js-mode . whitespace-mode)
   (ultimate-js-mode . lsp))
@@ -217,13 +224,29 @@
   (setq which-key-idle-delay 0.5)
   (which-key-mode))
 
+(use-package selectrum
+  :config (selectrum-mode +1))
+
+(use-package selectrum-prescient
+  :config
+  (selectrum-prescient-mode +1)
+  (prescient-persist-mode +1)
+  (setq prescient-filter-method '(fuzzy)))
+
 (use-package company
-  :hook (after-init . global-company-mode)
+  :hook
+  (after-init . global-company-mode)
   :custom
   (company-minimum-prefix-length 1)
   (company-idle-delay 0.2))
 
-(use-package flycheck)
+(use-package company-prescient
+  :config
+  (company-prescient-mode +1))
+
+;;;;;;;;;;;;;;;;;;;;;
+;; Language Server ;;
+;;;;;;;;;;;;;;;;;;;;;
 
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
@@ -238,6 +261,8 @@
   :config
   (setq lsp-ui-sideline-show-diagnostics t)
   (setq lsp-ui-sideline-show-code-actions t))
+
+(use-package flycheck)
 
 ;;;;;;;;;;
 ;; HTML ;;
