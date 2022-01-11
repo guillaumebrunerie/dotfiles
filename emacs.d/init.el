@@ -233,6 +233,10 @@
   (prescient-persist-mode +1)
   (setq prescient-filter-method '(fuzzy)))
 
+(use-package marginalia
+  :config
+  (marginalia-mode +1))
+
 (use-package company
   :hook
   (after-init . global-company-mode)
