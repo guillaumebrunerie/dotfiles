@@ -231,7 +231,7 @@
   :config
   (selectrum-prescient-mode +1)
   (prescient-persist-mode +1)
-  (setq prescient-filter-method '(fuzzy)))
+  (setq prescient-filter-method '(regexp fuzzy)))
 
 (use-package marginalia
   :config
