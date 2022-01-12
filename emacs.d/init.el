@@ -248,6 +248,10 @@
   :config
   (company-prescient-mode +1))
 
+;; Case insensitive fuzzy completion in buffer
+(add-to-list 'completion-styles 'flex)
+(setq completion-ignore-case t)
+
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Language Server ;;
 ;;;;;;;;;;;;;;;;;;;;;
