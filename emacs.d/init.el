@@ -141,6 +141,37 @@
                        '(("align\\*?" . "\\\\end{align\\*?}")
                          ))))))
 
+;;;;;;;;;;;;;;;;;;;;;;;
+;; Terminal emulator ;;
+;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar vterm-background-cookies nil)
+(defun toggle-vterm-background ()
+  "Set up a different background color if we are in vterm mode but not in vterm copy mode"
+  (if (and (string= major-mode "vterm-mode") (not vterm-copy-mode))
+	  (setq vterm-background-cookies (cons (face-remap-add-relative 'default 'vterm-background) (face-remap-add-relative 'fringe 'vterm-background)))
+	(face-remap-remove-relative (car vterm-background-cookies))
+	(face-remap-remove-relative (cdr vterm-background-cookies))))
+
+(use-package vterm
+  ;; :custom
+  ;; (vterm-buffer-name-string "%s [vterm]")
+  :hook
+  (vterm-mode . (lambda () (text-scale-adjust -1)))
+  (vterm-mode . toggle-vterm-background)
+  (vterm-copy-mode . toggle-vterm-background))
+
+(use-package multi-vterm
+  :bind
+  (("C-c t" . multi-vterm-project) ))
+
+;; If we aren’t in any project, make multi-vterm believe we're in a project at ~
+(advice-add 'multi-vterm-project-root :filter-return (lambda (r) (or r "~")))
+
+(use-package shell-script-mode
+  :straight nil
+  :mode "\\(\\.sh\\'\\|zshrc\\)")
+
 ;;;;;;;;;
 ;; Git ;;
 ;;;;;;;;;
@@ -165,7 +196,6 @@
 
 (use-package phindent-mode
   :straight (:host github :repo "guillaumebrunerie/phindent-mode"))
-
 (defun infer-indentation-style ()
   ;; if our source file uses tabs, we use tabs, if spaces spaces, and if
   ;; neither, we use the current indent-tabs-mode
@@ -175,7 +205,6 @@
       (setq-local indent-tabs-mode nil))
     (when (< space-count tab-count)
       (setq-local indent-tabs-mode t))))
-
 (defun infer-indentation-amount ()
   (let ((two-indented-lines (how-many "^  [^ ]" (point-min) (point-max))))
     (when (> two-indented-lines 2)
@@ -189,13 +218,10 @@
   (js2-mode . whitespace-mode)
   :config
   (setq js-switch-indent-offset js-indent-level))
-
 (use-package js2-refactor
   :hook (js2-mode . js2-refactor-mode)
   :config
   (js2r-add-keybindings-with-prefix "C-c C-r"))
-
-
 (use-package js2-highlight-vars
   :hook (js2-mode . js2-highlight-vars-mode))
 
@@ -251,6 +277,62 @@
 ;; Case insensitive fuzzy completion in buffer
 (add-to-list 'completion-styles 'flex)
 (setq completion-ignore-case t)
+
+;;;;;;;;;;;;;;;;;;
+;; Code folding ;;
+;;;;;;;;;;;;;;;;;;
+
+(defun my/hs-is-folded ()
+  "Returns non-nil if the current line is folded, and returns the end position of the folding" 
+  (let* ((overlays-on-line (append (overlays-in (point-at-eol) (+ (point-at-eol) 1)) (overlays-in (1- (point-at-bol)) (point-at-bol)))))
+	(seq-some (lambda (o) (and (overlay-get o 'hs) (overlay-end o))) overlays-on-line)))	
+
+(defun my/hs-toggle (arg)
+  "If the current line is folded, unfold only one level of it, otherwise fold it."
+  (interactive "p")
+  (if-let ((fold-position (my/hs-is-folded)))
+	  (save-excursion
+		(goto-char fold-position)
+		(hs-hide-level arg))
+	(save-excursion
+	  (move-end-of-line arg)
+	  (hs-hide-block))))
+
+(defun my/hs-open (arg)
+  "Unfold entirely the current line"
+  (interactive "p")
+  (save-excursion
+	(if (> arg 1)
+		(hs-show-all)
+	  (if-let ((fold-position (my/hs-is-folded)))
+		  (progn
+			(goto-char fold-position)
+			(hs-show-block))
+		(move-beginning-of-line arg)
+		(hs-show-block)))))
+
+(defun my/hs-close (arg)
+  (interactive "p")
+  (save-excursion
+	(if (> arg 1)
+		(hs-hide-all)
+	  (move-end-of-line arg)
+	  (hs-hide-block))))
+
+(defface hs-folded '((t :background "#782200" :foreground "#737373")) "Dots")
+
+(use-package hs-minor-mode
+  :straight nil
+  :bind
+  (("C-<tab>" . my/hs-toggle)
+   ("<backtab>" . my/hs-close)
+   ("<C-iso-lefttab>" . my/hs-open))
+  :custom
+  (hs-hide-comments-when-hiding-all nil)
+  :config
+  (hs-minor-mode)
+  (setq hs-set-up-overlay (lambda (o) (overlay-put o 'display (concat " " (propertize "[···]" 'face 'hs-folded))))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Language Server ;;

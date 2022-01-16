@@ -26,8 +26,7 @@
   (myjsdctype "Red")
   (myjsdcval  "Red")
   (mywarning  "#b50")
-  (mywstrail  "#800")
-  )
+  (mywstrail  "#800"))
 
  ((default                      (:foreground mytx :background mybg :height 170))
   (font-lock-comment-face       (:foreground mycomment))
@@ -56,6 +55,17 @@
   (tree-sitter-hl-face:function.call (:foreground mytx))
   (tree-sitter-hl-face:constructor (:foreground myfunname))
   (tree-sitter-hl-face:punctuation.special (:foreground mystring :weight 'bold))
-  (lsp-lsp-flycheck-info-unnecessary-face (:foreground nil :underline '(:style wave :color "ForestGreen")))))
+  (lsp-lsp-flycheck-info-unnecessary-face (:foreground nil :underline '(:style wave :color "ForestGreen")))
+
+  (vterm-color-black   (:foreground "#2E3436" :background "#555753"))
+  (vterm-color-red     (:foreground "#CC0000" :background "#EF2929"))
+  (vterm-color-green   (:foreground "#4E9A06" :background "#8AE234"))
+  (vterm-color-yellow  (:foreground "#C4A000" :background "#FCE94F"))
+  (vterm-color-blue    (:foreground "#3465A4" :background "#729FCF"))
+  (vterm-color-magenta (:foreground "#75507B" :background "#AD7FA8"))
+  (vterm-color-cyan    (:foreground "#06989A" :background "#34E2E2"))
+  (vterm-color-white   (:foreground "#FFFFFF" :background "#FFFFFF"))))
+
+(defface vterm-background '((t :background "#300A24")) "Background for vterm")
 
 (provide-theme 'mytheme)
