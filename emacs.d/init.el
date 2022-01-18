@@ -156,6 +156,10 @@
 (use-package vterm
   ;; :custom
   ;; (vterm-buffer-name-string "%s [vterm]")
+  :bind
+  (:map vterm-mode-map
+		("<mouse-4>" . vterm-send-up)
+		("<mouse-5>" . vterm-send-down))
   :hook
   (vterm-mode . (lambda () (text-scale-adjust -1)))
   (vterm-mode . toggle-vterm-background)

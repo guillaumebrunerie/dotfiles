@@ -37,6 +37,7 @@
   (font-lock-string-face        (:foreground mystring))
   (font-lock-variable-name-face (:foreground myvar))
   (font-lock-doc-face           (:foreground mydoc))
+  (font-lock-type-face          (:foreground "#0A0"))
   (isearch                      (:background mysearch :distant-foreground mytx))
   (js2-external-variable        ())
   (js2-function-param           (:foreground myparam))
