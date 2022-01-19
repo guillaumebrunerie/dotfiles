@@ -32,7 +32,7 @@
   (font-lock-comment-face       (:foreground mycomment))
   (font-lock-constant-face      (:foreground myconstant))
   (font-lock-builtin-face       (:foreground mybuiltin))
-  (font-lock-function-name-face (:foreground myvar))
+  (font-lock-function-name-face (:foreground myfunname))
   (font-lock-keyword-face       (:foreground mykeyword :weight 'bold))
   (font-lock-string-face        (:foreground mystring))
   (font-lock-variable-name-face (:foreground myvar))

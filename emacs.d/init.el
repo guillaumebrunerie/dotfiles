@@ -330,13 +330,17 @@
   :bind
   (("C-<tab>" . my/hs-toggle)
    ("<backtab>" . my/hs-close)
+   ("C-S-<tab>" . my/hs-open)
    ("<C-iso-lefttab>" . my/hs-open))
   :custom
   (hs-hide-comments-when-hiding-all nil)
   :config
   (hs-minor-mode)
-  (setq hs-set-up-overlay (lambda (o) (overlay-put o 'display (concat " " (propertize "[···]" 'face 'hs-folded))))))
+  (setq hs-set-up-overlay (lambda (o) (overlay-put o 'display (propertize "[···]" 'face 'hs-folded)))))
 
+(use-package prog-mode
+  :straight nil
+  :hook (prog-mode . hs-minor-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Language Server ;;
