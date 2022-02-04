@@ -213,9 +213,11 @@
     (when (< space-count tab-count)
       (setq-local indent-tabs-mode t))))
 (defun infer-indentation-amount ()
-  (let ((two-indented-lines (how-many "^  [^ ]" (point-min) (point-max))))
-    (when (> two-indented-lines 2)
-      (setq-local js-indent-level 2))))
+  (let ((two-indented-lines (how-many "^  [^ ]" (point-min) (point-max)))
+		(tab-indented-lines (how-many "^\t" (point-min) (point-max))))
+    (if (and (> two-indented-lines 2) (= tab-indented-lines 0))
+		(setq-local js-indent-level 2)
+	  (setq-local js-indent-level 4))))
 
 (use-package js2-mode
   :hook
