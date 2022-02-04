@@ -159,7 +159,9 @@
   :bind
   (:map vterm-mode-map
 		("<mouse-4>" . vterm-send-up)
-		("<mouse-5>" . vterm-send-down))
+		("<wheel-up>" . vterm-send-up)
+		("<mouse-5>" . vterm-send-down)
+		("<wheel-down>" . vterm-send-down))
   :hook
   (vterm-mode . (lambda () (text-scale-adjust -1)))
   (vterm-mode . toggle-vterm-background)
@@ -192,7 +194,8 @@
   (setq projectile-enable-caching t)
   (setq projectile-indexing-method 'hybrid)
   (define-key projectile-mode-map (kbd "C-c C-p") 'projectile-command-map)
-  (push "makefile" projectile-project-root-files-bottom-up))
+  (push "makefile" projectile-project-root-files-bottom-up)
+  (push "package.json" projectile-project-root-files-bottom-up))
 
 ;;;;;;;;;;;;;;;;
 ;; Javascript ;;
@@ -357,8 +360,7 @@
 
 (use-package lsp-ui
   :config
-  (setq lsp-ui-sideline-show-diagnostics t)
-  (setq lsp-ui-sideline-show-code-actions t))
+  (setq lsp-ui-sideline-show-diagnostics t))
 
 (use-package flycheck)
 
