@@ -251,7 +251,9 @@
   (ultimate-js-mode . infer-indentation-amount)
   (ultimate-js-mode . phindent-mode)
   (ultimate-js-mode . whitespace-mode)
-  (ultimate-js-mode . lsp))
+  (ultimate-js-mode . lsp)
+  :config
+  (setq js-switch-indent-offset js-indent-level))
 
 ;;;;;;;;;;;;;;;;
 ;; Completion ;;
