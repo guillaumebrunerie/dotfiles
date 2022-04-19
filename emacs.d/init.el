@@ -198,6 +198,7 @@
   (setq projectile-indexing-method 'hybrid)
   (define-key projectile-mode-map (kbd "C-c C-p") 'projectile-command-map)
   (push "makefile" projectile-project-root-files-bottom-up)
+  (push "go.mod" projectile-project-root-files-bottom-up)
   (push "package.json" projectile-project-root-files-bottom-up))
 
 ;;;;;;;;;;;;;;;;
@@ -351,6 +352,16 @@
 (use-package prog-mode
   :straight nil
   :hook (prog-mode . hs-minor-mode))
+
+;;;;;;;;
+;; Go ;;
+;;;;;;;;
+
+(use-package go-mode
+  :hook
+  (go-mode . phindent-mode)
+  (go-mode . whitespace-mode)
+  (go-mode . lsp))
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Language Server ;;
