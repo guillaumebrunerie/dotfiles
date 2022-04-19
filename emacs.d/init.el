@@ -78,6 +78,9 @@
 ;; History for minibuffer
 (savehist-mode)
 
+;; Deal with long lines
+(global-so-long-mode 1)
+
 ;;;;;;;;;;;
 ;; OCaml ;;
 ;;;;;;;;;;;
