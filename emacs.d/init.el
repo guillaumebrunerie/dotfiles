@@ -353,16 +353,6 @@
   :straight nil
   :hook (prog-mode . hs-minor-mode))
 
-;;;;;;;;
-;; Go ;;
-;;;;;;;;
-
-(use-package go-mode
-  :hook
-  (go-mode . phindent-mode)
-  (go-mode . whitespace-mode)
-  (go-mode . lsp))
-
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Language Server ;;
 ;;;;;;;;;;;;;;;;;;;;;
@@ -380,7 +370,26 @@
   :config
   (setq lsp-ui-sideline-show-diagnostics t))
 
-(use-package flycheck)
+(use-package flycheck
+  :bind
+  (("M-<down>" . flycheck-next-error)
+   ("M-<up>" . flycheck-previous-error)))
+
+;;;;;;;;
+;; Go ;;
+;;;;;;;;
+
+(defun setup-before-save-hooks ()
+  (add-hook 'before-save-hook #'gofmt-before-save)
+  (add-hook 'before-save-hook #'lsp-organize-imports))
+
+(use-package go-mode
+  :hook
+  (go-mode . yas-minor-mode)
+  (go-mode . phindent-mode)
+  (go-mode . whitespace-mode)
+  (go-mode . lsp-deferred)
+  (go-mode . setup-before-save-hooks))
 
 ;;;;;;;;;;
 ;; HTML ;;
