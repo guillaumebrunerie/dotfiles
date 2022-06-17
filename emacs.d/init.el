@@ -32,6 +32,9 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 
+; Visible bell
+(setq visible-bell t)
+
 ; Customize window title
 (setq frame-title-format '(buffer-file-name "Emacs: %b (%f)" "Emacs: %b"))
 
@@ -99,21 +102,19 @@
                     auto-mode-alist))
 (setq-default tuareg-in-indent 0)
 (defvar caml-mode-hook
-  '(lambda () (modify-syntax-entry ?_ "w" caml-mode-syntax-table)))
+  (lambda () (modify-syntax-entry ?_ "w" caml-mode-syntax-table)))
 
 (add-hook 'tuareg-mode-hook
-          '(lambda ()
-             (define-key tuareg-mode-map "\M-q" 'fill-paragraph)
-))
+          (lambda ()
+            (define-key tuareg-mode-map "\M-q" 'fill-paragraph)))
 
 (add-hook 'tuareg-load-hook
-          '(lambda ()
-             (define-key tuareg-mode-map [f9] 'tuareg-eval-buffer)
-             (define-key tuareg-mode-map [f10] 'tuareg-eval-phrase)
-             (outline-minor-mode)
-             (define-key tuareg-mode-map [M-left] `hide-subtree)
-             (define-key tuareg-mode-map [M-right] `show-subtree)
-             ))
+          (lambda ()
+            (define-key tuareg-mode-map [f9] 'tuareg-eval-buffer)
+            (define-key tuareg-mode-map [f10] 'tuareg-eval-phrase)
+            (outline-minor-mode)
+            (define-key tuareg-mode-map [M-left] `hide-subtree)
+            (define-key tuareg-mode-map [M-right] `show-subtree)))
 
 ;;;;;;;;;;;
 ;; LaTeX ;;
@@ -133,16 +134,15 @@
 (ignore-errors (load "preview-latex.el" nil t t))
 
 (add-hook 'LaTeX-mode-hook
-          '(lambda ()
-             (setq ispell-tex-skip-alists
-                   (list
-                     (append
-                       (car ispell-tex-skip-alists) 
-                       '(("[^\\]\\$" . "[^\\]\\$") ("\\[" . "\\]") ("\\\\operatorname" ispell-tex-arg-end)))
-                     (append
-                       (cadr ispell-tex-skip-alists)
-                       '(("align\\*?" . "\\\\end{align\\*?}")
-                         ))))))
+          (lambda ()
+            (setq ispell-tex-skip-alists
+                  (list
+                   (append
+                    (car ispell-tex-skip-alists) 
+                    '(("[^\\]\\$" . "[^\\]\\$") ("\\[" . "\\]") ("\\\\operatorname" ispell-tex-arg-end)))
+                   (append
+                    (cadr ispell-tex-skip-alists)
+                    '(("align\\*?" . "\\\\end{align\\*?}")))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;; Terminal emulator ;;
@@ -379,10 +379,14 @@
 ;; Go ;;
 ;;;;;;;;
 
-(defun setup-before-save-hooks ()
-  (add-hook 'before-save-hook #'gofmt-before-save)
-  (add-hook 'before-save-hook #'lsp-organize-imports))
+(defun go-before-save-hook ()
+  (when (eq major-mode 'go-mode)
+	(gofmt-before-save)
+	(lsp-organize-imports)))
 
+(defun setup-before-save-hooks ()
+  (add-hook 'before-save-hook #'go-before-save-hook))
+ 
 (use-package go-mode
   :hook
   (go-mode . yas-minor-mode)
