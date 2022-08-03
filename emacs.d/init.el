@@ -245,16 +245,24 @@
   (rjsx-mode . whitespace-mode))
 
 (use-package ultimate-js-mode
-  :straight (:host github :repo "guillaumebrunerie/ultimate-js-mode")
+  :straight (:host github :repo "guillaumebrunerie/ultimate-js-mode" :files (:defaults "libs" "queries"))
   :mode "\\.[jt]sx?\\'"
   :hook
   (ultimate-js-mode . infer-indentation-style)
   (ultimate-js-mode . infer-indentation-amount)
   (ultimate-js-mode . phindent-mode)
   (ultimate-js-mode . whitespace-mode)
-  (ultimate-js-mode . lsp)
+  (ultimate-js-mode . lsp-deferred)
   :config
   (setq js-switch-indent-offset js-indent-level))
+
+;;;;;;;;;;;;
+;; Prisma ;;
+;;;;;;;;;;;;
+
+(use-package emacs-prisma-mode
+  :straight (:host github :repo "pimeys/emacs-prisma-mode")
+  :mode "\\.prisma\\'")
 
 ;;;;;;;;;;;;;;;;
 ;; Completion ;;
@@ -375,6 +383,13 @@
   (("M-<down>" . flycheck-next-error)
    ("M-<up>" . flycheck-previous-error)))
 
+(define-key global-map (kbd "M-\"") #'xref-find-definitions)
+(define-key global-map (kbd "M-$") #'xref-go-back)
+
+(use-package lsp-tailwindcss
+  :straight (:type git :host github :repo "merrickluo/lsp-tailwindcss")
+  :init (setq lsp-tailwindcss-add-on-mode t))
+
 ;;;;;;;;
 ;; Go ;;
 ;;;;;;;;
@@ -472,75 +487,75 @@
  '(TeX-command-BibTeX "Biber")
  '(TeX-command-list
    '(("TeX" "%(PDF)%(tex) %`%S%(PDFout)%(mode)%' %t" TeX-run-TeX nil
-      (plain-tex-mode texinfo-mode ams-tex-mode)
-      :help "Run plain TeX")
-     ("LaTeX" "%`%l%(mode)%' %t" TeX-run-TeX nil
-      (latex-mode doctex-mode)
-      :help "Run LaTeX")
-     ("Makeinfo" "makeinfo %t" TeX-run-compile nil
-      (texinfo-mode)
-      :help "Run Makeinfo with Info output")
-     ("Makeinfo HTML" "makeinfo --html %t" TeX-run-compile nil
-      (texinfo-mode)
-      :help "Run Makeinfo with HTML output")
-     ("AmSTeX" "%(PDF)amstex %`%S%(PDFout)%(mode)%' %t" TeX-run-TeX nil
-      (ams-tex-mode)
-      :help "Run AMSTeX")
-     ("ConTeXt" "texexec --once --texutil %(execopts)%t" TeX-run-TeX nil
-      (context-mode)
-      :help "Run ConTeXt once")
-     ("ConTeXt Full" "texexec %(execopts)%t" TeX-run-TeX nil
-      (context-mode)
-      :help "Run ConTeXt until completion")
-     ("BibTeX" "bibtex %s" TeX-run-BibTeX nil t :help "Run BibTeX")
-     ("View" "evince %s.pdf" TeX-run-discard t t :help "Run Viewer")
-     ("Print" "%p" TeX-run-command t t :help "Print the file")
-     ("Queue" "%q" TeX-run-background nil t :help "View the printer queue" :visible TeX-queue-command)
-     ("File" "%(o?)dvips %d -o %f " TeX-run-command t t :help "Generate PostScript file")
-     ("Index" "makeindex %s" TeX-run-command nil t :help "Create index file")
-     ("Check" "lacheck %s" TeX-run-compile nil
-      (latex-mode)
-      :help "Check LaTeX file for correctness")
-     ("Spell" "(TeX-ispell-document \"\")" TeX-run-function nil t :help "Spell-check the document")
-     ("Clean" "TeX-clean" TeX-run-function nil t :help "Delete generated intermediate files")
-     ("Clean All" "(TeX-clean t)" TeX-run-function nil t :help "Delete generated intermediate and output files")
-     ("Other" "" TeX-run-command t t :help "Run an arbitrary command")
-     ("Biber" "biber %s.bcf" TeX-run-Biber nil t)))
+	  (plain-tex-mode texinfo-mode ams-tex-mode)
+	  :help "Run plain TeX")
+	 ("LaTeX" "%`%l%(mode)%' %t" TeX-run-TeX nil
+	  (latex-mode doctex-mode)
+	  :help "Run LaTeX")
+	 ("Makeinfo" "makeinfo %t" TeX-run-compile nil
+	  (texinfo-mode)
+	  :help "Run Makeinfo with Info output")
+	 ("Makeinfo HTML" "makeinfo --html %t" TeX-run-compile nil
+	  (texinfo-mode)
+	  :help "Run Makeinfo with HTML output")
+	 ("AmSTeX" "%(PDF)amstex %`%S%(PDFout)%(mode)%' %t" TeX-run-TeX nil
+	  (ams-tex-mode)
+	  :help "Run AMSTeX")
+	 ("ConTeXt" "texexec --once --texutil %(execopts)%t" TeX-run-TeX nil
+	  (context-mode)
+	  :help "Run ConTeXt once")
+	 ("ConTeXt Full" "texexec %(execopts)%t" TeX-run-TeX nil
+	  (context-mode)
+	  :help "Run ConTeXt until completion")
+	 ("BibTeX" "bibtex %s" TeX-run-BibTeX nil t :help "Run BibTeX")
+	 ("View" "evince %s.pdf" TeX-run-discard t t :help "Run Viewer")
+	 ("Print" "%p" TeX-run-command t t :help "Print the file")
+	 ("Queue" "%q" TeX-run-background nil t :help "View the printer queue" :visible TeX-queue-command)
+	 ("File" "%(o?)dvips %d -o %f " TeX-run-command t t :help "Generate PostScript file")
+	 ("Index" "makeindex %s" TeX-run-command nil t :help "Create index file")
+	 ("Check" "lacheck %s" TeX-run-compile nil
+	  (latex-mode)
+	  :help "Check LaTeX file for correctness")
+	 ("Spell" "(TeX-ispell-document \"\")" TeX-run-function nil t :help "Spell-check the document")
+	 ("Clean" "TeX-clean" TeX-run-function nil t :help "Delete generated intermediate files")
+	 ("Clean All" "(TeX-clean t)" TeX-run-function nil t :help "Delete generated intermediate and output files")
+	 ("Other" "" TeX-run-command t t :help "Run an arbitrary command")
+	 ("Biber" "biber %s.bcf" TeX-run-Biber nil t)))
  '(TeX-electric-sub-and-superscript nil)
  '(TeX-fold-macro-spec-list
    '(("[f]"
-      ("footnote"))
-     ("[i]"
-      ("index"))
-     ("*"
-      ("item"))
-     ("..."
-      ("dots"))
-     (1
-      ("emph" "textit" "textsl" "textmd" "textrm" "textsf" "texttt" "textbf" "textsc" "textup"))))
+	  ("footnote"))
+	 ("[i]"
+	  ("index"))
+	 ("*"
+	  ("item"))
+	 ("..."
+	  ("dots"))
+	 (1
+	  ("emph" "textit" "textsl" "textmd" "textrm" "textsf" "texttt" "textbf" "textsc" "textup"))))
  '(TeX-fold-type-list '(env macro comment))
  '(TeX-newline-function 'reindent-then-newline-and-indent)
  '(TeX-open-quote "\"")
  '(TeX-output-view-style
    '(("^dvi$"
-      ("^landscape$" "^pstricks$\\|^pst-\\|^psfrag$")
-      "%(o?)dvips -t landscape %d -o && gv %f")
-     ("^dvi$" "^pstricks$\\|^pst-\\|^psfrag$" "%(o?)dvips %d -o && gv %f")
-     ("^dvi$"
-      ("^a4\\(?:dutch\\|paper\\|wide\\)\\|sem-a4$" "^landscape$")
-      "%(o?)xdvi %dS -paper a4r -s 0 %d")
-     ("^dvi$" "^a4\\(?:dutch\\|paper\\|wide\\)\\|sem-a4$" "%(o?)xdvi %dS -paper a4 %d")
-     ("^dvi$"
-      ("^a5\\(?:comb\\|paper\\)$" "^landscape$")
-      "%(o?)xdvi %dS -paper a5r -s 0 %d")
-     ("^dvi$" "^a5\\(?:comb\\|paper\\)$" "%(o?)xdvi %dS -paper a5 %d")
-     ("^dvi$" "^b5paper$" "%(o?)xdvi %dS -paper b5 %d")
-     ("^dvi$" "^letterpaper$" "%(o?)xdvi %dS -paper us %d")
-     ("^dvi$" "^legalpaper$" "%(o?)xdvi %dS -paper legal %d")
-     ("^dvi$" "^executivepaper$" "%(o?)xdvi %dS -paper 7.25x10.5in %d")
-     ("^dvi$" "." "%(o?)xdvi %dS %d")
-     ("^pdf$" "." "evince %o")
-     ("^html?$" "." "netscape %o")))
+	  ("^landscape$" "^pstricks$\\|^pst-\\|^psfrag$")
+	  "%(o?)dvips -t landscape %d -o && gv %f")
+	 ("^dvi$" "^pstricks$\\|^pst-\\|^psfrag$" "%(o?)dvips %d -o && gv %f")
+	 ("^dvi$"
+	  ("^a4\\(?:dutch\\|paper\\|wide\\)\\|sem-a4$" "^landscape$")
+	  "%(o?)xdvi %dS -paper a4r -s 0 %d")
+	 ("^dvi$" "^a4\\(?:dutch\\|paper\\|wide\\)\\|sem-a4$" "%(o?)xdvi %dS -paper a4 %d")
+	 ("^dvi$"
+	  ("^a5\\(?:comb\\|paper\\)$" "^landscape$")
+	  "%(o?)xdvi %dS -paper a5r -s 0 %d")
+	 ("^dvi$" "^a5\\(?:comb\\|paper\\)$" "%(o?)xdvi %dS -paper a5 %d")
+	 ("^dvi$" "^b5paper$" "%(o?)xdvi %dS -paper b5 %d")
+	 ("^dvi$" "^letterpaper$" "%(o?)xdvi %dS -paper us %d")
+	 ("^dvi$" "^legalpaper$" "%(o?)xdvi %dS -paper legal %d")
+	 ("^dvi$" "^executivepaper$" "%(o?)xdvi %dS -paper 7.25x10.5in %d")
+	 ("^dvi$" "." "%(o?)xdvi %dS %d")
+	 ("^pdf$" "." "evince %o")
+	 ("^html?$" "." "netscape %o")))
  '(agda2-highlight-level 'interactive)
  '(agda2-include-dirs '("." ".."))
  '(agda2-program-args '("+RTS" "-M25G" "-RTS"))
@@ -556,6 +571,8 @@
  '(home-end-enable t)
  '(js-indent-align-list-continuation nil)
  '(js2-strict-missing-semi-warning t)
+ '(lsp-tailwindcss-major-modes
+   '(rjsx-mode web-mode html-mode css-mode typescript-mode ultimate-js-mode))
  '(ns-alternate-modifier 'none)
  '(ns-command-modifier 'meta)
  '(outline-regexp "[ 
@@ -563,19 +580,19 @@
  '(preview-auto-cache-preamble t)
  '(preview-default-preamble
    '("\\RequirePackage["
-     ("," . preview-default-option-list)
-     "]{preview}[2004/11/05]"))
+	 ("," . preview-default-option-list)
+	 "]{preview}[2004/11/05]"))
  '(preview-preserve-counters t)
  '(preview-scale-function 1.3)
  '(read-quoted-char-radix 16)
  '(safe-local-variable-values
    '((comment-fill-column . 80)
-     (eval let
-           ((default-directory
-              (locate-dominating-file buffer-file-name ".dir-locals.el")))
-           (make-local-variable 'coq-prog-name)
-           (setq coq-prog-name
-                 (expand-file-name "../hoqtop")))))
+	 (eval let
+		   ((default-directory
+			  (locate-dominating-file buffer-file-name ".dir-locals.el")))
+		   (make-local-variable 'coq-prog-name)
+		   (setq coq-prog-name
+				 (expand-file-name "../hoqtop")))))
  '(sentence-end-double-space nil)
  '(sgml-basic-offset 4)
  '(tab-width 4)
@@ -583,21 +600,21 @@
  '(tree-sitter-debug-jump-buttons t)
  '(vc-annotate-color-map
    '((20 . "#FA99B7")
-     (40 . "#FE9A9F")
-     (60 . "#F89F88")
-     (80 . "#ECA777")
-     (100 . "#D9AF6D")
-     (120 . "#C2B86D")
-     (140 . "#A8BF75")
-     (160 . "#8BC485")
-     (180 . "#6CC89C")
-     (200 . "#49C9B5")
-     (220 . "#21C9CE")
-     (240 . "#0EC7E4")
-     (260 . "#3CC3F5")
-     (280 . "#6ABDFE")
-     (300 . "#95B5FE")
-     (320 . "#BAACF6")))
+	 (40 . "#FE9A9F")
+	 (60 . "#F89F88")
+	 (80 . "#ECA777")
+	 (100 . "#D9AF6D")
+	 (120 . "#C2B86D")
+	 (140 . "#A8BF75")
+	 (160 . "#8BC485")
+	 (180 . "#6CC89C")
+	 (200 . "#49C9B5")
+	 (220 . "#21C9CE")
+	 (240 . "#0EC7E4")
+	 (260 . "#3CC3F5")
+	 (280 . "#6ABDFE")
+	 (300 . "#95B5FE")
+	 (320 . "#BAACF6")))
  '(whitespace-style '(face trailing lines-tail empty tabs)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

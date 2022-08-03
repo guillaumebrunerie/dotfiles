@@ -6,27 +6,31 @@
 
  ((((class color) (min-colors #xFFFFFF)))
 
-  (mytx       "#efefef")     ; Good
-  (myoperator "#bbbbbb")
-  (mybg       "#1e1e1e")     ; Good
-  (mykeyword  "DarkViolet")  ; Good
-  (myconstant "DarkCyan")
-  (mybuiltin  "DarkCyan")
-  (mycomment  "#b11")        ; Good
-  (mydoc      "#f00")
-  (mystring   "#f70")        ; Good
-  (myvar      "#da6")        ; Good
-  (myfunname  "#04f")        ; Good
-  (myparam    "#0A0")        ; Good
-  (mytab      "#282828")     ; Good
-  (myline     "#383838")     ; Good
-  (myregion   "#1d3854")     ; Good
-  (myhvars    "#070")        ; Good
-  (mysearch   "Blue")
-  (myjsdctype "Red")
-  (myjsdcval  "Red")
-  (mywarning  "#b50")
-  (mywstrail  "#800"))
+  (mytx        "#efefef")     ; Good
+  (myoperator  "#bbb")
+  (mybg        "#1e1e1e")     ; Good
+  (mykeyword   "DarkViolet")  ; Good
+  (myconstant  "DarkCyan")
+  (mybuiltin   "DarkCyan")
+  (mycomment   "#b11")        ; Good
+  (mydoc       "#f00")
+  (mystring    "#e70")        ; Good
+  (myvar       "#da6")        ; Good
+  (mypropvar   "#db8")
+  (myfunname   "#04f")        ; Good
+  (mytype      "#0A0")
+  (mytypeparam "#F60")
+  (myparam     "#092")        ; Good
+  (mytab       "#282828")     ; Good
+  (myline      "#383838")     ; Good
+  (myregion    "#1d3854")     ; Good
+  (myhvars     "#070")        ; Good
+  (mynamespace "#04F")
+  (mysearch    "Blue")
+  (myjsdctype  "Red")
+  (myjsdcval   "Red")
+  (mywarning   "#b50")
+  (mywstrail   "#800"))
 
  ((default                      (:foreground mytx :background mybg :height 170))
   (font-lock-comment-face       (:foreground mycomment))
@@ -37,7 +41,7 @@
   (font-lock-string-face        (:foreground mystring))
   (font-lock-variable-name-face (:foreground myvar))
   (font-lock-doc-face           (:foreground mydoc))
-  (font-lock-type-face          (:foreground "#0A0"))
+  (font-lock-type-face          (:foreground mytype))
   (isearch                      (:background mysearch :distant-foreground mytx))
   (js2-external-variable        ())
   (js2-function-param           (:foreground myparam))
@@ -53,8 +57,11 @@
   (tree-sitter-hl-face:variable (:foreground myvar))
   (tree-sitter-hl-face:function (:foreground myvar))
   (tree-sitter-hl-face:property (:foreground mytx))
+  (tree-sitter-hl-face:property.definition (:foreground mypropvar))
   (tree-sitter-hl-face:function.call (:foreground mytx))
-  (tree-sitter-hl-face:constructor (:foreground myfunname))
+  (tree-sitter-hl-face:constructor (:foreground mynamespace))
+  (tree-sitter-hl-face:type (:foreground mytype))
+  (tree-sitter-hl-face:type.parameter (:foreground mytypeparam))
   (tree-sitter-hl-face:punctuation.special (:foreground mystring :weight 'bold))
   (lsp-lsp-flycheck-info-unnecessary-face (:foreground nil :underline '(:style wave :color "ForestGreen")))
 
