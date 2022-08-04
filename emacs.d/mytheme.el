@@ -6,26 +6,26 @@
 
  ((((class color) (min-colors #xFFFFFF)))
 
-  (mytx        "#efefef")     ; Good
+  (mytx        "#efefef")
   (myoperator  "#bbb")
-  (mybg        "#1e1e1e")     ; Good
-  (mykeyword   "DarkViolet")  ; Good
+  (mybg        "#1e1e1e")
+  (mykeyword   "DarkViolet")
   (myconstant  "DarkCyan")
   (mybuiltin   "DarkCyan")
-  (mycomment   "#b11")        ; Good
+  (mycomment   "#b11")
   (mydoc       "#f00")
-  (mystring    "#e70")        ; Good
-  (myvar       "#da6")        ; Good
-  (mypropvar   "#db8")
-  (myfunname   "#04f")        ; Good
+  (mystring    "#e70")
+  (myvar       "#da6")
+  (mypropvar   "#57B")
+  (myfunname   "#04f")
   (mytype      "#0A0")
-  (mytypeparam "#F60")
-  (myparam     "#092")        ; Good
-  (mytab       "#282828")     ; Good
-  (myline      "#383838")     ; Good
-  (myregion    "#1d3854")     ; Good
-  (myhvars     "#070")        ; Good
-  (mynamespace "#04F")
+  (mytypeparam "#6D0")
+  (myparam     "#092")
+  (mytab       "#282828")
+  (myline      "#383838")
+  (myregion    "#1d3854")
+  (myhvars     "#070")
+  (mynamespace "#05F")
   (mysearch    "Blue")
   (myjsdctype  "Red")
   (myjsdcval   "Red")
@@ -53,7 +53,7 @@
   (whitespace-tab               (:background mytab))
   (whitespace-trailing          (:background mywstrail))
   (tree-sitter-hl-face:operator (:foreground myoperator))
-  (tree-sitter-hl-face:variable.parameter (:foreground myparam))
+  (tree-sitter-hl-face:variable.parameter (:foreground myvar))
   (tree-sitter-hl-face:variable (:foreground myvar))
   (tree-sitter-hl-face:function (:foreground myvar))
   (tree-sitter-hl-face:property (:foreground mytx))
@@ -63,6 +63,7 @@
   (tree-sitter-hl-face:type (:foreground mytype))
   (tree-sitter-hl-face:type.parameter (:foreground mytypeparam))
   (tree-sitter-hl-face:punctuation.special (:foreground mystring :weight 'bold))
+  (tree-sitter-hl-face:attribute (:foreground mypropvar))
   (lsp-lsp-flycheck-info-unnecessary-face (:foreground nil :underline '(:style wave :color "ForestGreen")))
 
   (vterm-color-black   (:foreground "#2E3436" :background "#555753"))
