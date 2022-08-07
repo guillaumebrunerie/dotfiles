@@ -57,7 +57,7 @@
   (tree-sitter-hl-face:variable (:foreground myvar))
   (tree-sitter-hl-face:function (:foreground myvar))
   (tree-sitter-hl-face:property (:foreground mytx))
-  (tree-sitter-hl-face:property.definition (:foreground mypropvar))
+  (tree-sitter-hl-face:property.definition (:foreground mytx))
   (tree-sitter-hl-face:function.call (:foreground mytx))
   (tree-sitter-hl-face:constructor (:foreground mynamespace))
   (tree-sitter-hl-face:type (:foreground mytype))

@@ -207,15 +207,12 @@
 
 (use-package phindent-mode
   :straight (:host github :repo "guillaumebrunerie/phindent-mode"))
+
 (defun infer-indentation-style ()
   ;; if our source file uses tabs, we use tabs, if spaces spaces, and if
   ;; neither, we use the current indent-tabs-mode
-  (let ((space-count (how-many "^  " (point-min) (point-max)))
-        (tab-count (how-many "^\t" (point-min) (point-max))))
-    (when (> space-count tab-count)
-      (setq-local indent-tabs-mode nil))
-    (when (< space-count tab-count)
-      (setq-local indent-tabs-mode t))))
+  (setq-local indent-tabs-mode (> (how-many "^\t" (point-min) (point-max)) 0)))
+
 (defun infer-indentation-amount ()
   (let ((two-indented-lines (how-many "^  [^ ]" (point-min) (point-max)))
 		(tab-indented-lines (how-many "^\t" (point-min) (point-max))))
@@ -386,9 +383,9 @@
 (define-key global-map (kbd "M-\"") #'xref-find-definitions)
 (define-key global-map (kbd "M-$") #'xref-go-back)
 
-(use-package lsp-tailwindcss
-  :straight (:type git :host github :repo "merrickluo/lsp-tailwindcss")
-  :init (setq lsp-tailwindcss-add-on-mode t))
+;; (use-package lsp-tailwindcss
+;;   :straight (:type git :host github :repo "merrickluo/lsp-tailwindcss")
+;;   :init (setq lsp-tailwindcss-add-on-mode t))
 
 ;;;;;;;;
 ;; Go ;;
