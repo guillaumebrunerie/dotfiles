@@ -170,3 +170,5 @@ if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
 	setopt PROMPT_SUBST
 	PROMPT=$PROMPT'%{$(vterm_prompt_end)%}'
 fi
+
+alias resource="source ~/.zshrc"
