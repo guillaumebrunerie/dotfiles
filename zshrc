@@ -80,9 +80,9 @@ then
 	emacs() {
 		if [[ $TERM == linux ]]
 		then
-			/usr/bin/emacs -nw "$@"
+			=emacs -nw "$@"
 		else
-			/usr/bin/emacs "$@" &!
+			=emacs "$@" &!
 		fi
 	}
 fi
