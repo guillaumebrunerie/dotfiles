@@ -381,6 +381,7 @@
    ("M-<up>" . flycheck-previous-error)))
 
 (define-key global-map (kbd "M-\"") #'xref-find-definitions)
+(define-key global-map (kbd "M-«") #'xref-find-references)
 (define-key global-map (kbd "M-$") #'xref-go-back)
 
 ;; (use-package lsp-tailwindcss
