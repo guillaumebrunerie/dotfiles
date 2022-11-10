@@ -128,6 +128,8 @@ svn() {
         /usr/bin/svn log --verbose "${@:2}" | ~/bin/colordiff --difftype=diffu | less -x4
     elif [[ "$1" == logd ]]; then
         /usr/bin/svn log --diff --verbose "${@:2}" | ~/bin/colordiff | less -x4
+	elif [[ "$1" == uncheckout ]]; then
+		/usr/bin/svn up --set-depth exclude "${@:2}"
     else
         /usr/bin/svn "$@"
     fi
