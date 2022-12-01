@@ -130,11 +130,15 @@ svn() {
         /usr/bin/svn log --diff --verbose "${@:2}" | ~/bin/colordiff | less -x4
 	elif [[ "$1" == uncheckout ]]; then
 		/usr/bin/svn up --set-depth exclude "${@:2}"
+	elif [[ "$1" == unadd ]]; then
+		/usr/bin/svn rm --keep-local "${@:2}"
     else
         /usr/bin/svn "$@"
     fi
 }
 compdef '_files' svn logd
+compdef '_files' svn unadd
+compdef '_files' svn uncheckout
 
 # Tab width
 tabs -4
