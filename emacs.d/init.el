@@ -209,9 +209,10 @@
   :straight (:host github :repo "guillaumebrunerie/phindent-mode"))
 
 (defun infer-indentation-style ()
-  ;; if our source file uses tabs, we use tabs, if spaces spaces, and if
-  ;; neither, we use the current indent-tabs-mode
-  (setq-local indent-tabs-mode (> (how-many "^\t" (point-min) (point-max)) 0)))
+  ;; If our source file uses tabs somewhere, or doesn’t but doesn’t use spaces
+  ;; either (for instance an empty file), we use tabs, otherwise we use spaces.
+  (setq-local indent-tabs-mode (or (> (how-many "^\t" (point-min) (point-max)) 0)
+                                   (= (how-many "^    " (point-min) (point-max)) 0))))
 
 (defun infer-indentation-amount ()
   (let ((two-indented-lines (how-many "^  [^ ]" (point-min) (point-max)))
@@ -243,7 +244,7 @@
 
 (use-package ultimate-js-mode
   :straight (:host github :repo "guillaumebrunerie/ultimate-js-mode" :files (:defaults "libs" "queries"))
-  :mode "\\.[jt]sx?\\'"
+  :mode ("\\.[jt]sx?\\'" "\\.json\\'")
   :hook
   (ultimate-js-mode . infer-indentation-style)
   (ultimate-js-mode . infer-indentation-amount)
@@ -564,7 +565,7 @@
  '(current-language-environment "UTF-8")
  '(custom-safe-themes
    '("78e9a3e1c519656654044aeb25acb8bec02579508c145b6db158d2cfad87c44e" default))
- '(fill-column 100)
+ '(fill-column 80)
  '(haskell-mode-hook '(turn-on-haskell-indent))
  '(home-end-enable t)
  '(js-indent-align-list-continuation nil)
