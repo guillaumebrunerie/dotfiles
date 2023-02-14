@@ -250,9 +250,9 @@
   (ultimate-js-mode . infer-indentation-amount)
   (ultimate-js-mode . phindent-mode)
   (ultimate-js-mode . whitespace-mode)
-  ;; (ultimate-js-mode . lsp-deferred)
-  (ultimate-js-mode . eglot-ensure)
-  (ultimate-js-mode . (lambda () (flymake-eslint-enable)))
+  (ultimate-js-mode . lsp-deferred)
+  ;; (ultimate-js-mode . eglot-ensure)
+  ;; (ultimate-js-mode . (lambda () (flymake-eslint-enable)))
   :config
   (setq js-switch-indent-offset js-indent-level))
 
@@ -365,19 +365,19 @@
 ;; Language Server ;;
 ;;;;;;;;;;;;;;;;;;;;;
 
-(use-package eglot
-  :config
-  (add-to-list 'eglot-server-programs
-               '(ultimate-js-mode . ("typescript-language-server" "--stdio"))))
+;; (use-package eglot
+;;   :config
+;;   (add-to-list 'eglot-server-programs
+;;                '(ultimate-js-mode . ("typescript-language-server" "--stdio"))))
 
-(use-package flymake-eslint)
+;; (use-package flymake-eslint)
 
-(use-package flymake
-  :bind
-  (("M-<down>" . flymake-goto-next-error)
-   ("M-<up>" . flymake-goto-prev-error))
-  :config
-  (setq flymake-wrap-around nil))
+;; (use-package flymake
+;;   :bind
+;;   (("M-<down>" . flymake-goto-next-error)
+;;    ("M-<up>" . flymake-goto-prev-error))
+;;   :config
+;;   (setq flymake-wrap-around nil))
 
 (use-package markdown-mode)
 
@@ -394,10 +394,10 @@
   :config
   (setq lsp-ui-sideline-show-diagnostics t))
 
-;; (use-package flycheck
-;;   :bind
-;;   (("M-<down>" . flycheck-next-error)
-;;    ("M-<up>" . flycheck-previous-error)))
+(use-package flycheck
+  :bind
+  (("M-<down>" . flycheck-next-error)
+   ("M-<up>" . flycheck-previous-error)))
 
 (define-key global-map (kbd "M-\"") #'xref-find-definitions)
 (define-key global-map (kbd "M-«") #'xref-find-references)
