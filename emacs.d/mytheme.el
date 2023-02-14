@@ -65,6 +65,9 @@
   (tree-sitter-hl-face:punctuation.special (:foreground mystring :weight 'bold))
   (tree-sitter-hl-face:attribute (:foreground mypropvar))
   (lsp-lsp-flycheck-info-unnecessary-face (:foreground nil :underline '(:style wave :color "ForestGreen")))
+  (flymake-warning (:underline '(:style wave :color "#E70")))
+  (eglot-highlight-symbol-face (:background "darkolivegreen"))
+  (eglot-diagnostic-tag-unnecessary-face (:underline '(:style wave :color "#E70")))
 
   (vterm-color-black   (:foreground "#2E3436" :background "#555753"))
   (vterm-color-red     (:foreground "#CC0000" :background "#EF2929"))

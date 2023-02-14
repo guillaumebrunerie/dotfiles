@@ -51,7 +51,7 @@
 ; Pour que la sélection soit remplacée par ce que l'on tape
 (pending-delete-mode)
 
-; Eviter que la cesure de fin de ligne, operée par exemple par le  mode autofill ou par un M-q, coupe au niveau d'un caractere ( ou : 
+; Eviter que la cesure de fin de ligne, operée par exemple par le  mode autofill ou par un M-q, coupe au niveau d'un caractere ( ou :
 (add-hook 'fill-no-break-predicate 'fill-french-nobreak-p)
 
 ; M-g pour aller à la x-ième ligne
@@ -138,7 +138,7 @@
             (setq ispell-tex-skip-alists
                   (list
                    (append
-                    (car ispell-tex-skip-alists) 
+                    (car ispell-tex-skip-alists)
                     '(("[^\\]\\$" . "[^\\]\\$") ("\\[" . "\\]") ("\\\\operatorname" ispell-tex-arg-end)))
                    (append
                     (cadr ispell-tex-skip-alists)
@@ -250,7 +250,9 @@
   (ultimate-js-mode . infer-indentation-amount)
   (ultimate-js-mode . phindent-mode)
   (ultimate-js-mode . whitespace-mode)
-  (ultimate-js-mode . lsp-deferred)
+  ;; (ultimate-js-mode . lsp-deferred)
+  (ultimate-js-mode . eglot-ensure)
+  (ultimate-js-mode . (lambda () (flymake-eslint-enable)))
   :config
   (setq js-switch-indent-offset js-indent-level))
 
@@ -304,9 +306,9 @@
 ;;;;;;;;;;;;;;;;;;
 
 (defun my/hs-is-folded ()
-  "Returns non-nil if the current line is folded, and returns the end position of the folding" 
+  "Returns non-nil if the current line is folded, and returns the end position of the folding"
   (let* ((overlays-on-line (append (overlays-in (point-at-eol) (+ (point-at-eol) 1)) (overlays-in (1- (point-at-bol)) (point-at-bol)))))
-	(seq-some (lambda (o) (and (overlay-get o 'hs) (overlay-end o))) overlays-on-line)))	
+	(seq-some (lambda (o) (and (overlay-get o 'hs) (overlay-end o))) overlays-on-line)))
 
 (defun my/hs-toggle (arg)
   "If the current line is folded, unfold only one level of it, otherwise fold it."
@@ -363,6 +365,22 @@
 ;; Language Server ;;
 ;;;;;;;;;;;;;;;;;;;;;
 
+(use-package eglot
+  :config
+  (add-to-list 'eglot-server-programs
+               '(ultimate-js-mode . ("typescript-language-server" "--stdio"))))
+
+(use-package flymake-eslint)
+
+(use-package flymake
+  :bind
+  (("M-<down>" . flymake-goto-next-error)
+   ("M-<up>" . flymake-goto-prev-error))
+  :config
+  (setq flymake-wrap-around nil))
+
+(use-package markdown-mode)
+
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
   :init
@@ -376,10 +394,10 @@
   :config
   (setq lsp-ui-sideline-show-diagnostics t))
 
-(use-package flycheck
-  :bind
-  (("M-<down>" . flycheck-next-error)
-   ("M-<up>" . flycheck-previous-error)))
+;; (use-package flycheck
+;;   :bind
+;;   (("M-<down>" . flycheck-next-error)
+;;    ("M-<up>" . flycheck-previous-error)))
 
 (define-key global-map (kbd "M-\"") #'xref-find-definitions)
 (define-key global-map (kbd "M-«") #'xref-find-references)
@@ -400,7 +418,7 @@
 
 (defun setup-before-save-hooks ()
   (add-hook 'before-save-hook #'go-before-save-hook))
- 
+
 (use-package go-mode
   :hook
   (go-mode . yas-minor-mode)
@@ -574,7 +592,7 @@
    '(rjsx-mode web-mode html-mode css-mode typescript-mode ultimate-js-mode))
  '(ns-alternate-modifier 'none)
  '(ns-command-modifier 'meta)
- '(outline-regexp "[ 
+ '(outline-regexp "[
 ]*" t)
  '(preview-auto-cache-preamble t)
  '(preview-default-preamble
