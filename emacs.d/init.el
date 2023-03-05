@@ -273,29 +273,71 @@
   (setq which-key-idle-delay 0.5)
   (which-key-mode))
 
-(use-package selectrum
-  :config (selectrum-mode +1))
+;; If we choosed a candidate, insert it, otherwise do the normal tab-completion
+(defun my-tab-complete ()
+  (interactive)
+  (if (= vertico--index -1) (minibuffer-complete) (vertico-insert)))
 
-(use-package selectrum-prescient
+(use-package vertico
+  :init (vertico-mode)
+  :bind (:map vertico-map ("TAB" . #'my-tab-complete)))
+
+(use-package vertico-prescient
   :config
-  (selectrum-prescient-mode +1)
-  (prescient-persist-mode +1)
-  (setq prescient-filter-method '(regexp fuzzy)))
+  (vertico-prescient-mode 1)
+  (setq prescient-filter-method '(regexp fuzzy))
+  (prescient-persist-mode 1))
 
 (use-package marginalia
   :config
   (marginalia-mode +1))
 
-(use-package company
-  :hook
-  (after-init . global-company-mode)
+(use-package corfu
   :custom
-  (company-minimum-prefix-length 1)
-  (company-idle-delay 0.2))
+  (corfu-auto t)
+  (corfu-auto-prefix 0)
+  (corfu-quit-no-match t)
+  :bind (("s-<tab>" . #'completion-at-point)
+		 :map corfu-map
+			  ([remap move-beginning-of-line] . nil)
+			  ([remap move-end-of-line] . nil)
+			  ([remap beginning-of-buffer] . nil)
+			  ([remap end-of-buffer] . nil)
+			  ([remap scroll-down-command] . nil)
+			  ([remap scroll-up-command] . nil)
+			  ([remap next-line] . nil)
+			  ([remap previous-line] . nil)
+			  ([remap keyboard-escape-quit] . corfu-quit)
+			  ("C-a" . nil)
+			  ("M-n" . nil)
+			  ("M-p" . nil)
+			  ("RET" . nil))
+  :init
+  (global-corfu-mode))
 
-(use-package company-prescient
-  :config
-  (company-prescient-mode +1))
+(use-package corfu-prescient)
+
+(use-package helpful
+  :bind (("C-c C-d" . helpful-at-point)))
+
+;; (use-package kind-icon
+;;   :ensure t
+;;   :after corfu
+;;   :custom
+;;   (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
+;;   :config
+;;   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+
+;; (use-package company
+;;   :hook
+;;   (after-init . global-company-mode)
+;;   :custom
+;;   (company-minimum-prefix-length 1)
+;;   (company-idle-delay 0.2))
+
+;; (use-package company-prescient
+;;   :config
+;;   (company-prescient-mode +1))
 
 ;; Case insensitive fuzzy completion in buffer
 (add-to-list 'completion-styles 'flex)
