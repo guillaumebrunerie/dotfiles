@@ -279,8 +279,12 @@
   (if (= vertico--index -1) (minibuffer-complete) (vertico-insert)))
 
 (use-package vertico
-  :init (vertico-mode)
-  :bind (:map vertico-map ("TAB" . #'my-tab-complete)))
+  :init
+  (vertico-mode)
+  :config
+  (setq vertico-preselect 'first)
+  :bind
+  (:map vertico-map ("TAB" . #'my-tab-complete)))
 
 (use-package vertico-prescient
   :config
@@ -310,8 +314,7 @@
 			  ([remap keyboard-escape-quit] . corfu-quit)
 			  ("C-a" . nil)
 			  ("M-n" . nil)
-			  ("M-p" . nil)
-			  ("RET" . nil))
+			  ("M-p" . nil))
   :init
   (global-corfu-mode))
 
