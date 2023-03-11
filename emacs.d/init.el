@@ -299,7 +299,7 @@
 (use-package corfu
   :custom
   (corfu-auto t)
-  (corfu-auto-prefix 0)
+  (corfu-auto-prefix 1)
   (corfu-quit-no-match t)
   :bind (("s-<tab>" . #'completion-at-point)
 		 :map corfu-map
