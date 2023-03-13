@@ -428,12 +428,19 @@
 
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
+  :custom
+  (lsp-completion-provider :none) ;; we use Corfu!
   :init
   (setq gc-cons-threshold 100000000)
   (setq read-process-output-max (* 1024 1024))
   (setq lsp-keymap-prefix "C-c C-l")
+  (defun my/lsp-mode-setup-completion ()
+    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+          '(flex))) ;; Configure flex
   :config
-  (lsp-enable-which-key-integration t))
+  (lsp-enable-which-key-integration t)
+  :hook
+  (lsp-completion-mode . my/lsp-mode-setup-completion))
 
 (use-package lsp-ui
   :config
