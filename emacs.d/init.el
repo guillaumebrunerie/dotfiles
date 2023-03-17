@@ -254,6 +254,8 @@
   ;; (ultimate-js-mode . eglot-ensure)
   ;; (ultimate-js-mode . (lambda () (flymake-eslint-enable)))
   :config
+  ;; (defun js--continued-expression-p () nil)
+  (setq js--declaration-keyword-re "\\<\\(let\\|var\\)\\>")
   (setq js-switch-indent-offset js-indent-level))
 
 ;;;;;;;;;;;;
