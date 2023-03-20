@@ -32,9 +32,9 @@ zstyle ':vcs_info:*' enable git hg
 zstyle ':vcs_info:git*' formats "%F{blue}(%b)%f%m%u%c "
 
 setopt prompt_subst
-[[ -n $SSH_CLIENT ]] && _HOST="$HOST " || _HOST=
+[[ -n $SSH_CLIENT ]] && _HOST="${HOST%%.*} " || _HOST=
 # Prompt
-PROMPT='%(?.(%F{green}0%f).%B%F{red}(%?%)%f%b) %F{red}${_HOST}%f%B%F{blue}%~%f %F{yellow}%1(j.%U.)%(!.#.$)%u%f%b '
+PROMPT='%(?.(%F{green}0%f).%B%F{red}(%?%)%f%b) %B%F{green}${_HOST}%f%B%F{blue}%~%f %F{yellow}%1(j.%U.)%(!.#.$)%u%f%b '
 RPROMPT='${vcs_info_msg_0_} %F{magenta}%B[%T]%b%f'
 
 if [[ $(uname -s) == "Linux" ]]
