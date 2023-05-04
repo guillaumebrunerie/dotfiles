@@ -461,6 +461,14 @@
 ;;   :straight (:type git :host github :repo "merrickluo/lsp-tailwindcss")
 ;;   :init (setq lsp-tailwindcss-add-on-mode t))
 
+;;;;;;;;;;;;;;;;;;;
+;; Atomic Chrome ;;
+;;;;;;;;;;;;;;;;;;;
+
+(use-package atomic-chrome
+  :init
+  (atomic-chrome-start-server))
+
 ;;;;;;;;
 ;; Go ;;
 ;;;;;;;;
