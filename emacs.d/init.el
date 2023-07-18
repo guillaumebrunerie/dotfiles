@@ -5,7 +5,7 @@
 ;; Initialize straight.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+   (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
       (bootstrap-version 5))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
@@ -24,6 +24,8 @@
 ;;;;;;;;;;;;;
 ;; Various ;;
 ;;;;;;;;;;;;;
+
+(global-whitespace-mode 1)
 
 ; No welcome message
 (setq inhibit-startup-message t)
@@ -152,19 +154,19 @@
 (defun toggle-vterm-background ()
   "Set up a different background color if we are in vterm mode but not in vterm copy mode"
   (if (and (string= major-mode "vterm-mode") (not vterm-copy-mode))
-	  (setq vterm-background-cookies (cons (face-remap-add-relative 'default 'vterm-background) (face-remap-add-relative 'fringe 'vterm-background)))
-	(face-remap-remove-relative (car vterm-background-cookies))
-	(face-remap-remove-relative (cdr vterm-background-cookies))))
+      (setq vterm-background-cookies (cons (face-remap-add-relative 'default 'vterm-background) (face-remap-add-relative 'fringe 'vterm-background)))
+    (face-remap-remove-relative (car vterm-background-cookies))
+    (face-remap-remove-relative (cdr vterm-background-cookies))))
 
 (use-package vterm
   ;; :custom
   ;; (vterm-buffer-name-string "%s [vterm]")
   :bind
   (:map vterm-mode-map
-		("<mouse-4>" . vterm-send-up)
-		("<wheel-up>" . vterm-send-up)
-		("<mouse-5>" . vterm-send-down)
-		("<wheel-down>" . vterm-send-down))
+        ("<mouse-4>" . vterm-send-up)
+        ("<wheel-up>" . vterm-send-up)
+        ("<mouse-5>" . vterm-send-down)
+        ("<wheel-down>" . vterm-send-down))
   :hook
   (vterm-mode . (lambda () (text-scale-adjust -1)))
   (vterm-mode . toggle-vterm-background)
@@ -208,50 +210,47 @@
 (use-package phindent-mode
   :straight (:host github :repo "guillaumebrunerie/phindent-mode"))
 
-(defun infer-indentation-style ()
-  ;; If our source file uses tabs somewhere, or doesn’t but doesn’t use spaces
-  ;; either (for instance an empty file), we use tabs, otherwise we use spaces.
-  (setq-local indent-tabs-mode (or (> (how-many "^\t" (point-min) (point-max)) 0)
-                                   (= (how-many "^    " (point-min) (point-max)) 0))))
+(defun infer-indentation-style (defaults-to-tabs)
+  "Detects and sets indentation style (tabs vs spaces), and width (four for
+tabs, and supports two and four for spaces)
 
-(defun infer-indentation-amount ()
-  (let ((two-indented-lines (how-many "^  [^ ]" (point-min) (point-max)))
-		(tab-indented-lines (how-many "^\t" (point-min) (point-max))))
-    (if (and (> two-indented-lines 2) (= tab-indented-lines 0))
-		(setq-local js-indent-level 2)
-	  (setq-local js-indent-level 4))))
+We consider the file to be indented with spaces if there are strictly more lines
+starting with two spaces than lines starting with a tab.
 
-(use-package js2-mode
-  :hook
-  (js2-mode . infer-indentation-style)
-  (js2-mode . infer-indentation-amount)
-  (js2-mode . phindent-mode)
-  (js2-mode . whitespace-mode)
-  :config
-  (setq js-switch-indent-offset js-indent-level))
-(use-package js2-refactor
-  :hook (js2-mode . js2-refactor-mode)
-  :config
-  (js2r-add-keybindings-with-prefix "C-c C-r"))
-(use-package js2-highlight-vars
-  :hook (js2-mode . js2-highlight-vars-mode))
+In the case of spaces, we consider it to be indented with two spaces if there is
+at least one line starting with exactly two spaces.
 
-(use-package rjsx-mode
-  :hook
-  (rjsx-mode . infer-indentation-style)
-  (rjsx-mode . phindent-mode)
-  (rjsx-mode . whitespace-mode))
+Special cases to support:
+- An empty file (or a file without indented lines) is indented with tabs.
+- A file with one predominant indentation style but small mistakes here and
+there should still be identified correctly.
+"
+  (let* ((tabs-indented-lines (how-many "^\t" (point-min) (point-max)))
+         (spaces-indented-lines (how-many "^  " (point-min) (point-max)))
+         (two-spaces-indented-lines (how-many "^  [^ \t]" (point-min) (point-max)))
+         (no-indented-lines (and (= tabs-indented-lines 0) (= spaces-indented-lines 0))))
+    (setq-local indent-tabs-mode (if no-indented-lines defaults-to-tabs (>= tabs-indented-lines spaces-indented-lines)))
+    (setq-local js-indent-level (cond
+                                 (indent-tabs-mode 4)
+                                 ((and no-indented-lines (not defaults-to-tabs)) 2)
+                                 ((= two-spaces-indented-lines 0) 4)
+                                 (t 2)))
+    (setq-local sgml-basic-offset js-indent-level)))
+
+(defun infer-indentation-style-defaulting-to-tabs ()
+  (infer-indentation-style t))
+
+(defun infer-indentation-style-defaulting-to-spaces ()
+  (infer-indentation-style nil))
 
 (use-package ultimate-js-mode
   :straight (:host github :repo "guillaumebrunerie/ultimate-js-mode" :files (:defaults "libs" "queries"))
-  :mode ("\\.[jt]sx?\\'" "\\.json\\'")
+  :mode ("\\.[mc]?[jt]sx?\\'" "\\.json\\'")
   :hook
-  (ultimate-js-mode . infer-indentation-style)
-  (ultimate-js-mode . infer-indentation-amount)
+  (ultimate-js-mode . infer-indentation-style-defaulting-to-tabs)
   (ultimate-js-mode . phindent-mode)
-  (ultimate-js-mode . whitespace-mode)
-  (ultimate-js-mode . lsp-deferred)
-  ;; (ultimate-js-mode . eglot-ensure)
+  ;; (ultimate-js-mode . lsp-deferred)
+  (ultimate-js-mode . eglot-ensure)
   ;; (ultimate-js-mode . (lambda () (flymake-eslint-enable)))
   :config
   ;; (defun js--continued-expression-p () nil)
@@ -304,19 +303,19 @@
   (corfu-auto-prefix 1)
   (corfu-quit-no-match t)
   :bind (("s-<tab>" . #'completion-at-point)
-		 :map corfu-map
-			  ([remap move-beginning-of-line] . nil)
-			  ([remap move-end-of-line] . nil)
-			  ([remap beginning-of-buffer] . nil)
-			  ([remap end-of-buffer] . nil)
-			  ([remap scroll-down-command] . nil)
-			  ([remap scroll-up-command] . nil)
-			  ([remap next-line] . nil)
-			  ([remap previous-line] . nil)
-			  ([remap keyboard-escape-quit] . corfu-quit)
-			  ("C-a" . nil)
-			  ("M-n" . nil)
-			  ("M-p" . nil))
+         :map corfu-map
+         ([remap move-beginning-of-line] . nil)
+         ([remap move-end-of-line] . nil)
+         ([remap beginning-of-buffer] . nil)
+         ([remap end-of-buffer] . nil)
+         ([remap scroll-down-command] . nil)
+         ([remap scroll-up-command] . nil)
+         ([remap next-line] . nil)
+         ([remap previous-line] . nil)
+         ([remap keyboard-escape-quit] . corfu-quit)
+         ("C-a" . nil)
+         ("M-n" . nil)
+         ("M-p" . nil))
   :init
   (global-corfu-mode))
 
@@ -355,39 +354,39 @@
 (defun my/hs-is-folded ()
   "Returns non-nil if the current line is folded, and returns the end position of the folding"
   (let* ((overlays-on-line (append (overlays-in (point-at-eol) (+ (point-at-eol) 1)) (overlays-in (1- (point-at-bol)) (point-at-bol)))))
-	(seq-some (lambda (o) (and (overlay-get o 'hs) (overlay-end o))) overlays-on-line)))
+    (seq-some (lambda (o) (and (overlay-get o 'hs) (overlay-end o))) overlays-on-line)))
 
 (defun my/hs-toggle (arg)
   "If the current line is folded, unfold only one level of it, otherwise fold it."
   (interactive "p")
   (if-let ((fold-position (my/hs-is-folded)))
-	  (save-excursion
-		(goto-char fold-position)
-		(hs-hide-level arg))
-	(save-excursion
-	  (move-end-of-line arg)
-	  (hs-hide-block))))
+      (save-excursion
+        (goto-char fold-position)
+        (hs-hide-level arg))
+    (save-excursion
+      (move-end-of-line arg)
+      (hs-hide-block))))
 
 (defun my/hs-open (arg)
   "Unfold entirely the current line"
   (interactive "p")
   (save-excursion
-	(if (> arg 1)
-		(hs-show-all)
-	  (if-let ((fold-position (my/hs-is-folded)))
-		  (progn
-			(goto-char fold-position)
-			(hs-show-block))
-		(move-beginning-of-line arg)
-		(hs-show-block)))))
+    (if (> arg 1)
+        (hs-show-all)
+      (if-let ((fold-position (my/hs-is-folded)))
+          (progn
+            (goto-char fold-position)
+            (hs-show-block))
+        (move-beginning-of-line arg)
+        (hs-show-block)))))
 
 (defun my/hs-close (arg)
   (interactive "p")
   (save-excursion
-	(if (> arg 1)
-		(hs-hide-all)
-	  (move-end-of-line arg)
-	  (hs-hide-block))))
+    (if (> arg 1)
+        (hs-hide-all)
+      (move-end-of-line arg)
+      (hs-hide-block))))
 
 (defface hs-folded '((t :background "#782200" :foreground "#737373")) "Dots")
 
@@ -412,54 +411,77 @@
 ;; Language Server ;;
 ;;;;;;;;;;;;;;;;;;;;;
 
-;; (use-package eglot
-;;   :config
-;;   (add-to-list 'eglot-server-programs
-;;                '(ultimate-js-mode . ("typescript-language-server" "--stdio"))))
+(use-package eglot
+  :config
+  (add-to-list 'eglot-server-programs
+               '(ultimate-js-mode . ("typescript-language-server" "--stdio"))))
 
-;; (use-package flymake-eslint)
+(defun my-next-error ()
+  "Show next diagnostic"
+  (interactive)
+  (next-line)
+  (call-interactively 'flymake-show-diagnostic))
 
-;; (use-package flymake
-;;   :bind
-;;   (("M-<down>" . flymake-goto-next-error)
-;;    ("M-<up>" . flymake-goto-prev-error))
-;;   :config
-;;   (setq flymake-wrap-around nil))
+(defun my-prev-error ()
+  "Show previous diagnostic"
+  (interactive)
+  (previous-line)
+  (call-interactively 'flymake-show-diagnostic))
+
+(defun my-show-diagnostics ()
+  "Show project diagnostics"
+  (interactive)
+  (flymake-show-project-diagnostics)
+  (other-window 1)
+  (call-interactively 'flymake-show-diagnostic))
+
+(use-package flymake
+  :bind
+  (("M-<down>" . flymake-goto-next-error)
+   ("M-<up>" . flymake-goto-prev-error)
+   ("C-c C-l" . my-show-diagnostics)
+   :map flymake-diagnostics-buffer-mode-map
+   :map flymake-project-diagnostics-mode-map
+   ("n" . my-next-error)
+   ("p" . my-prev-error))
+  :config
+  (setq flymake-wrap-around nil))
 
 (use-package markdown-mode)
 
-(use-package lsp-mode
-  :commands (lsp lsp-deferred)
-  :custom
-  (lsp-completion-provider :none) ;; we use Corfu!
-  :init
-  (setq gc-cons-threshold 100000000)
-  (setq read-process-output-max (* 1024 1024))
-  (setq lsp-keymap-prefix "C-c C-l")
-  (defun my/lsp-mode-setup-completion ()
-    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-          '(flex))) ;; Configure flex
-  :config
-  (lsp-enable-which-key-integration t)
-  :hook
-  (lsp-completion-mode . my/lsp-mode-setup-completion))
+;; (use-package lsp-mode
+;;   :commands (lsp lsp-deferred)
+;;   :custom
+;;   (lsp-completion-provider :none) ;; we use Corfu!
+;;   :init
+;;   (setq gc-cons-threshold 100000000)
+;;   (setq read-process-output-max (* 1024 1024))
+;;   (setq lsp-keymap-prefix "C-c C-l")
+;;   (defun my/lsp-mode-setup-completion ()
+;;     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+;;           '(flex))) ;; Configure flex
+;;   :config
+;;   (lsp-enable-which-key-integration t)
+;;   :hook
+;;   (lsp-completion-mode . my/lsp-mode-setup-completion))
 
-(use-package lsp-ui
-  :config
-  (setq lsp-ui-sideline-show-diagnostics t))
+;; (use-package lsp-ui
+;;   :config
+;;   (setq lsp-ui-sideline-show-diagnostics t))
 
-(use-package flycheck
+;; (use-package flycheck
+;;   :bind
+;;   (("M-<down>" . flycheck-next-error)
+;;    ("M-<up>" . flycheck-previous-error)))
+
+(use-package flymake
   :bind
-  (("M-<down>" . flycheck-next-error)
-   ("M-<up>" . flycheck-previous-error)))
+  (("M-<down>" . flymake-goto-next-error)
+   ("M-<up>" . flymake-goto-prev-error)))
 
 (define-key global-map (kbd "M-\"") #'xref-find-definitions)
 (define-key global-map (kbd "M-«") #'xref-find-references)
 (define-key global-map (kbd "M-$") #'xref-go-back)
-
-;; (use-package lsp-tailwindcss
-;;   :straight (:type git :host github :repo "merrickluo/lsp-tailwindcss")
-;;   :init (setq lsp-tailwindcss-add-on-mode t))
 
 ;;;;;;;;;;;;;;;;;;;
 ;; Atomic Chrome ;;
@@ -475,8 +497,8 @@
 
 (defun go-before-save-hook ()
   (when (eq major-mode 'go-mode)
-	(gofmt-before-save)
-	(lsp-organize-imports)))
+    (gofmt-before-save)
+    (eglot-code-action-organize-imports)))
 
 (defun setup-before-save-hooks ()
   (add-hook 'before-save-hook #'go-before-save-hook))
@@ -485,23 +507,22 @@
   :hook
   (go-mode . yas-minor-mode)
   (go-mode . phindent-mode)
-  (go-mode . whitespace-mode)
-  (go-mode . lsp-deferred)
+  ;; (go-mode . lsp-deferred)
+  (go-mode . eglot-ensure)
   (go-mode . setup-before-save-hooks))
 
 ;;;;;;;;;;
 ;; HTML ;;
 ;;;;;;;;;;
 
-(add-hook 'html-mode-hook 'infer-indentation-style)
-(add-hook 'html-mode-hook (lambda () (setq tab-width 2)))
+(add-hook 'html-mode-hook 'infer-indentation-style-defaulting-to-spaces)
+(add-hook 'html-mode-hook 'phindent-mode)
 
 ;;;;;;;;;
 ;; CSS ;;
 ;;;;;;;;;
 
-(add-hook 'css-mode-hook 'infer-indentation-style)
-(add-hook 'css-mode-hook (lambda () (setq tab-width 2)))
+(add-hook 'css-mode-hook 'infer-indentation-style-defaulting-to-spaces)
 (add-hook 'css-mode-hook 'phindent-mode)
 
 ;;;;;;;;;
@@ -522,7 +543,7 @@
 ;;;;;;;;;;
 
 (ignore-errors (load-file (let ((coding-system-for-read 'utf-8))
-                (shell-command-to-string "agda-mode locate"))))
+                            (shell-command-to-string "agda-mode locate"))))
 (ignore-errors '(agda2-program-args (quote ("+RTS" "-K40M" "-RTS"))))
 
 ;;;;;;;;;;;;;
@@ -650,8 +671,6 @@
  '(home-end-enable t)
  '(js-indent-align-list-continuation nil)
  '(js2-strict-missing-semi-warning t)
- '(lsp-tailwindcss-major-modes
-   '(rjsx-mode web-mode html-mode css-mode typescript-mode ultimate-js-mode))
  '(ns-alternate-modifier 'none)
  '(ns-command-modifier 'meta)
  '(outline-regexp "[
@@ -673,7 +692,6 @@
            (setq coq-prog-name
                  (expand-file-name "../hoqtop")))))
  '(sentence-end-double-space nil)
- '(sgml-basic-offset 4)
  '(tab-width 4)
  '(tree-sitter-debug-highlight-jump-region t)
  '(tree-sitter-debug-jump-buttons t)
