@@ -249,8 +249,8 @@ there should still be identified correctly.
   :hook
   (ultimate-js-mode . infer-indentation-style-defaulting-to-tabs)
   (ultimate-js-mode . phindent-mode)
-  ;; (ultimate-js-mode . lsp-deferred)
-  (ultimate-js-mode . eglot-ensure)
+  (ultimate-js-mode . lsp-deferred)
+  ;; (ultimate-js-mode . eglot-ensure)
   ;; (ultimate-js-mode . (lambda () (flymake-eslint-enable)))
   :config
   ;; (defun js--continued-expression-p () nil)
@@ -303,6 +303,7 @@ there should still be identified correctly.
   (corfu-auto-prefix 1)
   (corfu-quit-no-match t)
   :bind (("s-<tab>" . #'completion-at-point)
+         ("A-<tab>" . #'completion-at-point)
          :map corfu-map
          ([remap move-beginning-of-line] . nil)
          ([remap move-end-of-line] . nil)
@@ -411,73 +412,73 @@ there should still be identified correctly.
 ;; Language Server ;;
 ;;;;;;;;;;;;;;;;;;;;;
 
-(use-package eglot
-  :config
-  (add-to-list 'eglot-server-programs
-               '(ultimate-js-mode . ("typescript-language-server" "--stdio"))))
+;; (use-package eglot
+;;   :config
+;;   (add-to-list 'eglot-server-programs
+;;                '(ultimate-js-mode . ("typescript-language-server" "--stdio"))))
 
-(defun my-next-error ()
-  "Show next diagnostic"
-  (interactive)
-  (next-line)
-  (call-interactively 'flymake-show-diagnostic))
+;; (defun my-next-error ()
+;;   "Show next diagnostic"
+;;   (interactive)
+;;   (next-line)
+;;   (call-interactively 'flymake-show-diagnostic))
 
-(defun my-prev-error ()
-  "Show previous diagnostic"
-  (interactive)
-  (previous-line)
-  (call-interactively 'flymake-show-diagnostic))
+;; (defun my-prev-error ()
+;;   "Show previous diagnostic"
+;;   (interactive)
+;;   (previous-line)
+;;   (call-interactively 'flymake-show-diagnostic))
 
-(defun my-show-diagnostics ()
-  "Show project diagnostics"
-  (interactive)
-  (flymake-show-project-diagnostics)
-  (other-window 1)
-  (call-interactively 'flymake-show-diagnostic))
+;; (defun my-show-diagnostics ()
+;;   "Show project diagnostics"
+;;   (interactive)
+;;   (flymake-show-project-diagnostics)
+;;   (other-window 1)
+;;   (call-interactively 'flymake-show-diagnostic))
 
-(use-package flymake
-  :bind
-  (("M-<down>" . flymake-goto-next-error)
-   ("M-<up>" . flymake-goto-prev-error)
-   ("C-c C-l" . my-show-diagnostics)
-   :map flymake-diagnostics-buffer-mode-map
-   :map flymake-project-diagnostics-mode-map
-   ("n" . my-next-error)
-   ("p" . my-prev-error))
-  :config
-  (setq flymake-wrap-around nil))
+;; (use-package flymake
+;;   :bind
+;;   (("M-<down>" . flymake-goto-next-error)
+;;    ("M-<up>" . flymake-goto-prev-error)
+;;    ("C-c C-l" . my-show-diagnostics)
+;;    :map flymake-diagnostics-buffer-mode-map
+;;    :map flymake-project-diagnostics-mode-map
+;;    ("n" . my-next-error)
+;;    ("p" . my-prev-error))
+;;   :config
+;;   (setq flymake-wrap-around nil))
 
 (use-package markdown-mode)
 
-;; (use-package lsp-mode
-;;   :commands (lsp lsp-deferred)
-;;   :custom
-;;   (lsp-completion-provider :none) ;; we use Corfu!
-;;   :init
-;;   (setq gc-cons-threshold 100000000)
-;;   (setq read-process-output-max (* 1024 1024))
-;;   (setq lsp-keymap-prefix "C-c C-l")
-;;   (defun my/lsp-mode-setup-completion ()
-;;     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-;;           '(flex))) ;; Configure flex
-;;   :config
-;;   (lsp-enable-which-key-integration t)
-;;   :hook
-;;   (lsp-completion-mode . my/lsp-mode-setup-completion))
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :custom
+  (lsp-completion-provider :none) ;; we use Corfu!
+  :init
+  (setq gc-cons-threshold 100000000)
+  (setq read-process-output-max (* 1024 1024))
+  (setq lsp-keymap-prefix "C-c C-l")
+  (defun my/lsp-mode-setup-completion ()
+    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+          '(flex))) ;; Configure flex
+  :config
+  (lsp-enable-which-key-integration t)
+  :hook
+  (lsp-completion-mode . my/lsp-mode-setup-completion))
 
-;; (use-package lsp-ui
-;;   :config
-;;   (setq lsp-ui-sideline-show-diagnostics t))
+(use-package lsp-ui
+  :config
+  (setq lsp-ui-sideline-show-diagnostics t))
 
-;; (use-package flycheck
-;;   :bind
-;;   (("M-<down>" . flycheck-next-error)
-;;    ("M-<up>" . flycheck-previous-error)))
-
-(use-package flymake
+(use-package flycheck
   :bind
-  (("M-<down>" . flymake-goto-next-error)
-   ("M-<up>" . flymake-goto-prev-error)))
+  (("M-<down>" . flycheck-next-error)
+   ("M-<up>" . flycheck-previous-error)))
+
+;; (use-package flymake
+;;   :bind
+;;   (("M-<down>" . flymake-goto-next-error)
+;;    ("M-<up>" . flymake-goto-prev-error)))
 
 (define-key global-map (kbd "M-\"") #'xref-find-definitions)
 (define-key global-map (kbd "M-«") #'xref-find-references)
@@ -498,7 +499,8 @@ there should still be identified correctly.
 (defun go-before-save-hook ()
   (when (eq major-mode 'go-mode)
     (gofmt-before-save)
-    (eglot-code-action-organize-imports)))
+	(lsp-organize-imports)))
+    ;; (eglot-code-action-organize-imports)))
 
 (defun setup-before-save-hooks ()
   (add-hook 'before-save-hook #'go-before-save-hook))
@@ -507,8 +509,8 @@ there should still be identified correctly.
   :hook
   (go-mode . yas-minor-mode)
   (go-mode . phindent-mode)
-  ;; (go-mode . lsp-deferred)
-  (go-mode . eglot-ensure)
+  (go-mode . lsp-deferred)
+  ;; (go-mode . eglot-ensure)
   (go-mode . setup-before-save-hooks))
 
 ;;;;;;;;;;
