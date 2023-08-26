@@ -95,6 +95,27 @@
 ;; ;; Deal with long lines (disabled for now as Emacs 29 supposedly fixes it)
 ;; (global-so-long-mode 1)
 
+(defun duplicate-lines ()
+  "Duplicate the lines intersecting the region."
+  (interactive)
+  (save-excursion
+    (let* ((start
+            (save-excursion
+              (goto-char (region-beginning))
+              (beginning-of-line)
+              (point)))
+           (end
+            (save-excursion
+              (goto-char (region-end))
+              (end-of-line)
+              (point)))
+           (line (buffer-substring start end)))
+      (goto-char (region-end))
+      (forward-line 1)
+      (beginning-of-line)
+      (insert line "\n"))))
+(global-set-key (kbd "C-c C-j") #'duplicate-lines)
+
 ;;;;;;;;;;;
 ;; OCaml ;;
 ;;;;;;;;;;;
