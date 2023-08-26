@@ -1,12 +1,12 @@
-;;;;;;;;;;;;;;;;;;;;;;;;
-;; Package management ;;
-;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;
+;; Straight.el ;;
+;;;;;;;;;;;;;;;;;
 
-;; Initialize straight.el
+;; Bootstrap
 (defvar bootstrap-version)
 (let ((bootstrap-file
-   (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 6))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
         (url-retrieve-synchronously
@@ -17,83 +17,93 @@
   (load bootstrap-file nil 'nomessage))
 
 ;; Configure the use-package macro to work with straight
-(straight-use-package 'use-package)
 (use-package straight
   :custom (straight-use-package-by-default t))
 
-;;;;;;;;;;;;;
-;; Various ;;
-;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;
+;; Global settings ;;
+;;;;;;;;;;;;;;;;;;;;;
 
-(global-whitespace-mode 1)
+(use-package emacs
+  :init
+  (global-whitespace-mode 1)
+  (setq inhibit-startup-message t) ;; No welcome message
+  (tool-bar-mode -1) ;; No tool bar
+  (menu-bar-mode -1) ;; No menu bar
+  (setq visible-bell t) ;; Visible bell
 
-; No welcome message
-(setq inhibit-startup-message t)
+  ;; Customized window title
+  (setq frame-title-format '(buffer-file-name "Emacs: %b (%f)" "Emacs: %b"))
 
-; Cleaner interface
-(tool-bar-mode -1)
-(menu-bar-mode -1)
+  (column-number-mode 1) ;; Show column number
 
-; Visible bell
-(setq visible-bell t)
+  ;; Auto-fill by default in text-mode
+  (add-hook 'text-mode-hook 'turn-on-auto-fill)
 
-; Customize window title
-(setq frame-title-format '(buffer-file-name "Emacs: %b (%f)" "Emacs: %b"))
+  ;; Delete selection when typing
+  (pending-delete-mode)
 
-; Column number
-(column-number-mode 1)
+  ;; Consider dashes to be a word constituent in the minibuffer
+  (modify-syntax-entry ?\- "w" minibuffer-local-filename-syntax)
 
-; Auto-fill by default in text-mode
-(add-hook 'text-mode-hook 'turn-on-auto-fill)
+  ;; Confirm before killing Emacs
+  (setq confirm-kill-emacs 'yes-or-no-p)
 
-; Recherche automatique des fermetures et ouvertures des parenthèses
-(setq show-paren-delay 0)
-(setopt show-paren-predicate t)
-(setopt show-paren-context-when-offscreen 'overlay)
-(show-paren-mode 1)
+  ;; No backup files
+  (setq make-backup-files nil)
 
-; Pour que la sélection soit remplacée par ce que l'on tape
-(pending-delete-mode)
+  ;; No lockfiles
+  (setq create-lockfiles nil)
 
-; Eviter que la cesure de fin de ligne, operée par exemple par le  mode autofill ou par un M-q, coupe au niveau d'un caractere ( ou :
-(add-hook 'fill-no-break-predicate 'fill-french-nobreak-p)
+  ;; Auto save files in ~/.emacs.d/auto-save
+  (defvar autosave-dir (concat user-emacs-directory "/auto-save/"))
+  (make-directory autosave-dir t)
+  (setq auto-save-file-name-transforms
+        `(("\\(?:[^/]*/\\)*\\(.*\\)" ,(concat autosave-dir "\\1") t)))
 
-; Consider dashes to be a word constituent in the minibuffer
-(modify-syntax-entry ?\- "w" minibuffer-local-filename-syntax)
+  ;; Automatically show images and compressed files
+  (setq auto-image-file-mode t)
+  (setq auto-compression-mode t)
 
-; ----------------------------------------------------------------------
-; Divers
+  ;; Don’t require typing "yes"/"no" entirely
+  (fset 'yes-or-no-p 'y-or-n-p)
 
-(setq confirm-kill-emacs 'yes-or-no-p)
+  ;; Scrolling
+  (mouse-wheel-mode 1)
+  (pixel-scroll-precision-mode 1)
 
-; No backup files
-(setq make-backup-files nil)
+  ;; History for minibuffer
+  (savehist-mode)
 
-; Auto save in ~/.emacs.d/auto-save
-(defvar autosave-dir (concat user-emacs-directory "/auto-save/"))
-(make-directory autosave-dir t)
-(setq auto-save-file-name-transforms
-      `(("\\(?:[^/]*/\\)*\\(.*\\)" ,(concat autosave-dir "\\1") t)))
+  ;; ;; Deal with long lines (disabled for now as Emacs 29 supposedly fixes it)
+  ;; (global-so-long-mode 1)
 
-; Pour ne pas avoir à taper en entier la réponse yes/no
-(fset 'yes-or-no-p 'y-or-n-p)
+  ;; Mark script files as executable automatically
+  (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
 
-; Affichage des images et fichiers compressés
-(setq auto-image-file-mode t)
-(setq auto-compression-mode t)
+  ;; Tooltips in the echo area
+  (tooltip-mode -1)
 
-; Molette de la souris
-(mouse-wheel-mode 1)
-(pixel-scroll-precision-mode 1)
+  ;; Correct path
+  (add-to-list 'exec-path "/usr/local/bin/")
 
-; No annoying lockfiles
-(setq create-lockfiles nil)
+  ;; Maximize
+  (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
-;; History for minibuffer
-(savehist-mode)
+  ;; Local configuration
+  (when (file-exists-p "~/.emacs.d/init-local.el")
+    (load-file "~/.emacs.d/init-local.el"))
 
-;; ;; Deal with long lines (disabled for now as Emacs 29 supposedly fixes it)
-;; (global-so-long-mode 1)
+  ;; Select help buffers automatically
+  (setq help-window-select t)
+)
+
+(use-package paren
+  :init
+  (setq show-paren-delay 0)
+  (setopt show-paren-predicate t)
+  (setopt show-paren-context-when-offscreen 'overlay)
+  (show-paren-mode 1))
 
 (defun duplicate-lines ()
   "Duplicate the lines intersecting the region."
@@ -115,13 +125,6 @@
       (beginning-of-line)
       (insert line "\n"))))
 (global-set-key (kbd "C-c C-j") #'duplicate-lines)
-
-;; Mark script files as executable automatically
-(add-hook 'after-save-hook
-  'executable-make-buffer-file-executable-if-script-p)
-
-;; Tooltips in the echo area
-(tooltip-mode -1)
 
 ;;;;;;;;;;;
 ;; OCaml ;;
@@ -159,29 +162,29 @@
 ;; LaTeX ;;
 ;;;;;;;;;;;
 
-(add-hook 'LaTeX-mode-hook (lambda ()
-                             (LaTeX-math-mode 1)
-                             (global-linum-mode t)
-                             (TeX-PDF-mode 1)
-                             (TeX-fold-mode 1)
-                             (setq TeX-parse-self t)
-                             (setq TeX-auto-save t)
-                             (set-fill-column 100)
-                             )
-          )
+(add-hook
+ 'LaTeX-mode-hook
+ (lambda ()
+   (LaTeX-math-mode 1)
+   (TeX-PDF-mode 1)
+   (TeX-fold-mode 1)
+   (setq TeX-parse-self t)
+   (setq TeX-auto-save t)
+   (set-fill-column 100)))
 (ignore-errors (load "auctex.el" nil t t))
 (ignore-errors (load "preview-latex.el" nil t t))
 
-(add-hook 'LaTeX-mode-hook
-          (lambda ()
-            (setq ispell-tex-skip-alists
-                  (list
-                   (append
-                    (car ispell-tex-skip-alists)
-                    '(("[^\\]\\$" . "[^\\]\\$") ("\\[" . "\\]") ("\\\\operatorname" ispell-tex-arg-end)))
-                   (append
-                    (cadr ispell-tex-skip-alists)
-                    '(("align\\*?" . "\\\\end{align\\*?}")))))))
+(add-hook
+ 'LaTeX-mode-hook
+ (lambda ()
+   (setq ispell-tex-skip-alists
+         (list
+          (append
+           (car ispell-tex-skip-alists)
+           '(("[^\\]\\$" . "[^\\]\\$") ("\\[" . "\\]") ("\\\\operatorname" ispell-tex-arg-end)))
+          (append
+           (cadr ispell-tex-skip-alists)
+           '(("align\\*?" . "\\\\end{align\\*?}")))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;; Terminal emulator ;;
@@ -215,6 +218,10 @@
 
 ;; If we aren’t in any project, make multi-vterm believe we're in a project at ~
 (advice-add 'multi-vterm-project-root :filter-return (lambda (r) (or r "~")))
+
+;;;;;;;;;;;;;;;;;;
+;; Shell script ;;
+;;;;;;;;;;;;;;;;;;
 
 (use-package shell-script-mode
   :straight nil
@@ -426,7 +433,18 @@ there should still be identified correctly.
       (move-end-of-line arg)
       (hs-hide-block))))
 
-(defface hs-folded '((t :background "#782200" :foreground "#737373")) "Dots")
+(defun my/hs-set-up-overlay (ov)
+  (overlay-put
+   ov
+   'display
+   (propertize
+    (format
+     "...%d lines hidden..."
+     (count-lines (overlay-start ov) (overlay-end ov)))
+    'face
+    'hs-folded)))
+
+(defface hs-folded '((t :background "#782200" :foreground "#EEE" :weight bold :box "#FF0000")) "Dots")
 
 (use-package hs-minor-mode
   :straight nil
@@ -437,13 +455,21 @@ there should still be identified correctly.
    ("<C-iso-lefttab>" . my/hs-open))
   :custom
   (hs-hide-comments-when-hiding-all nil)
+  :init
+  (setq hs-set-up-overlay 'my/hs-set-up-overlay)
   :config
-  (hs-minor-mode)
-  (setq hs-set-up-overlay (lambda (o) (overlay-put o 'display (propertize "[···]" 'face 'hs-folded)))))
+  (hs-minor-mode))
 
 (use-package prog-mode
   :straight nil
   :hook (prog-mode . hs-minor-mode))
+
+;;;;;;;;;;;;;;
+;; Markdown ;;
+;;;;;;;;;;;;;;
+
+(use-package markdown-mode)
+
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Language Server ;;
@@ -484,8 +510,6 @@ there should still be identified correctly.
 ;;    ("p" . my-prev-error))
 ;;   :config
 ;;   (setq flymake-wrap-around nil))
-
-(use-package markdown-mode)
 
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
@@ -599,16 +623,6 @@ there should still be identified correctly.
   (setq indent-tabs-mode nil)
   (c-set-offset 'knr-argdecl-intro 0))
 (add-hook 'c-mode-common-hook 'hook-c)
-
-;; Correct path
-(add-to-list 'exec-path "/usr/local/bin/")
-
-;; Maximize
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
-
-; Local configuration
-(when (file-exists-p "~/.emacs.d/init-local.el")
-  (load-file "~/.emacs.d/init-local.el"))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
