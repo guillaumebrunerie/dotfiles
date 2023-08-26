@@ -116,6 +116,10 @@
       (insert line "\n"))))
 (global-set-key (kbd "C-c C-j") #'duplicate-lines)
 
+;; Mark script files as executable automatically
+(add-hook 'after-save-hook
+  'executable-make-buffer-file-executable-if-script-p)
+
 ;;;;;;;;;;;
 ;; OCaml ;;
 ;;;;;;;;;;;
