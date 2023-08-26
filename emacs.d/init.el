@@ -284,7 +284,8 @@ there should still be identified correctly.
                                  ((and no-indented-lines (not defaults-to-tabs)) 2)
                                  ((= two-spaces-indented-lines 0) 4)
                                  (t 2)))
-    (setq-local sgml-basic-offset js-indent-level)))
+    (setq-local sgml-basic-offset js-indent-level)
+    (setq-local typescript-ts-mode-indent-offset js-indent-level)))
 
 (defun infer-indentation-style-defaulting-to-tabs ()
   (infer-indentation-style t))
@@ -546,6 +547,27 @@ there should still be identified correctly.
 (define-key global-map (kbd "M-«") #'xref-find-references)
 (define-key global-map (kbd "M-$") #'xref-go-back)
 
+;;;;;;;;;;;;;;;;;
+;; Tree sitter ;;
+;;;;;;;;;;;;;;;;;
+
+(setq
+ treesit-language-source-alist
+ '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+   (css "https://github.com/tree-sitter/tree-sitter-css")
+   (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+   (go "https://github.com/tree-sitter/tree-sitter-go")
+   (html "https://github.com/tree-sitter/tree-sitter-html")
+   (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+   (json "https://github.com/tree-sitter/tree-sitter-json")
+   (make "https://github.com/alemuller/tree-sitter-make")
+   (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+   (python "https://github.com/tree-sitter/tree-sitter-python")
+   (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+   (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+   (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+
+
 ;;;;;;;;;;;;;;;;;;;
 ;; Atomic Chrome ;;
 ;;;;;;;;;;;;;;;;;;;
@@ -726,8 +748,7 @@ there should still be identified correctly.
  '(js2-strict-missing-semi-warning t)
  '(ns-alternate-modifier 'none)
  '(ns-command-modifier 'meta)
- '(outline-regexp "[
-]*" t)
+ '(outline-regexp "[\12]*" t)
  '(preview-auto-cache-preamble t)
  '(preview-default-preamble
    '("\\RequirePackage["
