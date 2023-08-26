@@ -56,8 +56,8 @@
 ; Eviter que la cesure de fin de ligne, operée par exemple par le  mode autofill ou par un M-q, coupe au niveau d'un caractere ( ou :
 (add-hook 'fill-no-break-predicate 'fill-french-nobreak-p)
 
-; M-g pour aller à la x-ième ligne
-;(global-set-key [(meta g)] 'goto-line)
+; Consider dashes to be a word constituent in the minibuffer
+(modify-syntax-entry ?\- "w" minibuffer-local-filename-syntax)
 
 ; ----------------------------------------------------------------------
 ; Divers
@@ -66,6 +66,12 @@
 
 ; No backup files
 (setq make-backup-files nil)
+
+; Auto save in ~/.emacs.d/auto-save
+(defvar autosave-dir (concat user-emacs-directory "/auto-save/"))
+(make-directory autosave-dir t)
+(setq auto-save-file-name-transforms
+      `(("\\(?:[^/]*/\\)*\\(.*\\)" ,(concat autosave-dir "\\1") t)))
 
 ; Pour ne pas avoir à taper en entier la réponse yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -475,11 +481,6 @@ there should still be identified correctly.
   (("M-<down>" . flycheck-next-error)
    ("M-<up>" . flycheck-previous-error)))
 
-;; (use-package flymake
-;;   :bind
-;;   (("M-<down>" . flymake-goto-next-error)
-;;    ("M-<up>" . flymake-goto-prev-error)))
-
 (define-key global-map (kbd "M-\"") #'xref-find-definitions)
 (define-key global-map (kbd "M-«") #'xref-find-references)
 (define-key global-map (kbd "M-$") #'xref-go-back)
@@ -499,7 +500,7 @@ there should still be identified correctly.
 (defun go-before-save-hook ()
   (when (eq major-mode 'go-mode)
     (gofmt-before-save)
-	(lsp-organize-imports)))
+    (lsp-organize-imports)))
     ;; (eglot-code-action-organize-imports)))
 
 (defun setup-before-save-hooks ()
