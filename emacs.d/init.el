@@ -82,6 +82,7 @@
 
 ; Molette de la souris
 (mouse-wheel-mode 1)
+(pixel-scroll-precision-mode 1)
 
 ; No annoying lockfiles
 (setq create-lockfiles nil)
@@ -89,8 +90,8 @@
 ;; History for minibuffer
 (savehist-mode)
 
-;; Deal with long lines
-(global-so-long-mode 1)
+;; ;; Deal with long lines (disabled for now as Emacs 29 supposedly fixes it)
+;; (global-so-long-mode 1)
 
 ;;;;;;;;;;;
 ;; OCaml ;;
