@@ -103,6 +103,7 @@
   (setq show-paren-delay 0)
   (setopt show-paren-predicate t)
   (setopt show-paren-context-when-offscreen 'overlay)
+  (setopt show-paren-when-point-inside-paren t)
   (show-paren-mode 1))
 
 (defun duplicate-lines ()
