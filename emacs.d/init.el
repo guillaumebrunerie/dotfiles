@@ -251,6 +251,10 @@
 ;; Javascript ;;
 ;;;;;;;;;;;;;;;;
 
+(use-package yasnippet
+  :config
+  (yas-global-mode))
+
 (use-package phindent-mode
   :straight (:host github :repo "guillaumebrunerie/phindent-mode"))
 
@@ -524,6 +528,7 @@ there should still be identified correctly.
           '(flex))) ;; Configure flex
   :config
   (lsp-enable-which-key-integration t)
+  (lsp-dired-mode)
   :hook
   (lsp-completion-mode . my/lsp-mode-setup-completion))
 
@@ -563,7 +568,6 @@ there should still be identified correctly.
 
 (use-package go-mode
   :hook
-  (go-mode . yas-minor-mode)
   (go-mode . phindent-mode)
   (go-mode . lsp-deferred)
   ;; (go-mode . eglot-ensure)
