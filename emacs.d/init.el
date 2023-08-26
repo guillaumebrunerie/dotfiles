@@ -120,6 +120,9 @@
 (add-hook 'after-save-hook
   'executable-make-buffer-file-executable-if-script-p)
 
+;; Tooltips in the echo area
+(tooltip-mode -1)
+
 ;;;;;;;;;;;
 ;; OCaml ;;
 ;;;;;;;;;;;
