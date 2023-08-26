@@ -47,8 +47,9 @@
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 
 ; Recherche automatique des fermetures et ouvertures des parenthèses
-;(load-library "paren")
+(setq show-paren-delay 0)
 (show-paren-mode 1)
+(setopt show-paren-predicate t)
 
 ; Pour que la sélection soit remplacée par ce que l'on tape
 (pending-delete-mode)
