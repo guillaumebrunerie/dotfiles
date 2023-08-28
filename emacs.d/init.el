@@ -293,15 +293,23 @@ there should still be identified correctly.
 (defun infer-indentation-style-defaulting-to-spaces ()
   (infer-indentation-style nil))
 
+(require 'typescript-ts-mode)
+(require 'js)
+
 (use-package ultimate-js-mode
   :straight (:host github :repo "guillaumebrunerie/ultimate-js-mode" :files (:defaults "libs" "queries"))
-  :mode ("\\.[mc]?[jt]sx?\\'" "\\.json\\'")
+  :mode ("\\.\\([mc]?[jt]sx?\\|json\\)\\'" . ultimate-js-ts-mode)
   :hook
   (ultimate-js-mode . infer-indentation-style-defaulting-to-tabs)
   (ultimate-js-mode . phindent-mode)
   (ultimate-js-mode . lsp-deferred)
   ;; (ultimate-js-mode . eglot-ensure)
   ;; (ultimate-js-mode . (lambda () (flymake-eslint-enable)))
+  (ultimate-js-ts-mode . infer-indentation-style-defaulting-to-tabs)
+  (ultimate-js-ts-mode . phindent-mode)
+  (ultimate-js-ts-mode . lsp-deferred)
+  ;; (ultimate-js-ts-mode . eglot-ensure)
+  ;; (ultimate-js-ts-mode . (lambda () (flymake-eslint-enable)))
   :config
   ;; (defun js--continued-expression-p () nil)
   (setq js--declaration-keyword-re "\\<\\(let\\|var\\)\\>")
