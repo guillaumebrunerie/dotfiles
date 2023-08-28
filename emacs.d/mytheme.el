@@ -17,43 +17,35 @@
   (mystring    "#e70")
   (myvar       "#da6")
   (mypropvar   "#57B")
-  (myfunname   "#04f")
+  (myfunname   "#06f")
   (mytype      "#0A0")
   (mytypeparam "#6D0")
-  (myparam     "#092")
   (mytab       "#282828")
   (myline      "#383838")
   (myregion    "#1d3854")
-  (myhvars     "#070")
   (mynamespace "#05F")
   (mysearch    "Blue")
-  (myjsdctype  "Red")
-  (myjsdcval   "Red")
-  (mywarning   "#b50")
   (mywstrail   "#800"))
 
- ((default                      (:foreground mytx :background mybg :height 170))
-  (font-lock-comment-face       (:foreground mycomment))
-  (font-lock-constant-face      (:foreground myconstant))
-  (font-lock-builtin-face       (:foreground mybuiltin))
-  (font-lock-function-name-face (:foreground myfunname))
-  (font-lock-keyword-face       (:foreground mykeyword :weight 'bold))
-  (font-lock-string-face        (:foreground mystring))
-  (font-lock-variable-name-face (:foreground myvar))
-  (font-lock-doc-face           (:foreground mydoc))
-  (font-lock-type-face          (:foreground mytype))
-  (isearch                      (:background mysearch :distant-foreground mytx))
-  (js2-external-variable        ())
-  (js2-function-param           (:foreground myparam))
-  (js2-highlight-vars-face      (:background myhvars :distant-foreground mytx))
-  (js2-warning                  (:underline  mywarning))
-  (region                       (:background myregion))
-  (lazy-highlight               (:background myregion))
-  (whitespace-line              (:background myline :foreground nil))
-  (whitespace-tab               (:background mytab))
-  (whitespace-trailing          (:background mywstrail))
-  (tree-sitter-hl-face:operator (:foreground myoperator))
-  (tree-sitter-hl-face:variable.parameter (:foreground myvar))
+ (
+  ;; Syntax highlighting
+  (default                       (:foreground mytx :background mybg :height 170))
+  (font-lock-comment-face        (:foreground mycomment))
+  (font-lock-constant-face       (:foreground myconstant))
+  (font-lock-builtin-face        (:foreground mybuiltin))
+  (font-lock-function-name-face  (:foreground myfunname))
+  (font-lock-keyword-face        (:foreground mykeyword :weight 'bold))
+  (font-lock-string-face         (:foreground mystring))
+  (font-lock-variable-name-face  (:foreground myvar))
+  (font-lock-doc-face            (:foreground mydoc))
+  (font-lock-type-face           (:foreground mytype))
+  (font-lock-operator-face       (:foreground myoperator))
+  (font-lock-number-face         (:foreground myconstant))
+  (font-lock-type-parameter-face (:foreground mytypeparam))
+  (font-lock-tag-face            (:foreground mybuiltin))
+  (font-lock-attribute-face      (:foreground mypropvar))
+
+  (tree-sitter-hl-face:operator (:foreground myoperator)) ;; Ok
   (tree-sitter-hl-face:variable (:foreground myvar))
   (tree-sitter-hl-face:function (:foreground myvar))
   (tree-sitter-hl-face:property (:foreground mytx))
@@ -64,11 +56,22 @@
   (tree-sitter-hl-face:type.parameter (:foreground mytypeparam))
   (tree-sitter-hl-face:punctuation.special (:foreground mystring :weight 'bold))
   (tree-sitter-hl-face:attribute (:foreground mypropvar))
+
+  ;; Others
+  (region                       (:background myregion))
+  (lazy-highlight               (:background myregion))
+  (whitespace-line              (:background myline :foreground nil))
+  (whitespace-tab               (:background mytab))
+  (whitespace-trailing          (:background mywstrail))
+  (isearch                      (:background mysearch :distant-foreground mytx))
+
+  ;; Diagnostics
   (lsp-lsp-flycheck-info-unnecessary-face (:foreground nil :underline '(:style wave :color "ForestGreen")))
   (flymake-warning (:underline '(:style wave :color "#E70")))
   (eglot-highlight-symbol-face (:background "darkolivegreen"))
   (eglot-diagnostic-tag-unnecessary-face (:underline '(:style wave :color "#E70")))
 
+  ;; Vterm
   (vterm-color-black   (:foreground "#2E3436" :background "#555753"))
   (vterm-color-red     (:foreground "#CC0000" :background "#EF2929"))
   (vterm-color-green   (:foreground "#4E9A06" :background "#8AE234"))
@@ -79,5 +82,19 @@
   (vterm-color-white   (:foreground "#FFFFFF" :background "#FFFFFF"))))
 
 (defface vterm-background '((t :background "#300A24")) "Background for vterm")
+
+(defface font-lock-type-parameter-face
+  '((t . (:inherit font-lock-type-face)))
+  "Face for type parameters.")
+
+(defface font-lock-tag-face
+  '((t . (:inherit font-lock-function-call-face)))
+  "Face for HTML tags like <div> and <p> in JSX."
+  :group 'typescript)
+
+(defface font-lock-attribute-face
+  '((t . (:inherit font-lock-constant-face)))
+  "Face for HTML attributes like name and id in JSX."
+  :group 'typescript)
 
 (provide-theme 'mytheme)

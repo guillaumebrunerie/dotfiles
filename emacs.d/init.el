@@ -761,7 +761,7 @@ there should still be identified correctly.
    '((comment-fill-column . 80)
      (eval let
            ((default-directory
-              (locate-dominating-file buffer-file-name ".dir-locals.el")))
+             (locate-dominating-file buffer-file-name ".dir-locals.el")))
            (make-local-variable 'coq-prog-name)
            (setq coq-prog-name
                  (expand-file-name "../hoqtop")))))
