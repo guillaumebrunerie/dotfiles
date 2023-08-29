@@ -96,7 +96,11 @@
 
   ;; Select help buffers automatically
   (setq help-window-select t)
-)
+
+  ;; Electricity
+  (electric-pair-mode 1)
+  (electric-layout-mode 1)
+  (electric-indent-mode 1))
 
 (use-package paren
   :init
@@ -575,6 +579,13 @@ there should still be identified correctly.
    (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
    (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
+;; (use-package combobulate)
+;; (load "combobulate")
+;; (setq combobulate-js-ts-enable-auto-close-tag nil)
+;; (combobulate-mode)
+
+;; Colors
+(use-package rainbow-mode)
 
 ;;;;;;;;;;;;;;;;;;;
 ;; Atomic Chrome ;;
