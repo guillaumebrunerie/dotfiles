@@ -17,7 +17,7 @@
   (mystring    "#e70")
   (myvar       "#da6")
   (mypropvar   "#57B")
-  (myfunname   "#06f")
+  (myfunname   "#05f")
   (mytype      "#0A0")
   (mytypeparam "#6D0")
   (mytab       "#282828")
