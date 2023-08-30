@@ -579,6 +579,38 @@ there should still be identified correctly.
    (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
    (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
+(defvar-local expand-region--nodes nil)
+(defvar-local expand-region--previous-point nil)
+
+(defun expand-region ()
+  (interactive)
+  (when (not (region-active-p))
+    (setq expand-region--previous-point (point))
+    (setq expand-region--nodes nil))
+  (let ((node (if (consp expand-region--nodes)
+                  (treesit-node-parent (car expand-region--nodes))
+                (treesit-node-at (point)))))
+    (when node
+      (setq expand-region--nodes (cons node expand-region--nodes))
+      (set-mark (treesit-node-start node))
+      (goto-char (treesit-node-end node))
+      (activate-mark))))
+
+(defun unexpand-region ()
+  (interactive)
+  (setq expand-region--nodes (cdr expand-region--nodes))
+  (if (consp expand-region--nodes)
+      (let ((node (car expand-region--nodes)))
+        (set-mark (treesit-node-start node))
+        (goto-char (treesit-node-end node))
+        (activate-mark))
+    (progn
+      (deactivate-mark)
+      (goto-char expand-region--previous-point))))
+
+(define-key global-map (kbd "M-h") #'expand-region)
+(define-key global-map (kbd "M-S-h") #'unexpand-region)
+
 ;; (use-package combobulate)
 ;; (load "combobulate")
 ;; (setq combobulate-js-ts-enable-auto-close-tag nil)
@@ -613,7 +645,8 @@ there should still be identified correctly.
   (go-mode . phindent-mode)
   (go-mode . lsp-deferred)
   ;; (go-mode . eglot-ensure)
-  (go-mode . setup-before-save-hooks))
+  (go-mode . setup-before-save-hooks)
+  (go-mode . (lambda () (treesit-parser-create 'go))))
 
 ;;;;;;;;;;
 ;; HTML ;;
@@ -658,6 +691,15 @@ there should still be identified correctly.
 (ignore-errors (require 'haskell-mode-autoloads))
 (ignore-errors (require 'haskell-mode))
 (add-to-list 'Info-default-directory-list "/usr/share/emacs/site-lisp/haskell-mode/")
+
+;;;;;;;;;;;
+;; Elisp ;;
+;;;;;;;;;;;
+
+(defun elisp-hook ()
+  (setq indent-tabs-mode nil)
+  (treesit-parser-create 'elisp))
+(add-hook 'emacs-lisp-mode-hook #'elisp-hook)
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; C (for NetHack) ;;
