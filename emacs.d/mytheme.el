@@ -45,8 +45,9 @@
   (font-lock-type-parameter-face (:foreground mytypeparam))
   (font-lock-tag-face            (:foreground mybuiltin))
   (font-lock-attribute-face      (:foreground mypropvar))
+  (font-lock-warning-face        (:background myerror))
 
-  (tree-sitter-hl-face:operator (:foreground myoperator)) ;; Ok
+  (tree-sitter-hl-face:operator (:foreground myoperator))
   (tree-sitter-hl-face:variable (:foreground myvar))
   (tree-sitter-hl-face:function (:foreground myvar))
   (tree-sitter-hl-face:property (:foreground mytx))
@@ -65,7 +66,6 @@
   (whitespace-tab               (:background mytab))
   (whitespace-trailing          (:background mywstrail))
   (isearch                      (:background mysearch :distant-foreground mytx))
-  (error                        (:background myerror))
 
   ;; Diagnostics
   (lsp-lsp-flycheck-info-unnecessary-face (:foreground nil :underline '(:style wave :color "ForestGreen")))
