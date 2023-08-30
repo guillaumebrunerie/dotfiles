@@ -594,22 +594,23 @@ there should still be identified correctly.
       (setq expand-region--nodes (cons node expand-region--nodes))
       (set-mark (treesit-node-start node))
       (goto-char (treesit-node-end node))
-      (activate-mark))))
+      (setq transient-mark-mode (cons 'only transient-mark-mode)))))
 
 (defun unexpand-region ()
   (interactive)
   (setq expand-region--nodes (cdr expand-region--nodes))
-  (if (consp expand-region--nodes)
-      (let ((node (car expand-region--nodes)))
-        (set-mark (treesit-node-start node))
-        (goto-char (treesit-node-end node))
-        (activate-mark))
-    (progn
-      (deactivate-mark)
-      (goto-char expand-region--previous-point))))
+  (when (region-active-p)
+    (if (consp expand-region--nodes)
+        (let ((node (car expand-region--nodes)))
+          (set-mark (treesit-node-start node))
+          (goto-char (treesit-node-end node))
+          (activate-mark))
+      (progn
+        (deactivate-mark)
+        (goto-char expand-region--previous-point)))))
 
 (define-key global-map (kbd "M-h") #'expand-region)
-(define-key global-map (kbd "M-S-h") #'unexpand-region)
+(define-key global-map (kbd "M-H") #'unexpand-region)
 
 ;; (use-package combobulate)
 ;; (load "combobulate")
