@@ -25,7 +25,8 @@
   (myregion    "#1d3854")
   (mynamespace "#05F")
   (mysearch    "Blue")
-  (mywstrail   "#800"))
+  (mywstrail   "#800")
+  (myerror     "#BB0000"))
 
  (
   ;; Syntax highlighting
@@ -64,6 +65,7 @@
   (whitespace-tab               (:background mytab))
   (whitespace-trailing          (:background mywstrail))
   (isearch                      (:background mysearch :distant-foreground mytx))
+  (error                        (:background myerror))
 
   ;; Diagnostics
   (lsp-lsp-flycheck-info-unnecessary-face (:foreground nil :underline '(:style wave :color "ForestGreen")))
