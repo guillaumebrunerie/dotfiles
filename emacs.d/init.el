@@ -99,7 +99,6 @@
 
   ;; Electricity
   (electric-pair-mode 1)
-  (electric-layout-mode 1)
   (electric-indent-mode 1))
 
 (use-package paren
