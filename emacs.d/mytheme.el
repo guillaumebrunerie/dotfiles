@@ -62,13 +62,15 @@
   ;; Others
   (region                       (:background myregion))
   (lazy-highlight               (:background myregion))
-  (whitespace-line              (:background myline :foreground nil))
+  (whitespace-line              (:background myline :foreground 'unspecified))
   (whitespace-tab               (:background mytab))
   (whitespace-trailing          (:background mywstrail))
   (isearch                      (:background mysearch :distant-foreground mytx))
 
   ;; Diagnostics
-  (lsp-lsp-flycheck-info-unnecessary-face (:foreground nil :underline '(:style wave :color "ForestGreen")))
+  (lsp-lsp-flycheck-info-unnecessary-face (:foreground 'unspecified :underline '(:style wave :color "ForestGreen")))
+  (lsp-flycheck-info-unnecessary-face (:foreground 'unspecified :underline '(:style wave :color "ForestGreen")))
+  (lsp-flycheck-error-unnecessary-face (:foreground 'unspecified :underline '(:style wave :color "Red1")))
   (flymake-warning (:underline '(:style wave :color "#E70")))
   (eglot-highlight-symbol-face (:background "darkolivegreen"))
   (eglot-diagnostic-tag-unnecessary-face (:underline '(:style wave :color "#E70")))
