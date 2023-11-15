@@ -649,6 +649,7 @@ there should still be identified correctly.
 
 (add-hook 'html-mode-hook 'infer-indentation-style-defaulting-to-spaces)
 (add-hook 'html-mode-hook 'phindent-mode)
+(add-hook 'html-mode-hook #'turn-off-auto-fill)
 
 ;;;;;;;;;
 ;; CSS ;;
