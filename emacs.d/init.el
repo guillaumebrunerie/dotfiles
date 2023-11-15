@@ -55,11 +55,11 @@
   ;; No lockfiles
   (setq create-lockfiles nil)
 
-  ;; Auto save files in ~/.emacs.d/auto-save
-  (defvar autosave-dir (concat user-emacs-directory "/auto-save/"))
-  (make-directory autosave-dir t)
-  (setq auto-save-file-name-transforms
-        `(("\\(?:[^/]*/\\)*\\(.*\\)" ,(concat autosave-dir "\\1") t)))
+  ;; ;; Auto save files in ~/.emacs.d/auto-save
+  ;; (defvar autosave-dir (concat user-emacs-directory "/auto-save/"))
+  ;; (make-directory autosave-dir t)
+  ;; (setq auto-save-file-name-transforms
+  ;;       `(("\\(?:[^/]*/\\)*\\(.*\\)" ,(concat autosave-dir "\\1") t)))
 
   ;; Automatically show images and compressed files
   (setq auto-image-file-mode t)
