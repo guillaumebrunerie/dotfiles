@@ -229,7 +229,9 @@
 
 (use-package shell-script-mode
   :straight nil
-  :mode "\\(\\.sh\\'\\|zshrc\\)")
+  :mode "\\(\\.sh\\'\\|zshrc\\)"
+  :init
+  (setq sh--completion-keywords '("if" "then" "elif" "else" "fi" "while" "until" "for" "in" "do" "done" "case" "esac")))
 
 ;;;;;;;;;
 ;; Git ;;
@@ -372,7 +374,8 @@ there should still be identified correctly.
          ([remap keyboard-escape-quit] . corfu-quit)
          ("C-a" . nil)
          ("M-n" . nil)
-         ("M-p" . nil))
+         ("M-p" . nil)
+         ("<tab>" . nil))
   :init
   (global-corfu-mode))
 
