@@ -75,6 +75,8 @@ zle -N rationalise-dot
 zle -N slash-after-dots
 bindkey . rationalise-dot
 bindkey / slash-after-dots
+bindkey -M isearch . self-insert
+bindkey -M isearch / self-insert
 
 if [[ $(uname -s) == "Linux" ]]
 then
