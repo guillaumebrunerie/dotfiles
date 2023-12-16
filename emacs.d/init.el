@@ -359,7 +359,9 @@ there should still be identified correctly.
   :custom
   (corfu-auto t)
   (corfu-auto-prefix 1)
+  (corfu-auto-delay 0.1)
   (corfu-quit-no-match t)
+  (corfu-on-exact-match 'quit)
   :bind (("s-<tab>" . #'completion-at-point)
          ("A-<tab>" . #'completion-at-point)
          :map corfu-map
