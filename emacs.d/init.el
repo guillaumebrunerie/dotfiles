@@ -547,7 +547,8 @@ there should still be identified correctly.
 
 (use-package lsp-ui
   :config
-  (setq lsp-ui-sideline-show-diagnostics t))
+  (setq lsp-ui-sideline-show-diagnostics t)
+  (setq lsp-ui-sideline-diagnostic-max-lines 10))
 
 (use-package flycheck
   :bind

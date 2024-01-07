@@ -155,6 +155,15 @@ alias dh='dirs -v'
 
 alias dropbox-ignore='attr -s com.dropbox.ignored -V 1'
 
+function dropbox-ls-ignored {
+	for i in *(N) .*(N)
+	do
+		if [[ $(attr -ql "$i") =~ 'com.dropbox.ignored' ]] && [[ $(attr -qg com.dropbox.ignored "$i") == 1 ]]
+		then
+			echo "$i"
+		fi
+	done
+}
 
 ### Emacs' vterm config
 
