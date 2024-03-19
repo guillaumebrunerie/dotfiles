@@ -315,6 +315,26 @@ there should still be identified correctly.
   (setq js--declaration-keyword-re "\\<\\(let\\|var\\)\\>")
   (setq js-switch-indent-offset js-indent-level))
 
+(use-package apheleia
+  :config
+  (setq apheleia-mode-lighter " Aph")
+  (setf (alist-get 'ultimate-js-mode apheleia-mode-alist)
+        '(prettier))
+  (apheleia-global-mode +1))
+
+(use-package copilot
+  :straight (:host github :repo "copilot-emacs/copilot.el" :files ("dist" "*.el"))
+  :ensure t)
+;; (("C-<tab>" . my/hs-toggle)
+;;  ("<backtab>" . my/hs-close)
+;;  ("C-S-<tab>" . my/hs-open)
+;;  ("<C-iso-lefttab>" . my/hs-open))
+
+(define-key copilot-completion-map (kbd "C-<tab>") 'copilot-accept-completion-by-line)
+(define-key copilot-completion-map (kbd "C-<return>") 'copilot-accept-completion)
+
+(add-to-list 'copilot-indentation-alist '(ultimate-js-mode js-indent-level))
+
 ;;;;;;;;;;;;
 ;; Prisma ;;
 ;;;;;;;;;;;;
@@ -463,19 +483,19 @@ there should still be identified correctly.
 
 (defface hs-folded '((t :background "#782200" :foreground "#EEE" :weight bold :box "#FF0000")) "Dots")
 
-(use-package hs-minor-mode
-  :straight nil
-  :bind
-  (("C-<tab>" . my/hs-toggle)
-   ("<backtab>" . my/hs-close)
-   ("C-S-<tab>" . my/hs-open)
-   ("<C-iso-lefttab>" . my/hs-open))
-  :custom
-  (hs-hide-comments-when-hiding-all nil)
-  :init
-  (setq hs-set-up-overlay 'my/hs-set-up-overlay)
-  :config
-  (hs-minor-mode))
+;; (use-package hs-minor-mode
+;;   :straight nil
+;;   :bind
+;;   (("C-<tab>" . my/hs-toggle)
+;;    ("<backtab>" . my/hs-close)
+;;    ("C-S-<tab>" . my/hs-open)
+;;    ("<C-iso-lefttab>" . my/hs-open))
+;;   :custom
+;;   (hs-hide-comments-when-hiding-all nil)
+;;   :init
+;;   (setq hs-set-up-overlay 'my/hs-set-up-overlay)
+;;   :config
+;;   (hs-minor-mode))
 
 (use-package prog-mode
   :straight nil
@@ -636,7 +656,7 @@ there should still be identified correctly.
   (when (eq major-mode 'go-mode)
     (gofmt-before-save)
     (lsp-organize-imports)))
-    ;; (eglot-code-action-organize-imports)))
+;; (eglot-code-action-organize-imports)))
 
 (defun setup-before-save-hooks ()
   (add-hook 'before-save-hook #'go-before-save-hook))
