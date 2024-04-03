@@ -27,6 +27,7 @@
 (use-package emacs
   :init
   (global-whitespace-mode 1)
+  (setq whitespace-global-modes '(not mediawiki-mode))
   (setq inhibit-startup-message t) ;; No welcome message
   (tool-bar-mode -1) ;; No tool bar
   (menu-bar-mode -1) ;; No menu bar
@@ -644,9 +645,19 @@ there should still be identified correctly.
 ;; Atomic Chrome ;;
 ;;;;;;;;;;;;;;;;;;;
 
+(use-package visual-fill-column)
+(use-package mediawiki)
+
 (use-package atomic-chrome
   :init
-  (atomic-chrome-start-server))
+  (atomic-chrome-start-server)
+  :config
+  (setq atomic-chrome-default-major-mode 'mediawiki-mode)
+  :hook
+  (atomic-chrome-edit-mode . visual-fill-column-mode)
+  (atomic-chrome-edit-mode . visual-line-mode)
+  (atomic-chrome-edit-mode . turn-off-auto-fill)
+  (atomic-chrome-edit-mode . (lambda () (setq fill-column 100))))
 
 ;;;;;;;;
 ;; Go ;;
