@@ -29,6 +29,11 @@
   (global-whitespace-mode 1)
   (setq whitespace-global-modes '(not mediawiki-mode))
   (setq inhibit-startup-message t) ;; No welcome message
+  (setq initial-major-mode 'markdown-mode)
+  (setq initial-scratch-message "\
+# Temporary notes
+
+")
   (tool-bar-mode -1) ;; No tool bar
   (menu-bar-mode -1) ;; No menu bar
   (setq visible-bell t) ;; Visible bell
@@ -376,33 +381,33 @@ there should still be identified correctly.
   :config
   (marginalia-mode +1))
 
-(use-package corfu
-  :custom
-  (corfu-auto t)
-  (corfu-auto-prefix 1)
-  (corfu-auto-delay 0.1)
-  (corfu-quit-no-match t)
-  (corfu-on-exact-match 'quit)
-  :bind (("s-<tab>" . #'completion-at-point)
-         ("A-<tab>" . #'completion-at-point)
-         :map corfu-map
-         ([remap move-beginning-of-line] . nil)
-         ([remap move-end-of-line] . nil)
-         ([remap beginning-of-buffer] . nil)
-         ([remap end-of-buffer] . nil)
-         ([remap scroll-down-command] . nil)
-         ([remap scroll-up-command] . nil)
-         ([remap next-line] . nil)
-         ([remap previous-line] . nil)
-         ([remap keyboard-escape-quit] . corfu-quit)
-         ("C-a" . nil)
-         ("M-n" . nil)
-         ("M-p" . nil)
-         ("<tab>" . nil))
-  :init
-  (global-corfu-mode))
+;; (use-package corfu
+;;   :custom
+;;   (corfu-auto t)
+;;   (corfu-auto-prefix 1)
+;;   (corfu-auto-delay 0.1)
+;;   (corfu-quit-no-match t)
+;;   (corfu-on-exact-match 'quit)
+;;   :bind (("s-<tab>" . #'completion-at-point)
+;;          ("A-<tab>" . #'completion-at-point)
+;;          :map corfu-map
+;;          ([remap move-beginning-of-line] . nil)
+;;          ([remap move-end-of-line] . nil)
+;;          ([remap beginning-of-buffer] . nil)
+;;          ([remap end-of-buffer] . nil)
+;;          ([remap scroll-down-command] . nil)
+;;          ([remap scroll-up-command] . nil)
+;;          ([remap next-line] . nil)
+;;          ([remap previous-line] . nil)
+;;          ([remap keyboard-escape-quit] . corfu-quit)
+;;          ("C-a" . nil)
+;;          ("M-n" . nil)
+;;          ("M-p" . nil)
+;;          ("<tab>" . nil))
+;;   :init
+;;   (global-corfu-mode))
 
-(use-package corfu-prescient)
+;; (use-package corfu-prescient)
 
 (use-package helpful
   :bind (("C-c C-d" . helpful-at-point)))
@@ -415,16 +420,17 @@ there should still be identified correctly.
 ;;   :config
 ;;   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
-;; (use-package company
-;;   :hook
-;;   (after-init . global-company-mode)
-;;   :custom
-;;   (company-minimum-prefix-length 1)
-;;   (company-idle-delay 0.2))
+(use-package company
+  :hook
+  (after-init . global-company-mode)
+  :custom
+  (company-minimum-prefix-length 1)
+  ;; No auto complete after numbers
+  (company-idle-delay (lambda () (if (looking-back "\\b[0-9]+" (- (point) 5)) nil 0.1))))
 
-;; (use-package company-prescient
-;;   :config
-;;   (company-prescient-mode +1))
+(use-package company-prescient
+  :config
+  (company-prescient-mode +1))
 
 ;; Case insensitive fuzzy completion in buffer
 (add-to-list 'completion-styles 'flex)
@@ -551,8 +557,8 @@ there should still be identified correctly.
 
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
-  :custom
-  (lsp-completion-provider :none) ;; we use Corfu!
+  ;; :custom
+  ;; (lsp-completion-provider :none) ;; we use Corfu!
   :init
   (setq gc-cons-threshold 100000000)
   (setq read-process-output-max (* 1024 1024))
@@ -646,7 +652,19 @@ there should still be identified correctly.
 ;;;;;;;;;;;;;;;;;;;
 
 (use-package visual-fill-column)
-(use-package mediawiki)
+(use-package mediawiki
+  :bind
+  (:map mediawiki-mode-map
+        ("C-<left>" . nil)
+        ("C-<right>" . nil)
+        ("C-<up>" . nil)
+        ("C-<down>" . nil)
+        ("C-x C-s" . 'ignore)
+        ("M-q" . 'ignore)
+        ("M-g" . nil))
+  :config
+  ;; workaround for bug https://github.com/hexmode/mediawiki-el/issues/36
+  (remove-hook 'outline-minor-mode-hook 'mediawiki-outline-magic-keys))
 
 (use-package atomic-chrome
   :init
