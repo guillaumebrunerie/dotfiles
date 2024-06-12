@@ -243,7 +243,7 @@
 ;; Git ;;
 ;;;;;;;;;
 
-(use-package magit)
+;; (use-package magit)
 
 ;;;;;;;;;;;;;;;;
 ;; Projectile ;;
