@@ -49,7 +49,7 @@ else
     alias ls="ls -G"
 fi
 alias grep="grep --color=auto"
-export LESS=' -R '
+export LESS=' -R -j.5 '
 
 catfunc () {
     if [[ $# == 1 ]]
