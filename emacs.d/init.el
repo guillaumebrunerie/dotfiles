@@ -330,6 +330,8 @@ there should still be identified correctly.
 
 (use-package copilot
   :straight (:host github :repo "copilot-emacs/copilot.el" :files ("dist" "*.el"))
+  :config
+  (setq copilot-indent-offset-warning-disable t)
   :ensure t)
 ;; (("C-<tab>" . my/hs-toggle)
 ;;  ("<backtab>" . my/hs-close)
