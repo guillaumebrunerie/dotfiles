@@ -689,6 +689,12 @@ there should still be identified correctly.
     (lsp-organize-imports)))
 ;; (eglot-code-action-organize-imports)))
 
+(defun my/add-package-line-if-missing ()
+  (when (and (string-match-p "\\.go\\'" (buffer-name))
+             (eq (point-min) (point-max))) ;; Check if buffer is empty
+    (let ((package-name (file-name-nondirectory (directory-file-name (file-name-directory (buffer-file-name))))))
+      (insert (format "package %s\n\n" package-name)))))
+
 (defun setup-before-save-hooks ()
   (add-hook 'before-save-hook #'go-before-save-hook))
 
@@ -698,6 +704,7 @@ there should still be identified correctly.
   (go-mode . lsp-deferred)
   ;; (go-mode . eglot-ensure)
   (go-mode . setup-before-save-hooks)
+  (go-mode . my/add-package-line-if-missing)
   (go-mode . (lambda () (treesit-parser-create 'go))))
 
 ;;;;;;;;;;
