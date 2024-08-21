@@ -32,7 +32,6 @@
   (setq initial-major-mode 'markdown-mode)
   (setq initial-scratch-message "\
 # Temporary notes
-
 ")
   (tool-bar-mode -1) ;; No tool bar
   (menu-bar-mode -1) ;; No menu bar
@@ -706,6 +705,14 @@ there should still be identified correctly.
   (go-mode . setup-before-save-hooks)
   (go-mode . my/add-package-line-if-missing)
   (go-mode . (lambda () (treesit-parser-create 'go))))
+
+;;;;;;;;;
+;; XML ;;
+;;;;;;;;;
+
+(defun xml-format ()
+  (interactive)
+  (shell-command-on-region (point-min) (point-max) "xmllint --format -" t t))
 
 ;;;;;;;;;;
 ;; HTML ;;
