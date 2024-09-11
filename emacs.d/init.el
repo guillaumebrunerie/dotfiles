@@ -569,6 +569,7 @@ there should still be identified correctly.
           '(flex))) ;; Configure flex
   :config
   (lsp-enable-which-key-integration t)
+  (setq lsp-clients-typescript-prefer-use-project-ts-server t)
   (lsp-dired-mode)
   :hook
   (lsp-completion-mode . my/lsp-mode-setup-completion))
