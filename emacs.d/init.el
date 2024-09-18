@@ -424,6 +424,8 @@ there should still be identified correctly.
 (use-package company
   :hook
   (after-init . global-company-mode)
+  :bind (("s-<tab>" . #'completion-at-point)
+         ("A-<tab>" . #'completion-at-point))
   :custom
   (company-minimum-prefix-length 1)
   ;; No auto complete after numbers
@@ -607,6 +609,15 @@ there should still be identified correctly.
    (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
    (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
    (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+
+(defun treesit-install-my-language-grammars ()
+  (interactive)
+  (treesit-install-language-grammar 'javascript)
+  (treesit-install-language-grammar 'typescript)
+  (treesit-install-language-grammar 'tsx)
+  (treesit-install-language-grammar 'json)
+  (treesit-install-language-grammar 'go)
+  (treesit-install-language-grammar 'elisp))
 
 (defvar-local expand-region--nodes nil)
 (defvar-local expand-region--previous-point nil)
@@ -875,8 +886,9 @@ there should still be identified correctly.
  '(home-end-enable t)
  '(js-indent-align-list-continuation nil)
  '(js2-strict-missing-semi-warning t)
- '(ns-alternate-modifier 'none)
+ '(ns-alternate-modifier 'super)
  '(ns-command-modifier 'meta)
+ '(ns-right-alternate-modifier 'none)
  '(outline-regexp "[\12]*" t)
  '(preview-auto-cache-preamble t)
  '(preview-default-preamble
