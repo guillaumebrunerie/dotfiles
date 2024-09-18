@@ -129,7 +129,9 @@ REPORTTIME=10
 
 # Colored and paged SVN
 svn() {
-    if [[ "$1" == diff ]] || [[ "$1" == di ]]; then
+    if [[ "$1" == di ]]; then
+        =svn diff "${@:2}" -x -w | ~/bin/colordiff | less -x4
+    elif [[ "$1" == diff ]]; then
         =svn diff "${@:2}" | ~/bin/colordiff | less -x4
     elif [[ "$1" == logq ]]; then
         =svn log "${@:2}" | ~/bin/colordiff --difftype=diffu | less -x4
