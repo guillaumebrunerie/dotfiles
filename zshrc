@@ -116,11 +116,11 @@ precmd () {
     vcs_info
     if [[ -n $__last_cmd && $TERM != linux ]]
     then
-	if (( $exit_status == 0 ))
-	then
-	    printf "\e]0;(%s)\a" $__last_cmd
+        if (( $exit_status == 0 ))
+        then
+            printf "\e]0;(%s)\a" $__last_cmd
         else
-	    printf "\e]0;[%s]\a" $__last_cmd
+            printf "\e]0;[%s]\a" $__last_cmd
         fi
     fi
     echo -en "\a"
