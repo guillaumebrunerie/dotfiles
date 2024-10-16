@@ -312,6 +312,7 @@ there should still be identified correctly.
   :hook
   (ultimate-js-mode . infer-indentation-style-defaulting-to-tabs)
   (ultimate-js-mode . phindent-mode)
+  (ultimate-js-mode . copilot-mode)
   (ultimate-js-mode . lsp-deferred)
   ;; (ultimate-js-mode . eglot-ensure)
   ;; (ultimate-js-mode . (lambda () (flymake-eslint-enable)))
