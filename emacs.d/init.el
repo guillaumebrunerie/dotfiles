@@ -309,6 +309,7 @@ there should still be identified correctly.
 (use-package ultimate-js-mode
   :straight (:host github :repo "guillaumebrunerie/ultimate-js-mode" :files (:defaults "libs" "queries"))
   :mode ("\\.\\([mc]?[jt]sx?\\|json\\)\\'" . ultimate-js-mode)
+  :interpreter ("bun" . ultimate-js-mode)
   :hook
   (ultimate-js-mode . infer-indentation-style-defaulting-to-tabs)
   (ultimate-js-mode . phindent-mode)
