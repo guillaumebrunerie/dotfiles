@@ -654,6 +654,10 @@ there should still be identified correctly.
 (define-key global-map (kbd "M-h") #'expand-region)
 (define-key global-map (kbd "M-H") #'unexpand-region)
 
+(use-package multiple-cursors
+  :bind
+  (("C-<next>" . mc/mark-next-like-this)))
+
 ;; (use-package combobulate)
 ;; (load "combobulate")
 ;; (setq combobulate-js-ts-enable-auto-close-tag nil)
