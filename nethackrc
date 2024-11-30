@@ -16,7 +16,6 @@
 # Z         cast spell
 ###
 
-OPTIONS=windowtype:curses
 OPTIONS=color, hilite_pet, lit_corridor
 OPTIONS=standout, time, msg_window:f, boulder:0
 OPTIONS=pickup_type:$, autoquiver, autodig
