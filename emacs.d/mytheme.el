@@ -45,7 +45,8 @@
   (font-lock-type-parameter-face (:foreground mytypeparam))
   (font-lock-tag-face            (:foreground mybuiltin))
   (font-lock-attribute-face      (:foreground mypropvar))
-  (font-lock-warning-face        (:background myerror))
+  (font-lock-warning-face        (:background myerror :foreground mytx))
+  (font-lock-embedded-face       (:background mypropvar))
 
   (tree-sitter-hl-face:operator (:foreground myoperator))
   (tree-sitter-hl-face:variable (:foreground myvar))

@@ -618,6 +618,8 @@ there should still be identified correctly.
   (treesit-install-language-grammar 'typescript)
   (treesit-install-language-grammar 'tsx)
   (treesit-install-language-grammar 'json)
+  (treesit-install-language-grammar 'css)
+  (treesit-install-language-grammar 'html)
   (treesit-install-language-grammar 'go)
   (treesit-install-language-grammar 'elisp))
 
