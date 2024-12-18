@@ -44,7 +44,7 @@ RPROMPT='${vcs_info_msg_0_} %F{magenta}%B[%T]%b%f'
 
 if [[ $(uname -s) == "Linux" ]]
 then
-	alias ls="ls --color=auto"
+	alias ls="ls -v --color=auto"
 else
 	alias ls="ls -G"
 fi
