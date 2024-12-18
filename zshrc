@@ -44,36 +44,35 @@ RPROMPT='${vcs_info_msg_0_} %F{magenta}%B[%T]%b%f'
 
 if [[ $(uname -s) == "Linux" ]]
 then
-    alias ls="ls --color=auto"
+	alias ls="ls --color=auto"
 else
-    alias ls="ls -G"
+	alias ls="ls -G"
 fi
 alias grep="grep --color=auto"
-export LESS=' -R -j.5 '
+export LESS=' -R -j.5 -x4 '
 
 catfunc () {
-    if [[ $# == 1 ]]
-    then
-        source-highlight --failsafe --infer-lang -f esc --style-file=esc.style -i "$1" 2>/dev/null || /bin/cat "$1"
-    else
-        cat $*
-    fi
+	if [[ $# == 1 ]]
+	then
+		source-highlight --failsafe --infer-lang -f esc --style-file=esc.style -i "$1" 2>/dev/null || /bin/cat "$1"
+	else
+		cat $*
+	fi
 }
 alias cat=catfunc
 
 rationalise-dot() {
-    if [[ $LBUFFER = *. ]]; then
-        LBUFFER+=./
-    else
-        LBUFFER+=.
-    fi
+	if [[ $LBUFFER = *. ]]; then
+		LBUFFER+=./
+	else
+		LBUFFER+=.
+	fi
 }
 slash-after-dots() {
-    if [[ $LBUFFER = *../ ]]; then
-        
-    else
-        LBUFFER+=/
-    fi
+	if [[ $LBUFFER = *../ ]]; then
+	else
+		LBUFFER+=/
+	fi
 }
 zle -N rationalise-dot
 zle -N slash-after-dots
@@ -97,55 +96,55 @@ fi
 unsetopt automenu
 
 reset-prompt-and-accept-line () {
-    zle reset-prompt
-    zle accept-line
+	zle reset-prompt
+	zle accept-line
 }
 zle -N reset-prompt-and-accept-line
 bindkey "^M" reset-prompt-and-accept-line
 
 __last_cmd=
 preexec () {
-    __last_cmd=$1
-    if [[ $TERM != linux ]]
-    then
-        printf "\e]0;*%s\a" $__last_cmd
-    fi
+	__last_cmd=$1
+	if [[ $TERM != linux ]]
+	then
+		printf "\e]0;*%s\a" $__last_cmd
+	fi
 }
 precmd () {
-    local exit_status=$?
-    vcs_info
-    if [[ -n $__last_cmd && $TERM != linux ]]
-    then
-        if (( $exit_status == 0 ))
-        then
-            printf "\e]0;(%s)\a" $__last_cmd
-        else
-            printf "\e]0;[%s]\a" $__last_cmd
-        fi
-    fi
-    echo -en "\a"
+	local exit_status=$?
+	vcs_info
+	if [[ -n $__last_cmd && $TERM != linux ]]
+	then
+		if (( $exit_status == 0 ))
+		then
+			printf "\e]0;(%s)\a" $__last_cmd
+		else
+			printf "\e]0;[%s]\a" $__last_cmd
+		fi
+	fi
+	echo -en "\a"
 }
 REPORTTIME=10
 
 # Colored and paged SVN
 svn() {
-    if [[ "$1" == di ]]; then
-        =svn diff "${@:2}" -x -w | ~/bin/colordiff | less -x4
-    elif [[ "$1" == diff ]]; then
-        =svn diff "${@:2}" | ~/bin/colordiff | less -x4
-    elif [[ "$1" == logq ]]; then
-        =svn log "${@:2}" | ~/bin/colordiff --difftype=diffu | less -x4
-    elif [[ "$1" == log ]]; then
-        =svn log --verbose "${@:2}" | ~/bin/colordiff --difftype=diffu | less -x4
-    elif [[ "$1" == logd ]]; then
-        =svn log --diff --verbose "${@:2}" | ~/bin/colordiff | less -x4
+	if [[ "$1" == di ]]; then
+		=svn diff "${@:2}" -x -w | ~/bin/colordiff | less -x4
+	elif [[ "$1" == diff ]]; then
+		=svn diff "${@:2}" | ~/bin/colordiff | less -x4
+	elif [[ "$1" == logq ]]; then
+		=svn log "${@:2}" | ~/bin/colordiff --difftype=diffu | less -x4
+	elif [[ "$1" == log ]]; then
+		=svn log --verbose "${@:2}" | ~/bin/colordiff --difftype=diffu | less -x4
+	elif [[ "$1" == logd ]]; then
+		=svn log --diff --verbose "${@:2}" | ~/bin/colordiff | less -x4
 	elif [[ "$1" == uncheckout ]]; then
 		=svn up --set-depth exclude "${@:2}"
 	elif [[ "$1" == unadd ]]; then
 		=svn rm --keep-local "${@:2}"
-    else
-        =svn "$@"
-    fi
+	else
+		=svn "$@"
+	fi
 }
 compdef '_files' svn logd
 compdef '_files' svn unadd
@@ -176,26 +175,28 @@ function dropbox-ls-ignored {
 ### Emacs' vterm config
 
 vterm_printf(){
-    if [ -n "$TMUX" ] && ([ "${TERM%%-*}" = "tmux" ] || [ "${TERM%%-*}" = "screen" ] ); then
-        # Tell tmux to pass the escape sequences through
-        printf "\ePtmux;\e\e]%s\007\e\\" "$1"
-    elif [ "${TERM%%-*}" = "screen" ]; then
-        # GNU screen (screen, screen-256color, screen-256color-bce)
-        printf "\eP\e]%s\007\e\\" "$1"
-    else
-        printf "\e]%s\e\\" "$1"
-    fi
+	if [ -n "$TMUX" ] && ([ "${TERM%%-*}" = "tmux" ] || [ "${TERM%%-*}" = "screen" ] ); then
+		# Tell tmux to pass the escape sequences through
+		printf "\ePtmux;\e\e]%s\007\e\\" "$1"
+	elif [ "${TERM%%-*}" = "screen" ]; then
+		# GNU screen (screen, screen-256color, screen-256color-bce)
+		printf "\eP\e]%s\007\e\\" "$1"
+	else
+		printf "\e]%s\e\\" "$1"
+	fi
 }
 
 vterm_prompt_end() {
-    vterm_printf "51;A$(whoami)@$(hostname):$(pwd)";
+	vterm_printf "51;A$(whoami)@$(hostname):$(pwd)";
 }
 
 if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
-    alias clear='vterm_printf "51;Evterm-clear-scrollback";tput clear'
+	alias clear='vterm_printf "51;Evterm-clear-scrollback";tput clear'
 	setopt PROMPT_SUBST
 	PROMPT=$PROMPT'%{$(vterm_prompt_end)%}'
 fi
+
+# NVM
 
 alias resource="source ~/.zshrc"
 
@@ -203,9 +204,8 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# bun completions
-[ -s "/Users/guillaumeb/.bun/_bun" ] && source "/Users/guillaumeb/.bun/_bun"
+# Bun
 
-# bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+[ -s "/Users/guillaumeb/.bun/_bun" ] && source "/Users/guillaumeb/.bun/_bun"
