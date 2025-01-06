@@ -47,7 +47,7 @@
   (font-lock-tag-face            (:foreground mybuiltin))
   (font-lock-attribute-face      (:foreground mypropvar))
   (font-lock-warning-face        (:background myerror :foreground mytx))
-  (ultimate-js-mode--embedded-css-face (:background mycssbg))
+  (ultimate-js-mode-embedded-lang-face (:background mycssbg :extend t))
 
   (tree-sitter-hl-face:operator (:foreground myoperator))
   (tree-sitter-hl-face:variable (:foreground myvar))
