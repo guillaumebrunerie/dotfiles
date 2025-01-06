@@ -26,7 +26,8 @@
   (mynamespace "#05F")
   (mysearch    "Blue")
   (mywstrail   "#800")
-  (myerror     "#BB0000"))
+  (myerror     "#BB0000")
+  (mycssbg     "#030"))
 
  (
   ;; Syntax highlighting
@@ -46,7 +47,7 @@
   (font-lock-tag-face            (:foreground mybuiltin))
   (font-lock-attribute-face      (:foreground mypropvar))
   (font-lock-warning-face        (:background myerror :foreground mytx))
-  (font-lock-embedded-face       (:background mypropvar))
+  (ultimate-js-mode--embedded-css-face (:background mycssbg))
 
   (tree-sitter-hl-face:operator (:foreground myoperator))
   (tree-sitter-hl-face:variable (:foreground myvar))
