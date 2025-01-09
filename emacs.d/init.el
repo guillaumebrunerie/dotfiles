@@ -668,6 +668,44 @@ there should still be identified correctly.
 ;; Colors
 (use-package rainbow-mode)
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Real time SVG editing ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defconst realtime-svg--image-buffer "*svg-image*")
+
+(defun realtime-svg--update-image ()
+  "Turn the current buffer's content into an image and display it in a new buffer."
+  (let ((svg (buffer-string)))
+    (with-silent-modifications
+      (with-current-buffer (get-buffer-create realtime-svg--image-buffer)
+        (let ((inhibit-read-only t))
+          (erase-buffer)
+          (insert svg)
+          (image-mode)
+          (set-buffer-modified-p nil)
+          (display-buffer (current-buffer) '((display-buffer-in-direction) (direction . right))))))))
+
+(defvar realtime-svg--timer nil)
+(defvar realtime-svg--debounce-delay 0.1)
+(defun realtime-svg--change-handler (&rest _args)
+  "Handler for `after-change-functions` to update SVG image."
+  (when realtime-svg--timer
+    (cancel-timer realtime-svg--timer))
+  (setq realtime-svg--timer
+        (run-with-idle-timer realtime-svg--debounce-delay nil #'realtime-svg--update-image)))
+
+(defun realtime-svg--setup ()
+  "Set up real time SVG editing."
+  (when (string= image-type "svg")
+    (realtime-svg--change-handler)
+    (add-hook 'after-change-functions #'realtime-svg--change-handler nil t)))
+
+;; Enable real time SVG editing
+(add-hook 'image-minor-mode-hook #'realtime-svg--setup)
+
+
 ;;;;;;;;;;;;;;;;;;;
 ;; Atomic Chrome ;;
 ;;;;;;;;;;;;;;;;;;;
