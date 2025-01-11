@@ -678,14 +678,14 @@ there should still be identified correctly.
 (defun realtime-svg--update-image ()
   "Turn the current buffer's content into an image and display it in a new buffer."
   (let ((svg (buffer-string)))
-    (with-silent-modifications
-      (with-current-buffer (get-buffer-create realtime-svg--image-buffer)
-        (let ((inhibit-read-only t))
-          (erase-buffer)
-          (insert svg)
-          (image-mode)
-          (set-buffer-modified-p nil)
-          (display-buffer (current-buffer) '((display-buffer-in-direction) (direction . right))))))))
+    (with-current-buffer (get-buffer-create realtime-svg--image-buffer)
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (insert svg)
+        (let ((inhibit-message t))
+          (image-mode))
+        (set-buffer-modified-p nil)
+        (display-buffer (current-buffer))))))
 
 (defvar realtime-svg--timer nil)
 (defvar realtime-svg--debounce-delay 0.1)
