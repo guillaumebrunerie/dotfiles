@@ -129,15 +129,15 @@ REPORTTIME=10
 # Colored and paged SVN
 svn() {
 	if [[ "$1" == di ]]; then
-		=svn diff "${@:2}" -x -w | ~/bin/colordiff | less -x4
+		=svn diff "${@:2}" -x -w | ~/bin/colordiff | less
 	elif [[ "$1" == diff ]]; then
-		=svn diff "${@:2}" | ~/bin/colordiff | less -x4
+		=svn diff "${@:2}" | ~/bin/colordiff | less
 	elif [[ "$1" == logq ]]; then
-		=svn log "${@:2}" | ~/bin/colordiff --difftype=diffu | less -x4
+		=svn log "${@:2}" | ~/bin/colordiff --difftype=diffu | less
 	elif [[ "$1" == log ]]; then
-		=svn log --verbose "${@:2}" | ~/bin/colordiff --difftype=diffu | less -x4
+		=svn log --verbose "${@:2}" | ~/bin/colordiff --difftype=diffu | less
 	elif [[ "$1" == logd ]]; then
-		=svn log --diff --verbose "${@:2}" | ~/bin/colordiff | less -x4
+		=svn log --diff --verbose "${@:2}" | ~/bin/colordiff | less
 	elif [[ "$1" == uncheckout ]]; then
 		=svn up --set-depth exclude "${@:2}"
 	elif [[ "$1" == unadd ]]; then
