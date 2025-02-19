@@ -49,7 +49,7 @@ else
 	alias ls="ls -G"
 fi
 alias grep="grep --color=auto"
-export LESS=' -R -j.5 -x4 '
+export LESS=' -R -j.5 -x4 -i '
 
 catfunc () {
 	if [[ $# == 1 ]]
@@ -146,9 +146,16 @@ svn() {
 		=svn "$@"
 	fi
 }
-compdef '_files' svn logd
-compdef '_files' svn unadd
-compdef '_files' svn uncheckout
+
+_subversion_custom() {
+	cmd=$words[2]
+	if [[ $cmd == unadd || $cmd == logd || $cmd == uncheckout ]]; then
+		_files
+	else
+		_subversion
+	fi
+}
+compdef _subversion_custom svn
 
 # Tab width
 tabs -4
