@@ -315,6 +315,7 @@ there should still be identified correctly.
   (ultimate-js-mode . phindent-mode)
   (ultimate-js-mode . copilot-mode)
   (ultimate-js-mode . lsp-deferred)
+  (ultimate-js-mode . font-lock-mode)
   ;; (ultimate-js-mode . eglot-ensure)
   ;; (ultimate-js-mode . (lambda () (flymake-eslint-enable)))
   :config
