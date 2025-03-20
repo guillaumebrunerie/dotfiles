@@ -73,8 +73,11 @@
   (lsp-lsp-flycheck-info-unnecessary-face (:foreground 'unspecified :underline '(:style wave :color "ForestGreen")))
   (lsp-flycheck-info-unnecessary-face (:foreground 'unspecified :underline '(:style wave :color "ForestGreen")))
   (lsp-flycheck-error-unnecessary-face (:foreground 'unspecified :underline '(:style wave :color "Red1")))
+  (lsp-face-highlight-textual (:background "#34495E"))
+  (lsp-face-highlight-read (:background "#34495E"))
+  (lsp-face-highlight-write (:background "#34495E"))
   (flymake-warning (:underline '(:style wave :color "#E70")))
-  (eglot-highlight-symbol-face (:background "darkolivegreen"))
+  (eglot-highlight-symbol-face (:background "#2C3E50"))
   (eglot-diagnostic-tag-unnecessary-face (:underline '(:style wave :color "#E70")))
 
   ;; Vterm
