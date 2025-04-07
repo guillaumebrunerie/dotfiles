@@ -140,6 +140,13 @@
       (insert line "\n"))))
 (global-set-key (kbd "C-c C-j") #'duplicate-lines)
 
+(use-package recentf
+  :ensure nil
+  :init
+  (recentf-mode 1)
+  (setq recentf-max-menu-items 100)
+  :bind ("C-x C-r" . recentf-open))
+
 ;;;;;;;;;;;
 ;; OCaml ;;
 ;;;;;;;;;;;
