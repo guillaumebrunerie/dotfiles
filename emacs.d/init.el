@@ -611,6 +611,7 @@ there should still be identified correctly.
    (css "https://github.com/tree-sitter/tree-sitter-css")
    (elisp "https://github.com/Wilfred/tree-sitter-elisp")
    (go "https://github.com/tree-sitter/tree-sitter-go")
+   (gomod "https://github.com/camdencheek/tree-sitter-go-mod")
    (html "https://github.com/tree-sitter/tree-sitter-html")
    (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
    (json "https://github.com/tree-sitter/tree-sitter-json")
@@ -630,7 +631,10 @@ there should still be identified correctly.
   (treesit-install-language-grammar 'css)
   (treesit-install-language-grammar 'html)
   (treesit-install-language-grammar 'go)
+  (treesit-install-language-grammar 'gomod)
   (treesit-install-language-grammar 'elisp))
+
+(setq treesit-font-lock-level 4)
 
 (defvar-local expand-region--nodes nil)
 (defvar-local expand-region--previous-point nil)
@@ -750,7 +754,7 @@ there should still be identified correctly.
 ;;;;;;;;
 
 (defun go-before-save-hook ()
-  (when (eq major-mode 'go-mode)
+  (when (eq major-mode 'go-ts-mode)
     (gofmt-before-save)
     (lsp-organize-imports)))
 ;; (eglot-code-action-organize-imports)))
@@ -764,14 +768,16 @@ there should still be identified correctly.
 (defun setup-before-save-hooks ()
   (add-hook 'before-save-hook #'go-before-save-hook))
 
-(use-package go-mode
+(use-package go-ts-mode
+  :mode "\\.go\\'"
   :hook
-  (go-mode . phindent-mode)
-  (go-mode . lsp-deferred)
-  ;; (go-mode . eglot-ensure)
-  (go-mode . setup-before-save-hooks)
-  (go-mode . my/add-package-line-if-missing)
-  (go-mode . (lambda () (treesit-parser-create 'go))))
+  (go-ts-mode . phindent-mode)
+  (go-ts-mode . lsp-deferred)
+  ;; (go-ts-mode . eglot-ensure)
+  (go-ts-mode . setup-before-save-hooks)
+  (go-ts-mode . my/add-package-line-if-missing)
+  :init
+  (setq go-ts-mode-indent-offset 4))
 
 ;;;;;;;;;
 ;; XML ;;
