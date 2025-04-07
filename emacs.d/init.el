@@ -432,6 +432,9 @@ there should still be identified correctly.
 (use-package company
   :hook
   (after-init . global-company-mode)
+  :config
+  ;; Disable company-mode in markdown-mode
+  (setq company-global-modes '(not markdown-mode))
   :bind (("s-<tab>" . #'completion-at-point)
          ("A-<tab>" . #'completion-at-point))
   :custom
