@@ -786,6 +786,19 @@ there should still be identified correctly.
   :init
   (setq go-ts-mode-indent-offset 4))
 
+
+;;;;;;;;
+;; C# ;;
+;;;;;;;;
+
+(server-start)
+(use-package csharp-mode
+  :straight nil
+  :hook
+  (csharp-mode . phindent-mode)
+  (csharp-mode . lsp-deferred))
+
+
 ;;;;;;;;;
 ;; XML ;;
 ;;;;;;;;;
