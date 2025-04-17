@@ -110,14 +110,14 @@
   (setopt show-paren-when-point-inside-paren t)
   (show-paren-mode 1))
 
-;; Smooth scrolling
-(use-package ultra-scroll
-  :straight (:host github :repo "jdtsmith/ultra-scroll")
-  :init
-  (setq scroll-conservatively 101 ; important!
-        scroll-margin 0)
-  :config
-  (ultra-scroll-mode 1))
+;; ;; Smooth scrolling
+;; (use-package ultra-scroll
+;;   :straight (:host github :repo "jdtsmith/ultra-scroll")
+;;   :init
+;;   (setq scroll-conservatively 101 ; important!
+;;         scroll-margin 0)
+;;   :config
+;;   (ultra-scroll-mode 1))
 
 (defun duplicate-lines ()
   "Duplicate the lines intersecting the region."
@@ -347,6 +347,7 @@ there should still be identified correctly.
   :config
   (setq copilot-indent-offset-warning-disable t)
   :ensure t)
+
 ;; (("C-<tab>" . my/hs-toggle)
 ;;  ("<backtab>" . my/hs-close)
 ;;  ("C-S-<tab>" . my/hs-open)
@@ -590,6 +591,7 @@ there should still be identified correctly.
   :config
   (lsp-enable-which-key-integration t)
   (setq lsp-clients-typescript-prefer-use-project-ts-server t)
+  (setq lsp-auto-execute-action nil)
   (lsp-dired-mode)
   :hook
   (lsp-completion-mode . my/lsp-mode-setup-completion))
