@@ -110,14 +110,14 @@
   (setopt show-paren-when-point-inside-paren t)
   (show-paren-mode 1))
 
-;; ;; Smooth scrolling
-;; (use-package ultra-scroll
-;;   :straight (:host github :repo "jdtsmith/ultra-scroll")
-;;   :init
-;;   (setq scroll-conservatively 101 ; important!
-;;         scroll-margin 0)
-;;   :config
-;;   (ultra-scroll-mode 1))
+;; Smooth scrolling
+(use-package ultra-scroll
+  :straight (:host github :repo "jdtsmith/ultra-scroll")
+  :init
+  (setq scroll-conservatively 101 ; important!
+        scroll-margin 0)
+  :config
+  (ultra-scroll-mode 1))
 
 (defun duplicate-lines ()
   "Duplicate the lines intersecting the region."
