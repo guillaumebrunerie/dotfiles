@@ -442,7 +442,7 @@ there should still be identified correctly.
   (after-init . global-company-mode)
   :config
   ;; Disable company-mode in markdown-mode
-  (setq company-global-modes '(not markdown-mode))
+  (setq company-global-modes '(not markdown-mode mediawiki-mode))
   :bind (("s-<tab>" . #'completion-at-point)
          ("A-<tab>" . #'completion-at-point))
   :custom
