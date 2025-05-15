@@ -763,7 +763,7 @@ there should still be identified correctly.
 ;;;;;;;;
 
 (defun go-before-save-hook ()
-  (when (eq major-mode 'go-ts-mode)
+  (when (eq major-mode 'go-mode)
     (gofmt-before-save)
     (lsp-organize-imports)))
 ;; (eglot-code-action-organize-imports)))
@@ -777,16 +777,16 @@ there should still be identified correctly.
 (defun setup-before-save-hooks ()
   (add-hook 'before-save-hook #'go-before-save-hook))
 
-(use-package go-ts-mode
+(use-package go-mode
   :mode "\\.go\\'"
   :hook
-  (go-ts-mode . phindent-mode)
-  (go-ts-mode . lsp-deferred)
-  ;; (go-ts-mode . eglot-ensure)
-  (go-ts-mode . setup-before-save-hooks)
-  (go-ts-mode . my/add-package-line-if-missing)
+  (go-mode . phindent-mode)
+  (go-mode . lsp-deferred)
+  ;; (go-mode . eglot-ensure)
+  (go-mode . setup-before-save-hooks)
+  (go-mode . my/add-package-line-if-missing)
   :init
-  (setq go-ts-mode-indent-offset 4))
+  (setq go-mode-indent-offset 4))
 
 
 ;;;;;;;;
@@ -987,7 +987,7 @@ there should still be identified correctly.
      (260 . "#3CC3F5") (280 . "#6ABDFE") (300 . "#95B5FE") (320 . "#BAACF6")))
  '(warning-suppress-log-types '((comp) (lsp-mode) (lsp-mode)))
  '(warning-suppress-types '((lsp-mode) (lsp-mode)))
- '(whitespace-style '(face trailing lines-tail empty tabs)))
+ '(whitespace-style '(face tabs)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
