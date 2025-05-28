@@ -961,6 +961,7 @@ there should still be identified correctly.
  '(ns-alternate-modifier 'super)
  '(ns-command-modifier 'meta)
  '(ns-right-alternate-modifier 'none)
+ '(ns-pop-up-frames nil)
  '(outline-regexp "[\12]*" t)
  '(preview-auto-cache-preamble t)
  '(preview-default-preamble
