@@ -81,17 +81,28 @@ bindkey / slash-after-dots
 bindkey -M isearch . self-insert
 bindkey -M isearch / self-insert
 
-if [[ $(uname -s) == "Linux" ]]
-then
-	emacs() {
-		if [[ $TERM == linux ]]
-		then
-			=emacs -nw "$@"
-		else
-			=emacs "$@" &!
-		fi
-	}
-fi
+emacs() {
+	case "$(uname -s)" in
+		Linux)
+			if [[ $TERM == linux ]]; then
+				=emacs -nw "$@"
+			else
+				=emacs "$@" &!
+			fi
+			;;
+		Darwin)
+			if ! emacsclient -e nil &>/dev/null; then
+				=emacs &!
+				echo "Emacs not started, starting it and waiting 3 seconds..."
+				sleep 3
+			fi
+			emacsclient "$@" &!
+			;;
+		*)
+			=emacs "$@"
+			;;
+	esac
+}
 
 unsetopt automenu
 

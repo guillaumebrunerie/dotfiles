@@ -328,6 +328,7 @@ there should still be identified correctly.
   (ultimate-js-mode . copilot-mode)
   (ultimate-js-mode . lsp-deferred)
   (ultimate-js-mode . font-lock-mode)
+  (ultimate-js-mode . copilot/override-electric-keys)
   ;; (ultimate-js-mode . eglot-ensure)
   ;; (ultimate-js-mode . (lambda () (flymake-eslint-enable)))
   :config
@@ -347,6 +348,27 @@ there should still be identified correctly.
   :config
   (setq copilot-indent-offset-warning-disable t)
   :ensure t)
+
+;; see https://github.com/copilot-emacs/copilot.el/issues/250
+
+(defun copilot/cancel-on-electric-indent-chars (arg)
+  "Cancel copilot completion eagerly when electric-indent-mode is triggered."
+  (interactive "p")
+  ;; clear the overlay if visible and keypress is in electric-indent-chars.
+  ;; Not really a rejection, so maybe let's not notify it as such?
+  (when (and (copilot--overlay-visible)
+             (memq last-command-event electric-indent-chars))
+    (delete-overlay copilot--overlay)
+    (setq copilot--real-posn nil))
+  ;; continue on to self-insert command. With the copilot overlay cleared,
+  ;; electric-indent-mode will not be misbehave.
+  (self-insert-command arg))
+
+(defun copilot/override-electric-keys ()
+  "Override electric keys for copilot."
+  (dolist (char electric-indent-chars)
+    (message "disable electric-indent-mode for %s" (char-to-string char))
+    (define-key copilot-completion-map (vector char) 'copilot/cancel-on-electric-indent-chars)))
 
 ;; (("C-<tab>" . my/hs-toggle)
 ;;  ("<backtab>" . my/hs-close)
@@ -441,8 +463,8 @@ there should still be identified correctly.
   :hook
   (after-init . global-company-mode)
   :config
-  ;; Disable company-mode in markdown-mode
-  (setq company-global-modes '(not markdown-mode mediawiki-mode))
+  ;; Disable company-mode in some modes
+  (setq company-global-modes '(not text-mode markdown-mode mediawiki-mode))
   :bind (("s-<tab>" . #'completion-at-point)
          ("A-<tab>" . #'completion-at-point))
   :custom
