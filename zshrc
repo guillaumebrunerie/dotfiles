@@ -12,6 +12,7 @@ bindkey '^[[1;5C' emacs-forward-word
 bindkey '^[[1;5D' emacs-backward-word
 bindkey '^[[3^' backward-kill-word
 bindkey '^H' backward-kill-word
+bindkey '^G' push-line-or-edit
 
 autoload -U select-word-style
 select-word-style bash
