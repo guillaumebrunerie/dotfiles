@@ -85,9 +85,6 @@
   ;; Tooltips in the echo area
   (tooltip-mode -1)
 
-  ;; Correct path
-  (add-to-list 'exec-path "/usr/local/bin/")
-
   ;; Maximize
   (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
@@ -101,6 +98,10 @@
   ;; Electricity
   (electric-pair-mode 1)
   (electric-indent-mode 1))
+
+(use-package exec-path-from-shell
+  :config
+  (exec-path-from-shell-initialize))
 
 (use-package paren
   :init
