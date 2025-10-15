@@ -808,6 +808,8 @@ there should still be identified correctly.
   ;; (go-mode . eglot-ensure)
   (go-mode . setup-before-save-hooks)
   (go-mode . my/add-package-line-if-missing)
+  (go-mode . copilot-mode)
+  (go-mode . copilot/override-electric-keys)
   :init
   (setq go-mode-indent-offset 4))
 
