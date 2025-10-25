@@ -102,6 +102,12 @@
   (electric-pair-mode 1)
   (electric-indent-mode 1))
 
+(global-set-key (kbd "C-<wheel-up>") (lambda () (interactive)))
+(global-set-key (kbd "C-<wheel-down>") (lambda () (interactive)))
+(global-set-key (kbd "C-<mouse-4>") (lambda () (interactive)))
+(global-set-key (kbd "C-<mouse-5>") (lambda () (interactive)))
+
+
 (use-package exec-path-from-shell
   :config
   (exec-path-from-shell-initialize))
@@ -393,6 +399,10 @@ there should still be identified correctly.
 (define-key copilot-completion-map (kbd "C-<return>") 'copilot-accept-completion)
 
 (add-to-list 'copilot-indentation-alist '(ultimate-js-mode js-indent-level))
+
+(use-package copilot-chat
+  :straight (:host github :repo "chep/copilot-chat.el" :files ("*.el"))
+  :after (request org markdown-mode))
 
 ;;;;;;;;;;;;
 ;; Prisma ;;
