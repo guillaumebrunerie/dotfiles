@@ -5,8 +5,11 @@
 ;; Bootstrap
 (defvar bootstrap-version)
 (let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 6))
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
         (url-retrieve-synchronously
@@ -983,10 +986,11 @@ there should still be identified correctly.
  '(home-end-enable t)
  '(js-indent-align-list-continuation nil)
  '(js2-strict-missing-semi-warning t)
+ '(lsp-eslint-options '((flags . ["unstable_native_nodejs_ts_config"])))
  '(ns-alternate-modifier 'super)
  '(ns-command-modifier 'meta)
- '(ns-right-alternate-modifier 'none)
  '(ns-pop-up-frames nil)
+ '(ns-right-alternate-modifier 'none)
  '(outline-regexp "[\12]*" t)
  '(preview-auto-cache-preamble t)
  '(preview-default-preamble
