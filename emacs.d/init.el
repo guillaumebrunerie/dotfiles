@@ -278,9 +278,19 @@
 ;; Javascript ;;
 ;;;;;;;;;;;;;;;;
 
+(defun my-yasnippet-tab ()
+  "Fix issue with Company mode"
+  (interactive)
+  (company-abort)
+  (yas-next-field-or-maybe-expand))
+
 (use-package yasnippet
   :config
-  (yas-global-mode))
+  (yas-global-mode)
+  :bind (
+         :map yas-keymap
+         ("<tab>" . #'my-yasnippet-tab))
+  )
 
 (use-package phindent-mode
   :straight (:host github :repo "guillaumebrunerie/phindent-mode"))
@@ -795,7 +805,7 @@ there should still be identified correctly.
 ;; (eglot-code-action-organize-imports)))
 
 (defun my/add-package-line-if-missing ()
-  (when (and (string-match-p "\\.go\\'" (buffer-name))
+  (when (and (string-match-p "\\.go\\'" (buffer-file-name))
              (eq (point-min) (point-max))) ;; Check if buffer is empty
     (let ((package-name (file-name-nondirectory (directory-file-name (file-name-directory (buffer-file-name))))))
       (insert (format "package %s\n\n" package-name)))))
