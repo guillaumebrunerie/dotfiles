@@ -1,0 +1,8 @@
+#!/bin/zsh
+
+if [[ $(attr -ql "$1") =~ 'com.dropbox.ignored' ]] && [[ $(attr -qg com.dropbox.ignored "$1") == "1" ]]
+then
+	exit 0
+else
+	exit 1
+fi

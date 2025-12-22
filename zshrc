@@ -180,6 +180,7 @@ setopt autopushd pushdminus pushdsilent pushdtohome
 alias dh='dirs -v'
 
 alias dropbox-ignore='attr -s com.dropbox.ignored -V 1'
+alias dropbox-unignore='attr -r com.dropbox.ignored'
 
 function dropbox-ls-ignored {
 	for i in *(N) .*(N)
@@ -227,4 +228,8 @@ export NVM_DIR="$HOME/.nvm"
 
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
-[ -s "/Users/guillaumeb/.bun/_bun" ] && source "/Users/guillaumeb/.bun/_bun"
+[ -s "/Users/guillaumeb/.bun/_bun" ] && source "/Users/guillaumeb/.bun/_bun" || true
+
+# Custom scripts
+
+export PATH="$HOME/dotfiles/bin:$PATH"
