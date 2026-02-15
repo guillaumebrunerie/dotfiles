@@ -656,6 +656,37 @@ there should still be identified correctly.
 (define-key global-map (kbd "M-«") #'xref-find-references)
 (define-key global-map (kbd "M-$") #'xref-go-back)
 
+;;; Knip
+
+;; (lsp-register-custom-settings
+;;  '(("knip.deferSession" nil t)
+;;    ("knip.editor.exports.codelens.enabled" t t)
+;;    ("knip.editor.exports.hover.enabled" t t)
+;;    ("knip.editor.exports.hover.includeImportLocationSnippet" nil t)
+;;    ("knip.editor.exports.hover.maxSnippets" 10)
+;;    ("knip.editor.exports.hover.timeout" 300)
+;;    ("knip.editor.exports.quickfix.enabled" t t)
+;;    ("knip.editor.exports.highlight.dimExports" nil t)
+;;    ("knip.editor.exports.highlight.dimTypes" nil t)
+;;    ("knip.imports.enabled" t t)
+;;    ("knip.exports.enabled" t t)
+;;    ("knip.exports.contention.enabled" t t)))
+
+(lsp-dependency 'knip-language-server
+                '(:system "knip-language-server")
+                '(:npm :package "@knip/language-server"
+                       :path "knip-language-server"))
+
+(lsp-register-client
+ (make-lsp-client :new-connection (lsp-stdio-connection (lambda () (lsp-package-path 'knip-language-server)))
+                  :activation-fn (lsp-activate-on "javascript" "javascriptreact" "typescript" "typescriptreact")
+                  :add-on? t
+                  :initialized-fn (lambda (workspace)
+                                    (with-lsp-workspace workspace
+                                      (lsp--set-configuration (lsp-configuration-section "knip"))))
+                  :server-id 'knip-ls))
+
+
 ;;;;;;;;;;;;;;;;;
 ;; Tree sitter ;;
 ;;;;;;;;;;;;;;;;;
