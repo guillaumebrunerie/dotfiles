@@ -684,7 +684,22 @@ there should still be identified correctly.
                   :initialized-fn (lambda (workspace)
                                     (with-lsp-workspace workspace
                                       (lsp--set-configuration (lsp-configuration-section "knip"))))
-                  :server-id 'knip-ls))
+                  :server-id 'knip))
+
+;;; Oxlint
+
+(lsp-register-custom-settings
+ '(("oxc.typeAware" t t)))
+
+(lsp-register-client
+ (make-lsp-client :new-connection (lsp-stdio-connection (lambda () `("npx" "oxlint" "--lsp")))
+                  :activation-fn (lsp-activate-on "javascript" "javascriptreact" "typescript" "typescriptreact")
+                  :add-on? t
+                  :initialized-fn (lambda (workspace)
+                                    (with-lsp-workspace workspace
+                                      (lsp--set-configuration (lsp-configuration-section "oxc"))))
+                  :server-id 'oxlint))
+
 
 
 ;;;;;;;;;;;;;;;;;
