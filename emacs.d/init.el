@@ -400,10 +400,6 @@ there should still be identified correctly.
 
 (add-to-list 'copilot-indentation-alist '(ultimate-js-mode js-indent-level))
 
-(use-package copilot-chat
-  :straight (:host github :repo "chep/copilot-chat.el" :files ("*.el"))
-  :after (request org markdown-mode))
-
 ;;;;;;;;;;;;
 ;; Prisma ;;
 ;;;;;;;;;;;;

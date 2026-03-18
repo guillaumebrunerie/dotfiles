@@ -2,7 +2,7 @@
 HISTFILE=~/.histfile
 HISTSIZE=100000
 SAVEHIST=100000
-setopt appendhistory sharehistory notify interactive_comments complete_in_word hist_find_no_dups hist_ignore_all_dups hist_ignore_dups
+setopt appendhistory notify interactive_comments complete_in_word hist_find_no_dups hist_ignore_all_dups hist_ignore_dups
 unsetopt beep
 bindkey -e
 # End of lines configured by zsh-newuser-install
