@@ -1062,7 +1062,8 @@ there should still be identified correctly.
  '(preview-scale-function 1.3)
  '(read-quoted-char-radix 16)
  '(safe-local-variable-values
-   '((comment-fill-column . 80)
+   '((lsp-enabled-clients ts-ls knipls) (lsp-enabled-clients ts-ls oxlint knipls)
+     (comment-fill-column . 80)
      (eval let
            ((default-directory
              (locate-dominating-file buffer-file-name ".dir-locals.el")))
