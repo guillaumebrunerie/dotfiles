@@ -233,3 +233,6 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # Custom scripts
 
 export PATH="$HOME/dotfiles/bin:$PATH"
+
+# Local installs
+export PATH="$HOME/.local/bin:$PATH"
