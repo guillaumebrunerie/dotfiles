@@ -114,7 +114,7 @@ reset-prompt-and-accept-line () {
 zle -N reset-prompt-and-accept-line
 bindkey "^M" reset-prompt-and-accept-line
 
-__last_cmd=
+: ${__last_cmd=}
 preexec () {
 	__last_cmd=$1
 	if [[ $TERM != linux ]]
@@ -123,18 +123,18 @@ preexec () {
 	fi
 }
 precmd () {
-	local exit_status=$?
-	vcs_info
-	if [[ -n $__last_cmd && $TERM != linux ]]
-	then
-		if (( $exit_status == 0 ))
-		then
-			printf "\e]0;(%s)\a" $__last_cmd
-		else
-			printf "\e]0;[%s]\a" $__last_cmd
-		fi
-	fi
-	echo -en "\a"
+    local exit_status=$?
+    vcs_info
+    if [[ -n $__last_cmd && $TERM != linux ]]
+    then
+        if (( $exit_status == 0 ))
+        then
+            printf "\e]0;(%s)\a" $__last_cmd
+        else
+            printf "\e]0;[%s]\a" $__last_cmd
+        fi
+    fi
+    printf '\a'
 }
 REPORTTIME=10
 
