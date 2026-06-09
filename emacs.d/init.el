@@ -1090,7 +1090,7 @@ there should still be identified correctly.
  '(preview-scale-function 1.3)
  '(read-quoted-char-radix 16)
  '(safe-local-variable-values
-   '((lsp-enabled-clients ts-ls knipls) (lsp-enabled-clients ts-ls oxlint knipls)
+   '((lsp-enabled-clients ts-ls knipls) (lsp-enabled-clients tsgo ts-ls knipls) (lsp-enabled-clients ts-ls oxlint knipls)
      (comment-fill-column . 80)
      (eval let
            ((default-directory
