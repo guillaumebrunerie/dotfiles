@@ -1,33 +1,58 @@
-;;;;;;;;;;;;;;;;;
-;; Straight.el ;;
-;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;
+;; Elpaca ;;
+;;;;;;;;;;;;
 
-;; Bootstrap
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name
-        "straight/repos/straight.el/bootstrap.el"
-        (or (bound-and-true-p straight-base-dir)
-            user-emacs-directory)))
-      (bootstrap-version 7))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
+(defvar elpaca-installer-version 0.12)
+(defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+(defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+(defvar elpaca-sources-directory (expand-file-name "sources/" elpaca-directory))
+(defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+                              :ref nil :depth 1 :inherit ignore
+                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+                              :build (:not elpaca-activate)))
+(let* ((repo  (expand-file-name "elpaca/" elpaca-sources-directory))
+       (build (expand-file-name "elpaca/" elpaca-builds-directory))
+       (order (cdr elpaca-order))
+       (default-directory repo))
+  (add-to-list 'load-path (if (file-exists-p build) build repo))
+  (unless (file-exists-p repo)
+    (make-directory repo t)
+    (when (<= emacs-major-version 28) (require 'subr-x))
+    (condition-case-unless-debug err
+        (if-let* ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                  ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
+                                                  ,@(when-let* ((depth (plist-get order :depth)))
+                                                      (list (format "--depth=%d" depth) "--no-single-branch"))
+                                                  ,(plist-get order :repo) ,repo))))
+                  ((zerop (call-process "git" nil buffer t "checkout"
+                                        (or (plist-get order :ref) "--"))))
+                  (emacs (concat invocation-directory invocation-name))
+                  ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                        "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                  ((require 'elpaca))
+                  ((elpaca-generate-autoloads "elpaca" repo)))
+            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+          (error "%s" (with-current-buffer buffer (buffer-string))))
+      ((error) (warn "%s" err) (delete-directory repo 'recursive))))
+  (unless (require 'elpaca-autoloads nil t)
+    (require 'elpaca)
+    (elpaca-generate-autoloads "elpaca" repo)
+    (let ((load-source-file-function nil)) (load "./elpaca-autoloads"))))
+(add-hook 'after-init-hook #'elpaca-process-queues)
+(elpaca `(,@elpaca-order))
 
-;; Configure the use-package macro to work with straight
-(use-package straight
-  :custom (straight-use-package-by-default t))
+(elpaca elpaca-use-package
+  ;; Enable Elpaca support for use-package's :ensure keyword.
+  (elpaca-use-package-mode))
+
+(setq use-package-always-ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Global settings ;;
 ;;;;;;;;;;;;;;;;;;;;;
 
 (use-package emacs
+  :ensure nil
   :init
   (global-whitespace-mode 1)
   (setq whitespace-global-modes '(not mediawiki-mode))
@@ -113,6 +138,7 @@
   (exec-path-from-shell-initialize))
 
 (use-package paren
+  :ensure nil
   :init
   (setq show-paren-delay 0)
   (setopt show-paren-predicate t)
@@ -122,7 +148,7 @@
 
 ;; Smooth scrolling
 (use-package ultra-scroll
-  :straight (:host github :repo "jdtsmith/ultra-scroll")
+  :ensure (:host github :repo "jdtsmith/ultra-scroll")
   :init
   (setq scroll-conservatively 101 ; important!
         scroll-margin 0)
@@ -255,7 +281,7 @@
 ;;;;;;;;;;;;;;;;;;
 
 (use-package shell-script-mode
-  :straight nil
+  :ensure nil
   :mode "\\(\\.sh\\'\\|zshrc\\)"
   :init
   (setq sh--completion-keywords '("if" "then" "elif" "else" "fi" "while" "until" "for" "in" "do" "done" "case" "esac")))
@@ -299,7 +325,7 @@
   )
 
 (use-package phindent-mode
-  :straight (:host github :repo "guillaumebrunerie/phindent-mode"))
+  :ensure (:host github :repo "guillaumebrunerie/phindent-mode"))
 
 (defun infer-indentation-style (defaults-to-tabs)
   "Detects and sets indentation style (tabs vs spaces), and width (four for
@@ -339,7 +365,7 @@ there should still be identified correctly.
 (require 'js)
 
 (use-package ultimate-js-mode
-  :straight (:host github :repo "guillaumebrunerie/ultimate-js-mode" :files (:defaults "libs" "queries"))
+  :ensure (:host github :repo "guillaumebrunerie/ultimate-js-mode" :files (:defaults "libs" "queries"))
   :mode ("\\.\\([mc]?[jt]sx?\\|json\\)\\'" . ultimate-js-mode)
   :interpreter ("bun" . ultimate-js-mode)
   :hook
@@ -363,11 +389,15 @@ there should still be identified correctly.
         '(prettier))
   (apheleia-global-mode +1))
 
+(use-package track-changes)
+
 (use-package copilot
-  :straight (:host github :repo "copilot-emacs/copilot.el" :files ("dist" "*.el"))
+  :ensure (:host github :repo "copilot-emacs/copilot.el" :files ("dist" "*.el"))
   :config
   (setq copilot-indent-offset-warning-disable t)
-  :ensure t)
+  (define-key copilot-completion-map (kbd "C-<tab>") 'copilot-accept-completion-by-line)
+  (define-key copilot-completion-map (kbd "C-<return>") 'copilot-accept-completion)
+  (add-to-list 'copilot-indentation-alist '(ultimate-js-mode js-indent-level)))
 
 ;; see https://github.com/copilot-emacs/copilot.el/issues/250
 
@@ -394,19 +424,6 @@ there should still be identified correctly.
 ;;  ("<backtab>" . my/hs-close)
 ;;  ("C-S-<tab>" . my/hs-open)
 ;;  ("<C-iso-lefttab>" . my/hs-open))
-
-(define-key copilot-completion-map (kbd "C-<tab>") 'copilot-accept-completion-by-line)
-(define-key copilot-completion-map (kbd "C-<return>") 'copilot-accept-completion)
-
-(add-to-list 'copilot-indentation-alist '(ultimate-js-mode js-indent-level))
-
-;;;;;;;;;;;;
-;; Prisma ;;
-;;;;;;;;;;;;
-
-(use-package emacs-prisma-mode
-  :straight (:host github :repo "pimeys/emacs-prisma-mode")
-  :mode "\\.prisma\\'")
 
 ;;;;;;;;;;;;;;;;
 ;; Completion ;;
@@ -555,7 +572,7 @@ there should still be identified correctly.
 (defface hs-folded '((t :background "#782200" :foreground "#EEE" :weight bold :box "#FF0000")) "Dots")
 
 ;; (use-package hs-minor-mode
-;;   :straight nil
+;;   :ensure nil
 ;;   :bind
 ;;   (("C-<tab>" . my/hs-toggle)
 ;;    ("<backtab>" . my/hs-close)
@@ -569,7 +586,7 @@ there should still be identified correctly.
 ;;   (hs-minor-mode))
 
 (use-package prog-mode
-  :straight nil
+  :ensure nil
   :hook (prog-mode . hs-minor-mode))
 
 ;;;;;;;;;;;;;;
@@ -668,33 +685,35 @@ there should still be identified correctly.
 ;;    ("knip.exports.enabled" t t)
 ;;    ("knip.exports.contention.enabled" t t)))
 
-(lsp-dependency 'knip-language-server
-                '(:system "knip-language-server")
-                '(:npm :package "@knip/language-server"
-                       :path "knip-language-server"))
+(with-eval-after-load 'lsp-mode
+  (lsp-dependency 'knip-language-server
+                  '(:system "knip-language-server")
+                  '(:npm :package "@knip/language-server"
+                         :path "knip-language-server"))
 
-(lsp-register-client
- (make-lsp-client :new-connection (lsp-stdio-connection (lambda () (lsp-package-path 'knip-language-server)))
-                  :activation-fn (lsp-activate-on "javascript" "javascriptreact" "typescript" "typescriptreact")
-                  :add-on? t
-                  :initialized-fn (lambda (workspace)
-                                    (with-lsp-workspace workspace
-                                      (lsp--set-configuration (lsp-configuration-section "knip"))))
-                  :server-id 'knip))
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection (lambda () (lsp-package-path 'knip-language-server)))
+                    :activation-fn (lsp-activate-on "javascript" "javascriptreact" "typescript" "typescriptreact")
+                    :add-on? t
+                    :initialized-fn (lambda (workspace)
+                                      (with-lsp-workspace workspace
+                                        (lsp--set-configuration (lsp-configuration-section "knip"))))
+                    :server-id 'knip)))
 
 ;;; Oxlint
 
-(lsp-register-custom-settings
- '(("oxc.typeAware" t t)))
+(with-eval-after-load 'lsp-mode
+  (lsp-register-custom-settings
+   '(("oxc.typeAware" t t)))
 
-(lsp-register-client
- (make-lsp-client :new-connection (lsp-stdio-connection (lambda () `("npx" "oxlint" "--lsp")))
-                  :activation-fn (lsp-activate-on "javascript" "javascriptreact" "typescript" "typescriptreact")
-                  :add-on? t
-                  :initialized-fn (lambda (workspace)
-                                    (with-lsp-workspace workspace
-                                      (lsp--set-configuration (lsp-configuration-section "oxc"))))
-                  :server-id 'oxlint))
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection (lambda () `("npx" "oxlint" "--lsp")))
+                    :activation-fn (lsp-activate-on "javascript" "javascriptreact" "typescript" "typescriptreact")
+                    :add-on? t
+                    :initialized-fn (lambda (workspace)
+                                      (with-lsp-workspace workspace
+                                        (lsp--set-configuration (lsp-configuration-section "oxc"))))
+                    :server-id 'oxlint)))
 
 
 
@@ -883,9 +902,8 @@ there should still be identified correctly.
 ;; C# ;;
 ;;;;;;;;
 
-(server-start)
 (use-package csharp-mode
-  :straight nil
+  :ensure nil
   :hook
   (csharp-mode . phindent-mode)
   (csharp-mode . lsp-deferred))
@@ -963,6 +981,16 @@ there should still be identified correctly.
   (setq indent-tabs-mode nil)
   (c-set-offset 'knr-argdecl-intro 0))
 (add-hook 'c-mode-common-hook 'hook-c)
+
+;;;;;;;;;;;
+;; Theme ;;
+;;;;;;;;;;;
+
+(add-to-list 'custom-theme-load-path "~/.emacs.d/")
+
+(use-package autothemer
+  :config
+  (load-theme 'mytheme t))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -1087,6 +1115,3 @@ there should still be identified correctly.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(lsp-lsp-flycheck-info-unnecessary-face ((t (:underline (:color "ForestGreen" :style wave)))) t))
-
-(load-file "~/.emacs.d/mytheme.el")
-(enable-theme 'mytheme)

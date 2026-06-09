@@ -1,4 +1,3 @@
-(straight-use-package 'autothemer)
 (require 'autothemer)
 
 (autothemer-deftheme
