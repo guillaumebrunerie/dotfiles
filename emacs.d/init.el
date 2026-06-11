@@ -269,12 +269,12 @@
   (vterm-mode . toggle-vterm-background)
   (vterm-copy-mode . toggle-vterm-background))
 
-(use-package multi-vterm
-  :bind
-  (("C-c t" . multi-vterm-project) ))
+;; (use-package multi-vterm
+;;   :bind
+;;   (("C-c t" . multi-vterm-project) ))
 
-;; If we aren’t in any project, make multi-vterm believe we're in a project at ~
-(advice-add 'multi-vterm-project-root :filter-return (lambda (r) (or r "~")))
+;; ;; If we aren’t in any project, make multi-vterm believe we're in a project at ~
+;; (advice-add 'multi-vterm-project-root :filter-return (lambda (r) (or r "~")))
 
 ;;;;;;;;;;;;;;;;;;
 ;; Shell script ;;
