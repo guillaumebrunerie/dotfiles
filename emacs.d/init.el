@@ -132,6 +132,7 @@
 (global-set-key (kbd "C-<mouse-4>") (lambda () (interactive)))
 (global-set-key (kbd "C-<mouse-5>") (lambda () (interactive)))
 
+(use-package conf-mode :ensure nil)
 
 (use-package exec-path-from-shell
   :config
