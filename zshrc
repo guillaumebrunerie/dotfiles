@@ -236,3 +236,9 @@ export PATH="$HOME/dotfiles/bin:$PATH"
 
 # Local installs
 export PATH="$HOME/.local/bin:$PATH"
+
+# Snaps
+export PATH="/snap/bin:$PATH"
+
+# Rust
+export PATH="$HOME/.cargo/bin:$PATH"

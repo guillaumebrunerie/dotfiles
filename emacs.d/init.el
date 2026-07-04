@@ -735,6 +735,7 @@ there should still be identified correctly.
    (make "https://github.com/alemuller/tree-sitter-make")
    (markdown "https://github.com/ikatyang/tree-sitter-markdown")
    (python "https://github.com/tree-sitter/tree-sitter-python")
+   (rust "https://github.com/tree-sitter/tree-sitter-rust")
    (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
    (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
    (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
@@ -982,6 +983,22 @@ there should still be identified correctly.
   (setq indent-tabs-mode nil)
   (c-set-offset 'knr-argdecl-intro 0))
 (add-hook 'c-mode-common-hook 'hook-c)
+
+;;;;;;;;;;
+;; Rust ;;
+;;;;;;;;;;
+
+(use-package rust-mode
+  :hook
+  (rust-mode . (lambda () (setq indent-tabs-mode nil)))
+  (rust-mode . lsp)
+  (rust-mode . lsp)
+  (before-save . (lambda () (when (eq 'rust-mode major-mode)
+                              (lsp-format-buffer))))
+  :init
+  (setq rust-mode-treesitter-derive t)
+  (setq rust-indent-offset 4))
+
 
 ;;;;;;;;;;;
 ;; Theme ;;
