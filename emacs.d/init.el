@@ -744,7 +744,7 @@ there should still be identified correctly.
   (interactive)
   (treesit-install-language-grammar 'bash)
   (treesit-install-language-grammar 'css)
-  ;; (treesit-install-language-grammar 'elisp)
+  (treesit-install-language-grammar 'elisp)
   (treesit-install-language-grammar 'go)
   (treesit-install-language-grammar 'gomod)
   (treesit-install-language-grammar 'html)
