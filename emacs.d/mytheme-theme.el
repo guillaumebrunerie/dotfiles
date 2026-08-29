@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (require 'autothemer)
 
 (autothemer-deftheme
@@ -70,6 +72,8 @@
   (whitespace-tab               (:background mytab))
   (whitespace-trailing          (:background mywstrail))
   (isearch                      (:background mysearch :distant-foreground mytx))
+  (mode-line                    (:background "grey40"))
+  (mode-line-highlight          (:background "grey30"))
 
   ;; Diagnostics
   (lsp-lsp-flycheck-info-unnecessary-face (:foreground 'unspecified :underline '(:style wave :color "ForestGreen")))

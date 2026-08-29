@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;;;;;;;;;;;;
 ;; Elpaca ;;
 ;;;;;;;;;;;;
@@ -74,7 +76,7 @@
   (add-hook 'text-mode-hook 'turn-on-auto-fill)
 
   ;; Delete selection when typing
-  (pending-delete-mode)
+  (delete-selection-mode)
 
   ;; Consider dashes to be a word constituent in the minibuffer
   (modify-syntax-entry ?\- "w" minibuffer-local-filename-syntax)
@@ -122,6 +124,9 @@
 
   ;; Select help buffers automatically
   (setq help-window-select t)
+
+  ;; Context menus
+  (context-menu-mode)
 
   ;; Electricity
   (electric-pair-mode 1)
@@ -530,7 +535,7 @@ there should still be identified correctly.
 (defun my/hs-toggle (arg)
   "If the current line is folded, unfold only one level of it, otherwise fold it."
   (interactive "p")
-  (if-let ((fold-position (my/hs-is-folded)))
+  (if-let* ((fold-position (my/hs-is-folded)))
       (save-excursion
         (goto-char fold-position)
         (hs-hide-level arg))
@@ -544,7 +549,7 @@ there should still be identified correctly.
   (save-excursion
     (if (> arg 1)
         (hs-show-all)
-      (if-let ((fold-position (my/hs-is-folded)))
+      (if-let* ((fold-position (my/hs-is-folded)))
           (progn
             (goto-char fold-position)
             (hs-show-block))
