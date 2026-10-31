@@ -104,6 +104,17 @@
     </dict>
     <dict>
       <key>name</key>
+      <string>Void type/keyword</string>
+      <key>scope</key>
+      <string>storage.type.void, storage.type.primitive.void, support.type.primitive.void, keyword.operator.void, keyword.operator.word.void</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#008B8B</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
       <string>Builtins</string>
       <key>scope</key>
       <string>support.function, support.constant, support.variable</string>
