@@ -25,7 +25,7 @@
     </dict>
     <dict>
       <key>name</key>
-      <string>Comment</string>
+      <string>Comments</string>
       <key>scope</key>
       <string>comment</string>
       <key>settings</key>
@@ -36,7 +36,7 @@
     </dict>
     <dict>
       <key>name</key>
-      <string>Doc Comment</string>
+      <string>Documentation comments</string>
       <key>scope</key>
       <string>comment.block.documentation, punctuation.definition.comment</string>
       <key>settings</key>
@@ -47,9 +47,9 @@
     </dict>
     <dict>
       <key>name</key>
-      <string>Keyword</string>
+      <string>Keywords</string>
       <key>scope</key>
-      <string>keyword, keyword.control, keyword.operator.word, storage, storage.modifier, storage.control, storage.type</string>
+      <string>keyword, storage</string>
       <key>settings</key>
       <dict>
         <key>fontStyle</key>
@@ -60,9 +60,9 @@
     </dict>
     <dict>
       <key>name</key>
-      <string>String</string>
+      <string>Strings</string>
       <key>scope</key>
-      <string>string</string>
+      <string>string, punctuation.definition.string</string>
       <key>settings</key>
       <dict>
         <key>foreground</key>
@@ -71,20 +71,22 @@
     </dict>
     <dict>
       <key>name</key>
-      <string>String quotes</string>
+      <string>Template interpolation punctuation</string>
       <key>scope</key>
-      <string>punctuation.definition.string, punctuation.definition.string.begin, punctuation.definition.string.end</string>
+      <string>punctuation.definition.template-expression, punctuation.section.interpolation.begin, punctuation.section.interpolation.end</string>
       <key>settings</key>
       <dict>
+        <key>fontStyle</key>
+        <string>bold</string>
         <key>foreground</key>
         <string>#ee7700</string>
       </dict>
     </dict>
     <dict>
       <key>name</key>
-      <string>Number and constants</string>
+      <string>Cyan group (constants, builtins, primitive types, HTML tags)</string>
       <key>scope</key>
-      <string>constant.numeric, constant.language, constant.character, constant.other</string>
+      <string>constant, support.constant, support.type.primitive, support.type.builtin, storage.type.primitive, storage.type.void, support.type.primitive.void, keyword.operator.void, keyword.operator.word.void, entity.name.tag</string>
       <key>settings</key>
       <dict>
         <key>foreground</key>
@@ -93,42 +95,9 @@
     </dict>
     <dict>
       <key>name</key>
-      <string>Primitive/builtin types</string>
+      <string>Blue group (definitions, classes, JSX components)</string>
       <key>scope</key>
-      <string>storage.type.primitive, support.type.primitive, support.type.builtin</string>
-      <key>settings</key>
-      <dict>
-        <key>foreground</key>
-        <string>#008B8B</string>
-      </dict>
-    </dict>
-    <dict>
-      <key>name</key>
-      <string>Void type/keyword</string>
-      <key>scope</key>
-      <string>storage.type.void, storage.type.primitive.void, support.type.primitive.void, keyword.operator.void, keyword.operator.word.void</string>
-      <key>settings</key>
-      <dict>
-        <key>foreground</key>
-        <string>#008B8B</string>
-      </dict>
-    </dict>
-    <dict>
-      <key>name</key>
-      <string>Builtins</string>
-      <key>scope</key>
-      <string>support.function, support.constant, support.variable</string>
-      <key>settings</key>
-      <dict>
-        <key>foreground</key>
-        <string>#008B8B</string>
-      </dict>
-    </dict>
-    <dict>
-      <key>name</key>
-      <string>Function names and constructors</string>
-      <key>scope</key>
-      <string>entity.name.function, entity.name.class</string>
+      <string>entity.name.function, entity.name.class, support.class.component, entity.name.tag.component, entity.name.class.component, meta.tag.component entity.name.tag</string>
       <key>settings</key>
       <dict>
         <key>foreground</key>
@@ -137,9 +106,9 @@
     </dict>
     <dict>
       <key>name</key>
-      <string>Function calls</string>
+      <string>White group (function calls, variable usage, properties)</string>
       <key>scope</key>
-      <string>meta.function-call, meta.function-call entity.name.function, variable.function, support.function.dom</string>
+      <string>meta.function-call, meta.function-call entity.name.function, variable.function, variable.other, meta.property-name, support.variable.property, variable.object.property, support.function, support.variable, support.class</string>
       <key>settings</key>
       <dict>
         <key>foreground</key>
@@ -148,9 +117,20 @@
     </dict>
     <dict>
       <key>name</key>
-      <string>Variables and parameters</string>
+      <string>Global objects in call chains</string>
       <key>scope</key>
-      <string>variable.parameter, variable.parameter.function, variable.other.definition, variable.other.readwrite</string>
+      <string>meta.function-call support.constant, meta.function-call variable.other.constant</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#efefef</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Import bindings</string>
+      <key>scope</key>
+      <string>meta.import variable.other, meta.import meta.binding.name</string>
       <key>settings</key>
       <dict>
         <key>foreground</key>
@@ -159,31 +139,20 @@
     </dict>
     <dict>
       <key>name</key>
-      <string>Properties and member access</string>
+      <string>Definitions and parameters</string>
       <key>scope</key>
-      <string>variable.other.property, meta.property-name, support.variable.property, variable.object.property</string>
+      <string>variable.parameter, meta.binding.name, meta.binding.destructuring, variable.other.definition</string>
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#efefef</string>
+        <string>#ddaa66</string>
       </dict>
     </dict>
     <dict>
       <key>name</key>
-      <string>Types</string>
+      <string>Green group (types)</string>
       <key>scope</key>
-      <string>entity.name.type, support.type, support.class</string>
-      <key>settings</key>
-      <dict>
-        <key>foreground</key>
-        <string>#00aa00</string>
-      </dict>
-    </dict>
-    <dict>
-      <key>name</key>
-      <string>Type usage identifiers</string>
-      <key>scope</key>
-      <string>meta.type variable.other.readwrite, meta.type variable.other.object, meta.type.annotation variable.other.readwrite, meta.return.type variable.other.readwrite</string>
+      <string>entity.name.type, support.type, meta.type variable.other.readwrite, meta.type variable.other.object, meta.type.annotation variable.other.readwrite, meta.return.type variable.other.readwrite</string>
       <key>settings</key>
       <dict>
         <key>foreground</key>
@@ -205,7 +174,7 @@
       <key>name</key>
       <string>Operators and punctuation</string>
       <key>scope</key>
-      <string>keyword.operator, punctuation.separator, punctuation.terminator, punctuation.accessor</string>
+      <string>keyword.operator, punctuation, storage.type.function.arrow</string>
       <key>settings</key>
       <dict>
         <key>foreground</key>
@@ -216,79 +185,13 @@
       <key>name</key>
       <string>New keyword</string>
       <key>scope</key>
-      <string>keyword.operator.new, keyword.new</string>
-      <key>settings</key>
-      <dict>
-        <key>foreground</key>
-        <string>#9400D3</string>
-      </dict>
-    </dict>
-    <dict>
-      <key>name</key>
-      <string>Arrow operator</string>
-      <key>scope</key>
-      <string>storage.type.function.arrow, keyword.operator.arrow, punctuation.definition.function.arrow</string>
-      <key>settings</key>
-      <dict>
-        <key>foreground</key>
-        <string>#bbbbbb</string>
-      </dict>
-    </dict>
-    <dict>
-      <key>name</key>
-      <string>Generic angle brackets</string>
-      <key>scope</key>
-      <string>punctuation.definition.typeparameters.begin, punctuation.definition.typeparameters.end, punctuation.definition.generic.begin, punctuation.definition.generic.end, meta.type.parameters punctuation</string>
-      <key>settings</key>
-      <dict>
-        <key>foreground</key>
-        <string>#bbbbbb</string>
-      </dict>
-    </dict>
-    <dict>
-      <key>name</key>
-      <string>Special punctuation</string>
-      <key>scope</key>
-      <string>punctuation.definition.template-expression, punctuation.section.embedded</string>
+      <string>keyword.operator.new</string>
       <key>settings</key>
       <dict>
         <key>fontStyle</key>
         <string>bold</string>
         <key>foreground</key>
-        <string>#ee7700</string>
-      </dict>
-    </dict>
-    <dict>
-      <key>name</key>
-      <string>JSX component tags</string>
-      <key>scope</key>
-      <string>support.class.component, entity.name.tag.component, entity.name.class.component, meta.tag.component entity.name.tag</string>
-      <key>settings</key>
-      <dict>
-        <key>foreground</key>
-        <string>#0055ff</string>
-      </dict>
-    </dict>
-    <dict>
-      <key>name</key>
-      <string>JSX/HTML tags</string>
-      <key>scope</key>
-      <string>entity.name.tag, meta.tag entity.name.tag, text.html.basic entity.name.tag, meta.tag.structure.any.html entity.name.tag, meta.tag.block.any.html entity.name.tag, meta.tag.inline.any.html entity.name.tag</string>
-      <key>settings</key>
-      <dict>
-        <key>foreground</key>
-        <string>#008B8B</string>
-      </dict>
-    </dict>
-    <dict>
-      <key>name</key>
-      <string>HTML/JSX tag punctuation</string>
-      <key>scope</key>
-      <string>punctuation.definition.tag, punctuation.definition.tag.begin, punctuation.definition.tag.end, meta.tag punctuation</string>
-      <key>settings</key>
-      <dict>
-        <key>foreground</key>
-        <string>#bbbbbb</string>
+        <string>#9400D3</string>
       </dict>
     </dict>
     <dict>
@@ -306,7 +209,7 @@
       <key>name</key>
       <string>Invalid / warning</string>
       <key>scope</key>
-      <string>invalid, invalid.illegal, markup.error</string>
+      <string>invalid, markup.error</string>
       <key>settings</key>
       <dict>
         <key>background</key>

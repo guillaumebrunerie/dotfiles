@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phosphor theme rules</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #1e1e1e;
+      --fg: #efefef;
+      --muted: #bbbbbb;
+      --border: #383838;
+      --header: #282828;
+    }
+    body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: var(--bg); color: var(--fg); }
+    main { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    table { width: 100%; border-collapse: collapse; margin: 0 0 24px; font-size: 14px; }
+    th, td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
+    th { background: var(--header); }
+    code { color: #ddaa66; }
+    .sample {
+      display: inline-block; padding: 2px 8px; border: 1px solid var(--border); border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px;
+    }
+    .muted { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Phosphor theme: simplified rule reference</h1>
+    <p>Rules are intentionally grouped by color to stay minimal and easy to tune.</p>
+
+    <table>
+      <thead><tr><th>Global setting</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Background</td><td><code>#1e1e1e</code></td></tr>
+        <tr><td>Foreground / Caret</td><td><code>#efefef</code></td></tr>
+        <tr><td>Selection</td><td><code>#1d3854</code></td></tr>
+        <tr><td>Line highlight</td><td><code>#383838</code></td></tr>
+        <tr><td>Invisibles</td><td><code>#282828</code></td></tr>
+      </tbody>
+    </table>
+
+    <table>
+      <thead>
+        <tr><th>Rule</th><th>Scope(s)</th><th>Color/style</th><th>Sample</th><th>Intent</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Comments</td>
+          <td><code>comment</code></td>
+          <td><code>#bb1111</code></td>
+          <td><span class="sample" style="color:#bb1111;background:#1e1e1e;">comment</span></td>
+          <td>Regular comments</td>
+        </tr>
+        <tr>
+          <td>Documentation comments</td>
+          <td><code>comment.block.documentation</code>, <code>punctuation.definition.comment</code></td>
+          <td><code>#ff0000</code></td>
+          <td><span class="sample" style="color:#ff0000;background:#1e1e1e;">doc</span></td>
+          <td>Doc comments and comment punctuation</td>
+        </tr>
+        <tr>
+          <td>Keywords</td>
+          <td><code>keyword</code>, <code>storage</code></td>
+          <td><code>#9400D3</code>, <strong>bold</strong></td>
+          <td><span class="sample" style="color:#9400D3;background:#1e1e1e;font-weight:bold;">if</span></td>
+          <td>Language keywords and storage tokens</td>
+        </tr>
+        <tr>
+          <td>Strings</td>
+          <td><code>string</code>, <code>punctuation.definition.string</code></td>
+          <td><code>#ee7700</code></td>
+          <td><span class="sample" style="color:#ee7700;background:#1e1e1e;">"text"</span></td>
+          <td>Strings and their quote punctuation</td>
+        </tr>
+        <tr>
+          <td>Template interpolation punctuation</td>
+          <td><code>punctuation.definition.template-expression</code>, <code>punctuation.section.interpolation.begin</code>, <code>punctuation.section.interpolation.end</code></td>
+          <td><code>#ee7700</code>, <strong>bold</strong></td>
+          <td><span class="sample" style="color:#ee7700;background:#1e1e1e;font-weight:bold;">${</span></td>
+          <td>Template expression delimiters</td>
+        </tr>
+        <tr>
+          <td>Cyan group</td>
+          <td><code>constant</code>, <code>support.constant</code>, <code>support.type.primitive</code>, <code>support.type.builtin</code>, <code>storage.type.primitive</code>, <code>storage.type.void</code>, <code>support.type.primitive.void</code>, <code>keyword.operator.void</code>, <code>keyword.operator.word.void</code>, <code>entity.name.tag</code></td>
+          <td><code>#008B8B</code></td>
+          <td><span class="sample" style="color:#008B8B;background:#1e1e1e;">const / string / div</span></td>
+          <td>Constants, primitive/void types, plain HTML tags</td>
+        </tr>
+        <tr>
+          <td>Blue group</td>
+          <td><code>entity.name.function</code>, <code>entity.name.class</code>, <code>support.class.component</code>, <code>entity.name.tag.component</code>, <code>entity.name.class.component</code>, <code>meta.tag.component entity.name.tag</code></td>
+          <td><code>#0055ff</code></td>
+          <td><span class="sample" style="color:#0055ff;background:#1e1e1e;">MyFunc / Component</span></td>
+          <td>Function/class definitions and JSX components</td>
+        </tr>
+        <tr>
+          <td>White group</td>
+          <td><code>meta.function-call</code>, <code>meta.function-call entity.name.function</code>, <code>variable.function</code>, <code>variable.other</code>, <code>meta.property-name</code>, <code>support.variable.property</code>, <code>variable.object.property</code>, <code>support.function</code>, <code>support.variable</code>, <code>support.class</code></td>
+          <td><code>#efefef</code></td>
+          <td><span class="sample" style="color:#efefef;background:#1e1e1e;">call(variable.prop)</span></td>
+          <td>Function calls, built-in calls/variables/classes, variable usage, and properties</td>
+        </tr>
+        <tr>
+          <td>Global objects in call chains</td>
+          <td><code>meta.function-call support.constant</code>, <code>meta.function-call variable.other.constant</code></td>
+          <td><code>#efefef</code></td>
+          <td><span class="sample" style="color:#efefef;background:#1e1e1e;">JSON.stringify</span></td>
+          <td>Forces global object receiver tokens in call chains to white</td>
+        </tr>
+        <tr>
+          <td>Import bindings</td>
+          <td><code>meta.import variable.other</code>, <code>meta.import meta.binding.name</code></td>
+          <td><code>#ddaa66</code></td>
+          <td><span class="sample" style="color:#ddaa66;background:#1e1e1e;">import { foo }</span></td>
+          <td>Imported identifiers in import statements</td>
+        </tr>
+        <tr>
+          <td>Definitions and parameters</td>
+          <td><code>variable.parameter</code>, <code>meta.binding.name</code>, <code>meta.binding.destructuring</code>, <code>variable.other.definition</code></td>
+          <td><code>#ddaa66</code></td>
+          <td><span class="sample" style="color:#ddaa66;background:#1e1e1e;">{ value }</span></td>
+          <td>Function parameters, optional parameters, and destructuring/definition bindings</td>
+        </tr>
+        <tr>
+          <td>Green group (types)</td>
+          <td><code>entity.name.type</code>, <code>support.type</code>, <code>meta.type variable.other.readwrite</code>, <code>meta.type variable.other.object</code>, <code>meta.type.annotation variable.other.readwrite</code>, <code>meta.return.type variable.other.readwrite</code></td>
+          <td><code>#00aa00</code></td>
+          <td><span class="sample" style="color:#00aa00;background:#1e1e1e;">Task</span></td>
+          <td>Type names and identifiers used in type positions</td>
+        </tr>
+        <tr>
+          <td>Type parameters</td>
+          <td><code>entity.name.type.parameter</code>, <code>variable.type.parameter</code>, <code>meta.type.parameters</code></td>
+          <td><code>#66dd00</code></td>
+          <td><span class="sample" style="color:#66dd00;background:#1e1e1e;">T</span></td>
+          <td>Generic type parameters</td>
+        </tr>
+        <tr>
+          <td>Operators and punctuation</td>
+          <td><code>keyword.operator</code>, <code>punctuation</code>, <code>storage.type.function.arrow</code></td>
+          <td><code>#bbbbbb</code></td>
+          <td><span class="sample" style="color:#bbbbbb;background:#1e1e1e;">=&gt; &lt;&gt; { }</span></td>
+          <td>All operators and punctuation are grey</td>
+        </tr>
+        <tr>
+          <td>New keyword</td>
+          <td><code>keyword.operator.new</code></td>
+          <td><code>#9400D3</code>, <strong>bold</strong></td>
+          <td><span class="sample" style="color:#9400D3;background:#1e1e1e;font-weight:bold;">new</span></td>
+          <td><code>new</code> is explicitly purple</td>
+        </tr>
+        <tr>
+          <td>JSX/HTML attributes</td>
+          <td><code>entity.other.attribute-name</code></td>
+          <td><code>#5577bb</code></td>
+          <td><span class="sample" style="color:#5577bb;background:#1e1e1e;">className</span></td>
+          <td>Tag attribute names</td>
+        </tr>
+        <tr>
+          <td>Invalid / warning</td>
+          <td><code>invalid</code>, <code>markup.error</code></td>
+          <td><code>#efefef</code> on <code>#BB0000</code></td>
+          <td><span class="sample" style="color:#efefef;background:#BB0000;">invalid</span></td>
+          <td>Error/invalid spans</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="muted">Theme name: <code>Phosphor</code> · UUID: <code>FAE9E89D-7A62-4FC9-9B35-B8BAFE85D4FB</code></p>
+  </main>
+</body>
+</html>

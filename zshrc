@@ -51,6 +51,7 @@ else
 fi
 alias grep="grep --color=auto"
 export LESS=' -R -j.1 -x4 -i '
+export LESSOPEN="| bat --color=always --theme=Phosphor --style=plain %s"
 
 catfunc () {
 	if [[ $# == 1 ]]
