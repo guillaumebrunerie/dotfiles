@@ -139,18 +139,22 @@ precmd () {
 }
 REPORTTIME=10
 
+svn-color-diff() {
+	~/delta/target/release/delta --svn-diff
+}
+
 # Colored and paged SVN
 svn() {
 	if [[ "$1" == di ]]; then
-		=svn diff "${@:2}" -x -w | ~/bin/colordiff | less
+		=svn diff "${@:2}" -x -w | svn-color-diff
 	elif [[ "$1" == diff ]]; then
-		=svn diff "${@:2}" | ~/bin/colordiff | less
+		=svn diff "${@:2}" | svn-color-diff
 	elif [[ "$1" == logq ]]; then
-		=svn log "${@:2}" | ~/bin/colordiff --difftype=diffu | less
+		=svn log "${@:2}" | svn-color-diff
 	elif [[ "$1" == log ]]; then
-		=svn log --verbose "${@:2}" | ~/bin/colordiff --difftype=diffu | less
+		=svn log --verbose "${@:2}" | svn-color-diff
 	elif [[ "$1" == logd ]]; then
-		=svn log --diff --verbose "${@:2}" | ~/bin/colordiff | less
+		=svn log --diff --verbose "${@:2}" | svn-color-diff
 	elif [[ "$1" == uncheckout ]]; then
 		=svn up --set-depth exclude "${@:2}"
 	elif [[ "$1" == unadd ]]; then
