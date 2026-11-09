@@ -53,15 +53,15 @@ alias grep="grep --color=auto"
 export LESS=' -R -j.1 -x4 -i '
 export LESSOPEN="| bat --color=always --theme=Phosphor --style=plain %s"
 
-catfunc () {
-	if [[ $# == 1 ]]
-	then
-		source-highlight --failsafe --infer-lang -f esc --style-file=esc.style -i "$1" 2>/dev/null || /bin/cat "$1"
-	else
-		cat $*
-	fi
-}
-alias cat=catfunc
+# catfunc () {
+# 	if [[ $# == 1 ]]
+# 	then
+# 		source-highlight --failsafe --infer-lang -f esc --style-file=esc.style -i "$1" 2>/dev/null || /bin/cat "$1"
+# 	else
+# 		cat $*
+# 	fi
+# }
+# alias cat=catfunc
 
 rationalise-dot() {
 	if [[ $LBUFFER = *. ]]; then
@@ -141,6 +141,11 @@ REPORTTIME=10
 
 svn-color-diff() {
 	~/delta/target/release/delta --svn-diff
+	# sed -E \
+	# 	-e 's#^(---|\+\+\+) .*[[:blank:]]\(nonexistent\)$#\1 /dev/null#' \
+	# 	-e 's#^(---|\+\+\+) (.*)\t\(revision [[:digit:]]*\)$#\1 \2#' \
+	# 	-e 's#^(---|\+\+\+) (.*)\t\(working copy\)$#\1 \2#' | delta
+	# ~/bin/colordiff --difftype=diffu | less
 }
 
 # Colored and paged SVN

@@ -1,0 +1,11 @@
+#!/bin/zsh
+
+url=$1
+rest=${url#emacs://}
+line=${rest##*:}
+file=${rest%:*}
+file=$(printf '%b' "${file//\%/\\x}")   # undo any %-encoding
+
+/opt/homebrew/bin/emacsclient -n +"$line" "$file"
+
+osascript -e 'tell application "org.gnu.Emacs" to activate'

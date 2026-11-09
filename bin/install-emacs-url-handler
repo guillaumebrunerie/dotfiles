@@ -1,0 +1,24 @@
+#!/bin/zsh
+
+# The script
+cat > /tmp/emacs-url.applescript <<'EOF'
+on open location theURL
+    do shell script quoted form of (POSIX path of (path to home folder) & "dotfiles/bin/emacs-url-handler") & " " & quoted form of theURL
+end open location
+EOF
+
+# Compile it
+osacompile -o ~/Applications/EmacsURL.app /tmp/emacs-url.applescript
+
+# Do stuff
+plist=~/Applications/EmacsURL.app/Contents/Info.plist
+/usr/libexec/PlistBuddy \
+  -c "Set :CFBundleIdentifier local.guillaume.emacsurl" \
+  -c "Add :CFBundleURLTypes array" \
+  -c "Add :CFBundleURLTypes:0 dict" \
+  -c "Add :CFBundleURLTypes:0:CFBundleURLName string EmacsFileLink" \
+  -c "Add :CFBundleURLTypes:0:CFBundleURLSchemes array" \
+  -c "Add :CFBundleURLTypes:0:CFBundleURLSchemes:0 string emacs" \
+  "$plist"
+codesign --force --sign - ~/Applications/EmacsURL.app   # plist edit invalidates the signature
+/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f ~/Applications/EmacsURL.app
